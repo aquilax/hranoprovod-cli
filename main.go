@@ -6,11 +6,13 @@ import (
 )
 
 const (
-	appName    = "hranoprovod-cli"
-	appUsage   = "Lifestyle tracker"
-	appVersion = "2.0.0"
-	appAuthor  = "aquilax"
-	appEmail   = "aquilax@gmail.com"
+	appName            = "hranoprovod-cli"
+	appUsage           = "Lifestyle tracker"
+	appVersion         = "2.0.0"
+	appAuthor          = "aquilax"
+	appEmail           = "aquilax@gmail.com"
+	defaultDbFilename  = "food.yaml"
+	defaultLogFilename = "log.yaml"
 )
 
 func main() {
@@ -25,23 +27,43 @@ func main() {
 			Name:      "register",
 			ShortName: "reg",
 			Usage:     "Shows the register",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:   "database, d",
+					Value:  defaultDbFilename,
+					Usage:  "database file name",
+					EnvVar: "HR_DATABASE",
+				},
+				cli.StringFlag{
+					Name:   "logfile, l",
+					Value:  defaultLogFilename,
+					Usage:  "log file name",
+					EnvVar: "HR_LOGFILE",
+				},
+			},
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod().Register())
+
+				handleExit(NewHranoprovod().Register(c.String("database")))
 			},
 		},
 		{
-			Name:      "add",
-			ShortName: "a",
-			Usage:     "Adds new item to the log",
+			Name:  "add",
+			Usage: "Adds new item to the log",
 			Action: func(c *cli.Context) {
 				handleExit(NewHranoprovod().Add(c.Args().First(), c.Args().Get(1)))
 			},
 		},
 		{
-			Name:  "search",
-			Usage: "Search for food online",
-			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod().Search(c.Args().First()))
+			Name:  "api",
+			Usage: "Service API commands",
+			Subcommands: []cli.Command{
+				{
+					Name:  "search",
+					Usage: "Search for food online",
+					Action: func(c *cli.Context) {
+						handleExit(NewHranoprovod().Search(c.Args().First()))
+					},
+				},
 			},
 		},
 		{
