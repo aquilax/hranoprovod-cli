@@ -1,16 +1,16 @@
 package main
 
 import (
-  "os"
-  "github.com/codegangsta/cli"
+	"github.com/codegangsta/cli"
+	"os"
 )
 
 const (
-	appName = "hranoprovod"
-	appUsage = "Lifestyle tracker"
+	appName    = "hranoprovod-cli"
+	appUsage   = "Lifestyle tracker"
 	appVersion = "2.0.0"
-	appAuthor = "aquilax"
-	appEmail = "aquilax@gmail.com"
+	appAuthor  = "aquilax"
+	appEmail   = "aquilax@gmail.com"
 )
 
 func main() {
@@ -22,18 +22,33 @@ func main() {
 	app.Email = appEmail
 	app.Commands = []cli.Command{
 		{
-			Name: "register",
+			Name:      "register",
 			ShortName: "reg",
-			Usage: "Shows the register",
+			Usage:     "Shows the register",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod().register())
+				handleExit(NewHranoprovod().Register())
 			},
 		},
 		{
-			Name: "search",
-			Usage: "Search for food",
+			Name:      "add",
+			ShortName: "a",
+			Usage:     "Adds new item to the log",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod().search(c.Args().First()))
+				handleExit(NewHranoprovod().Add(c.Args().First(), c.Args().Get(1)))
+			},
+		},
+		{
+			Name:  "search",
+			Usage: "Search for food online",
+			Action: func(c *cli.Context) {
+				handleExit(NewHranoprovod().Search(c.Args().First()))
+			},
+		},
+		{
+			Name:  "lint",
+			Usage: "Lints file",
+			Action: func(c *cli.Context) {
+				handleExit(NewHranoprovod().Lint(c.Args().First()))
 			},
 		},
 	}
