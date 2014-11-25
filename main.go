@@ -56,5 +56,8 @@ func main() {
 }
 
 func handleExit(err error) {
-
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
+	}
 }

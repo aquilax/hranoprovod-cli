@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Hranoprovod/api-client"
+	"github.com/Hranoprovod/parser"
 	"github.com/Hranoprovod/reporter"
 	"os"
 )
@@ -38,6 +39,17 @@ func (hr *Hranoprovod) Add(name string, qty string) error {
 
 // Lint lints file
 func (hr *Hranoprovod) Lint(fileName string) error {
-	println("Linting " + fileName)
-	return nil
+	p := parser.NewParser(parser.NewDefaultOptions())
+	go p.ParseFile(fileName)
+	return func() error {
+		for {
+			select {
+			case _ = <-p.Nodes:
+			case err := <-p.Errors:
+				return err
+			case <-p.Done:
+				return nil
+			}
+		}
+	}()
 }
