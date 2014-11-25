@@ -9,7 +9,7 @@ import (
 )
 
 type APINode *shared.APINode
-type APINodeList *shared.APINodeList
+type APINodeList []APINode
 
 type APIClientOptions struct {
 	BaseURL string

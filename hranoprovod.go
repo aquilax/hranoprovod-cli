@@ -1,7 +1,7 @@
 package main
 
 import (
-
+	"os"
 )
 
 type Hranoprovod struct {}
@@ -16,6 +16,10 @@ func (hr *Hranoprovod) register() error {
 
 func (hr *Hranoprovod) search(q string) error {
 	api := NewAPIClient(GetDefaultAPIClientOptions())
-	api.Search(q)
-	return nil
+	nl, err := api.Search(q)
+	if err != nil {
+		return err
+	}
+	reporter := NewReporter(os.Stdout)
+	return reporter.PrintAPISearchResult(*nl)
 }
