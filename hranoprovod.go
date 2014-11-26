@@ -50,12 +50,14 @@ func (ro *RegisterOptions) Validate() error {
 		if err != nil {
 			return err
 		}
+		ro.HasBeginning = true
 	}
 	if ro.End != "" {
 		ro.EndTime, err = time.Parse(ro.DateFormat, ro.End)
 		if err != nil {
 			return err
 		}
+		ro.HasEnd = true
 	}
 	return nil
 }
