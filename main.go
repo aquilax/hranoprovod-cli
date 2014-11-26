@@ -6,13 +6,15 @@ import (
 )
 
 const (
-	appName            = "hranoprovod-cli"
-	appUsage           = "Lifestyle tracker"
-	appVersion         = "2.0.0"
-	appAuthor          = "aquilax"
-	appEmail           = "aquilax@gmail.com"
-	defaultDbFilename  = "food.yaml"
-	defaultLogFilename = "log.yaml"
+	appName    = "hranoprovod-cli"
+	appUsage   = "Lifestyle tracker"
+	appVersion = "2.0.0"
+	appAuthor  = "aquilax"
+	appEmail   = "aquilax@gmail.com"
+
+	defaultDbFilename       = "food.yaml"
+	defaultLogFilename      = "log.yaml"
+	defaultResolverMaxDepth = 10
 )
 
 func main() {
@@ -26,7 +28,7 @@ func main() {
 		{
 			Name:      "register",
 			ShortName: "reg",
-			Usage:     "Shows the register",
+			Usage:     "Shows the log register report",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:   "database, d",
@@ -40,10 +42,52 @@ func main() {
 					Usage:  "log file name",
 					EnvVar: "HR_LOGFILE",
 				},
+				cli.StringFlag{
+					Name:  "beginning, b",
+					Usage: "Beginning of period",
+					Value: "",
+				},
+				cli.StringFlag{
+					Name:  "end, e",
+					Usage: "End of period",
+					Value: "",
+				},
+				cli.BoolFlag{
+					Name:  "csv",
+					Usage: "Export as CSV",
+				},
+				cli.BoolFlag{
+					Name:  "no-color",
+					Usage: "Disable color output",
+				},
+				cli.BoolFlag{
+					Name:  "no-totals",
+					Usage: "Disable totals",
+				},
+				cli.IntFlag{
+					Name:   "maxdepth",
+					Value:  defaultResolverMaxDepth,
+					Usage:  "resolve depth",
+					EnvVar: "HR_MAXDEPTH",
+				},
 			},
 			Action: func(c *cli.Context) {
-
-				handleExit(NewHranoprovod().Register(c.String("database")))
+				ro := &RegisterOptions{
+					DateFormat:       "2006/01/02",
+					DbFileName:       c.String("database"),
+					LogFileName:      c.String("logfile"),
+					ResolverMaxDepth: c.Int("maxdepth"),
+					CSV:              c.Bool("csv"),
+					Color:            !c.Bool("no-color"),
+					Totals:           !c.Bool("no-totals"),
+					Beginning:        c.String("beginning"),
+					End:              c.String("end"),
+				}
+				err := ro.Validate()
+				if err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod().Register(ro))
 			},
 		},
 		{
