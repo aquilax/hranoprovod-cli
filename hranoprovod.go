@@ -14,6 +14,7 @@ import (
 // Hranoprovod is the main app type
 type Hranoprovod struct{}
 
+// RegisterOptions contains the options for the register command
 type RegisterOptions struct {
 	DbFileName       string
 	LogFileName      string
@@ -41,6 +42,7 @@ func NewHranoprovod() *Hranoprovod {
 	return &Hranoprovod{}
 }
 
+// Validate validates the register options
 func (ro *RegisterOptions) Validate() error {
 	var err error
 	if ro.Beginning != "" {
@@ -162,5 +164,4 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList, ro *Reg
 			return nil
 		}
 	}
-	return nil
 }
