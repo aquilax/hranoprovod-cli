@@ -33,8 +33,8 @@ type Config struct {
 // NewConfig returns new config structure.
 func NewConfig() *Config {
 	config := &Config{}
-	config.Reporter.Color = true
-	config.Processor.Totals = true
+	config.Reporter = *reporter.NewDefaultOptions()
+	config.Processor = *processor.NewDefaultOptions()
 	return config
 }
 
@@ -68,7 +68,6 @@ func exists(name string) bool {
 }
 
 func (config *Config) populateGlobals(c *cli.Context) {
-	println(config.Global.DbFileName)
 	if c.GlobalIsSet("database") || config.Global.DbFileName == "" {
 		config.Global.DbFileName = c.GlobalString("database")
 	}
