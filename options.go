@@ -3,6 +3,7 @@ package main
 import (
 	"code.google.com/p/gcfg"
 	"github.com/Hranoprovod/api-client"
+	"github.com/Hranoprovod/parser"
 	"github.com/Hranoprovod/processor"
 	"github.com/Hranoprovod/reporter"
 	"github.com/codegangsta/cli"
@@ -25,6 +26,7 @@ type Options struct {
 	Resolver struct {
 		ResolverMaxDepth int
 	}
+	Parser    parser.Options
 	Processor processor.Options
 	Reporter  reporter.Options
 	API       client.Options
@@ -34,14 +36,16 @@ type Options struct {
 func NewOptions() *Options {
 	o := &Options{}
 	o.Reporter = *reporter.NewDefaultOptions()
+	o.Reporter.Color = true
 	o.Processor = *processor.NewDefaultOptions()
+	o.Parser = *parser.NewDefaultOptions()
 	o.API = *client.NewDefaultOptions()
 	return o
 }
 
 // Load loads the settigns from config file/command line params/defauls from given context.
 func (o *Options) Load(c *cli.Context) *Options {
-	fileName := c.GlobalString("o")
+	fileName := c.GlobalString("config")
 	// First try to load the o file
 	if exists(fileName) {
 		if err := gcfg.ReadFileInto(o, fileName); err != nil {

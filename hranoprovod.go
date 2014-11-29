@@ -22,7 +22,7 @@ func NewHranoprovod(options *Options) *Hranoprovod {
 
 // Register generates report
 func (hr *Hranoprovod) Register() error {
-	parser := parser.NewParser(parser.NewDefaultOptions())
+	parser := parser.NewParser(&hr.options.Parser)
 	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (hr *Hranoprovod) Add(name string, qty string) error {
 
 // Lint lints file
 func (hr *Hranoprovod) Lint(fileName string) error {
-	p := parser.NewParser(parser.NewDefaultOptions())
+	p := parser.NewParser(&hr.options.Parser)
 	go p.ParseFile(fileName)
 	return func() error {
 		for {
