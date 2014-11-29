@@ -97,14 +97,14 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewConfig().Load(c)).Register())
+				handleExit(NewHranoprovod(NewOptions().Load(c)).Register())
 			},
 		},
 		{
 			Name:  "add",
 			Usage: "Adds new item to the log",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewConfig().Load(c)).Add(c.Args().First(), c.Args().Get(1)))
+				handleExit(NewHranoprovod(NewOptions().Load(c)).Add(c.Args().First(), c.Args().Get(1)))
 			},
 		},
 		{
@@ -115,7 +115,7 @@ func main() {
 					Name:  "search",
 					Usage: "Search for food online",
 					Action: func(c *cli.Context) {
-						handleExit(NewHranoprovod(NewConfig().Load(c)).Search(c.Args().First()))
+						handleExit(NewHranoprovod(NewOptions().Load(c)).Search(c.Args().First()))
 					},
 				},
 			},
@@ -124,7 +124,7 @@ func main() {
 			Name:  "lint",
 			Usage: "Lints file",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewConfig().Load(c)).Lint(c.Args().First()))
+				handleExit(NewHranoprovod(NewOptions().Load(c)).Lint(c.Args().First()))
 			},
 		},
 	}
