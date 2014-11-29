@@ -1,35 +1,36 @@
 package main
 
 import (
+	"code.google.com/p/gcfg"
+	"github.com/Hranoprovod/processor"
+	"github.com/Hranoprovod/reporter"
+	"github.com/codegangsta/cli"
 	"os"
+	"os/user"
 	"time"
-    "os/user"
-    "code.google.com/p/gcfg"
-    "github.com/codegangsta/cli"
-    "github.com/Hranoprovod/processor"
-    "github.com/Hranoprovod/reporter"
 )
 
 const (
 	configFileName = "/.hranoprovod/config"
 )
 
+// Config contains the configuration structure
 type Config struct {
 	Global struct {
-		DbFileName       string
-		LogFileName      string
-		DateFormat string
+		DbFileName  string
+		LogFileName string
+		DateFormat  string
 	}
 	Resolver struct {
 		ResolverMaxDepth int
 	}
 	Processor processor.Options
-	Reporter reporter.Options
-	Api struct {
-
+	Reporter  reporter.Options
+	API       struct {
 	}
 }
 
+// NewConfig returns new config structure.
 func NewConfig() *Config {
 	config := &Config{}
 	config.Reporter.Color = true
@@ -37,21 +38,23 @@ func NewConfig() *Config {
 	return config
 }
 
+// Load loads the settigns from config file/command line params/defauls from given context.
 func (config *Config) Load(c *cli.Context) *Config {
-	fileName := c.String("config")
+	fileName := c.GlobalString("config")
 	// First try to load the config file
 	if exists(fileName) {
-		if err := gcfg.ReadFileInto(c, fileName); err != nil {
+		if err := gcfg.ReadFileInto(config, fileName); err != nil {
 			// Config file is not valid
 			panic(err)
 		}
 	}
 	config.populateGlobals(c)
 	config.populateLocals(c)
-	return config;
+	return config
 }
 
-func GetDefaultFileName() (string) {
+// GetDefaultFileName returns the default filename for the config file
+func GetDefaultFileName() string {
 	usr, err := user.Current()
 	if err != nil {
 		return ""
@@ -60,11 +63,12 @@ func GetDefaultFileName() (string) {
 }
 
 func exists(name string) bool {
-    _, err := os.Stat(name)
-    return !os.IsNotExist(err)
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
 }
 
 func (config *Config) populateGlobals(c *cli.Context) {
+	println(config.Global.DbFileName)
 	if c.GlobalIsSet("database") || config.Global.DbFileName == "" {
 		config.Global.DbFileName = c.GlobalString("database")
 	}
@@ -108,7 +112,7 @@ func (config *Config) populateProcessor(c *cli.Context) {
 		}
 		config.Processor.HasEnd = true
 	}
-	
+
 	config.Processor.Unresolved = c.Bool("unresolved")
 	config.Processor.SingleFood = c.String("single-food")
 	config.Processor.SingleElement = c.String("single-element")

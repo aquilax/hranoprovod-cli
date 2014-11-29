@@ -12,10 +12,9 @@ import (
 )
 
 // Hranoprovod is the main app type
-type Hranoprovod struct{
+type Hranoprovod struct {
 	config *Config
 }
-
 
 // RegisterOptions contains the options for the register command
 type RegisterOptions struct {

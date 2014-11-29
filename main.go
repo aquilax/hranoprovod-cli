@@ -38,15 +38,15 @@ func main() {
 			EnvVar: "HR_LOGFILE",
 		},
 		cli.StringFlag{
-			Name: "config, c",
-			Value: GetDefaultFileName(),
-			Usage: "Configuration file",
+			Name:   "config, c",
+			Value:  GetDefaultFileName(),
+			Usage:  "Configuration file",
 			EnvVar: "HR_CONFIG",
 		},
 		cli.StringFlag{
-			Name: "date-format",
-			Value: "2006/01/02",
-			Usage: "Date format for parsing and printing dates",
+			Name:   "date-format",
+			Value:  "2006/01/02",
+			Usage:  "Date format for parsing and printing dates",
 			EnvVar: "HR_DATE_FORMAT",
 		},
 	}
@@ -72,7 +72,7 @@ func main() {
 					Name:  "single-element, s",
 					Usage: "Show only single element",
 				},
-				
+
 				cli.BoolFlag{
 					Name:  "csv",
 					Usage: "Export as CSV",
