@@ -101,8 +101,8 @@ func (o *Options) populateResolver(c *cli.Context) {
 func (o *Options) populateProcessor(c *cli.Context) {
 	var err error
 
-	if c.IsSet("beginning") {
-		o.Processor.BeginningTime, err = time.Parse(o.Global.DateFormat, c.String("beginning"))
+	if c.IsSet("begin") {
+		o.Processor.BeginningTime, err = time.Parse(o.Global.DateFormat, c.String("begin"))
 		if err != nil {
 			panic(err)
 		}
