@@ -12,7 +12,10 @@ import (
 )
 
 // Hranoprovod is the main app type
-type Hranoprovod struct{}
+type Hranoprovod struct{
+	config *Config
+}
+
 
 // RegisterOptions contains the options for the register command
 type RegisterOptions struct {
@@ -38,8 +41,8 @@ type RegisterOptions struct {
 }
 
 // NewHranoprovod creates new application
-func NewHranoprovod() *Hranoprovod {
-	return &Hranoprovod{}
+func NewHranoprovod(config *Config) *Hranoprovod {
+	return &Hranoprovod{config}
 }
 
 // Validate validates the register options
@@ -62,35 +65,15 @@ func (ro *RegisterOptions) Validate() error {
 	return nil
 }
 
-func (ro *RegisterOptions) toProcessorOptions() *processor.Options {
-	po := processor.NewDefaultOptions()
-	po.HasBeginning = ro.HasBeginning
-	po.HasEnd = ro.HasEnd
-	po.BeginningTime = ro.BegginingTime
-	po.EndTime = ro.EndTime
-	po.Unresolved = ro.Unresolved
-	po.SingleElement = ro.SingleElement
-	po.SingleFood = ro.SingleFood
-	po.Totals = ro.Totals
-	return po
-}
-
-func (ro *RegisterOptions) toReporterOptions() *reporter.Options {
-	r := reporter.NewDefaultOptions()
-	r.CSV = ro.CSV
-	r.Color = ro.Color
-	return r
-}
-
 // Register generates report
-func (hr *Hranoprovod) Register(ro *RegisterOptions) error {
+func (hr *Hranoprovod) Register() error {
 	parser := parser.NewParser(parser.NewDefaultOptions())
-	nl, err := hr.loadDatabase(parser, ro.DbFileName)
+	nl, err := hr.loadDatabase(parser, hr.config.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, ro.ResolverMaxDepth).Resolve()
-	return hr.processLog(parser, nl, ro)
+	resolver.NewResolver(nl, hr.config.Resolver.ResolverMaxDepth).Resolve()
+	return hr.processLog(parser, nl)
 }
 
 // Search searches the API for the provided query
@@ -144,18 +127,18 @@ func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (*shared.
 	}()
 }
 
-func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList, ro *RegisterOptions) error {
+func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 	pr := processor.NewProcessor(
-		ro.toProcessorOptions(),
+		&hr.config.Processor,
 		nl,
-		reporter.NewReporter(ro.toReporterOptions(), os.Stdout),
+		reporter.NewReporter(&hr.config.Reporter, os.Stdout),
 	)
 
-	go p.ParseFile(ro.LogFileName)
+	go p.ParseFile(hr.config.Global.LogFileName)
 	for {
 		select {
 		case node := <-p.Nodes:
-			ln, err := shared.NewLogNodeFromNode(node, ro.DateFormat)
+			ln, err := shared.NewLogNodeFromNode(node, hr.config.Global.DateFormat)
 			if err != nil {
 				return err
 			}
