@@ -2,6 +2,7 @@ package main
 
 import (
 	"code.google.com/p/gcfg"
+	"errors"
 	"github.com/Hranoprovod/api-client"
 	"github.com/Hranoprovod/parser"
 	"github.com/Hranoprovod/processor"
@@ -44,18 +45,25 @@ func NewOptions() *Options {
 }
 
 // Load loads the settigns from config file/command line params/defauls from given context.
-func (o *Options) Load(c *cli.Context) *Options {
+func (o *Options) Load(c *cli.Context) error {
 	fileName := c.GlobalString("config")
 	// First try to load the o file
-	if exists(fileName) {
+	exists, err := fileExists(fileName)
+	if err != nil {
+		return err
+	}
+	// Non existing file passed
+	if !exists && c.GlobalIsSet("config") {
+		return errors.New("File " + fileName + "not found")
+	}
+	if exists {
 		if err := gcfg.ReadFileInto(o, fileName); err != nil {
-			// o file is not valid
-			panic(err)
+			return err
 		}
 	}
 	o.populateGlobals(c)
 	o.populateLocals(c)
-	return o
+	return nil
 }
 
 // GetDefaultFileName returns the default filename for the config file
@@ -67,9 +75,12 @@ func GetDefaultFileName() string {
 	return usr.HomeDir + optionsFileName
 }
 
-func exists(name string) bool {
+func fileExists(name string) (bool, error) {
 	_, err := os.Stat(name)
-	return !os.IsNotExist(err)
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return err != nil, err
 }
 
 func (o *Options) populateGlobals(c *cli.Context) {

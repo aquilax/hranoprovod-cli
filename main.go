@@ -97,14 +97,22 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewOptions().Load(c)).Register())
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Register())
 			},
 		},
 		{
 			Name:  "add",
 			Usage: "Adds new item to the log",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewOptions().Load(c)).Add(c.Args().First(), c.Args().Get(1)))
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Add(c.Args().First(), c.Args().Get(1)))
 			},
 		},
 		{
@@ -115,7 +123,11 @@ func main() {
 					Name:  "search",
 					Usage: "Search for food online",
 					Action: func(c *cli.Context) {
-						handleExit(NewHranoprovod(NewOptions().Load(c)).Search(c.Args().First()))
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).Search(c.Args().First()))
 					},
 				},
 			},
@@ -124,7 +136,11 @@ func main() {
 			Name:  "lint",
 			Usage: "Lints file",
 			Action: func(c *cli.Context) {
-				handleExit(NewHranoprovod(NewOptions().Load(c)).Lint(c.Args().First()))
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Lint(c.Args().First()))
 			},
 		},
 	}
