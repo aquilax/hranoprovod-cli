@@ -1,16 +1,17 @@
 package main
 
 import (
-	"code.google.com/p/gcfg"
 	"errors"
+	"os"
+	"os/user"
+	"time"
+
 	"github.com/Hranoprovod/api-client"
 	"github.com/Hranoprovod/parser"
 	"github.com/Hranoprovod/processor"
 	"github.com/Hranoprovod/reporter"
 	"github.com/codegangsta/cli"
-	"os"
-	"os/user"
-	"time"
+	gcfg "gopkg.in/gcfg.v1"
 )
 
 const (
