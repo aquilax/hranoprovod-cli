@@ -1,8 +1,9 @@
 package main
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestOptions(t *testing.T) {
@@ -19,7 +20,7 @@ func TestOptions(t *testing.T) {
 	})
 	Convey("Given fileExists", t, func() {
 		Convey("Returns false if file does not exit", func() {
-			ex, err := fileExists("ASDDD!@!@!@");
+			ex, err := fileExists("ASDDD!@!@!@")
 			So(ex, ShouldBeFalse)
 			So(err, ShouldBeNil)
 		})

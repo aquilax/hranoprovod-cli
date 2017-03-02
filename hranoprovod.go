@@ -1,13 +1,14 @@
 package main
 
 import (
+	"os"
+
 	"github.com/Hranoprovod/api-client"
 	"github.com/Hranoprovod/parser"
 	"github.com/Hranoprovod/processor"
 	"github.com/Hranoprovod/reporter"
 	"github.com/Hranoprovod/resolver"
 	"github.com/Hranoprovod/shared"
-	"os"
 )
 
 // Hranoprovod is the main app type

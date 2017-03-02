@@ -110,22 +110,28 @@ func (o *Options) populateResolver(c *cli.Context) {
 	}
 }
 
-func (o *Options) populateProcessor(c *cli.Context) {
-	var err error
+func mustGetTime(format string, date string) time.Time {
+	if date == "today" {
+		return time.Now().Local()
+	}
+	if date == "yesterday" {
+		return time.Now().AddDate(0, 0, -1)
+	}
+	customTime, err := time.Parse(format, date)
+	if err != nil {
+		panic(err)
+	}
+	return customTime
+}
 
+func (o *Options) populateProcessor(c *cli.Context) {
 	if c.IsSet("begin") {
-		o.Processor.BeginningTime, err = time.Parse(o.Global.DateFormat, c.String("begin"))
-		if err != nil {
-			panic(err)
-		}
+		o.Processor.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
 		o.Processor.HasBeginning = true
 	}
 
 	if c.IsSet("end") {
-		o.Processor.EndTime, err = time.Parse(o.Global.DateFormat, c.String("end"))
-		if err != nil {
-			panic(err)
-		}
+		o.Processor.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
 		o.Processor.HasEnd = true
 	}
 
