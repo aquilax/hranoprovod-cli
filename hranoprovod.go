@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 
-	"github.com/Hranoprovod/api-client"
-	"github.com/Hranoprovod/parser"
-	"github.com/Hranoprovod/processor"
-	"github.com/Hranoprovod/reporter"
-	"github.com/Hranoprovod/resolver"
-	"github.com/Hranoprovod/shared"
+	"github.com/aquilax/hranoprovod-cli/api-client"
+	"github.com/aquilax/hranoprovod-cli/parser"
+	"github.com/aquilax/hranoprovod-cli/processor"
+	"github.com/aquilax/hranoprovod-cli/reporter"
+	"github.com/aquilax/hranoprovod-cli/resolver"
+	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
 // Hranoprovod is the main app type

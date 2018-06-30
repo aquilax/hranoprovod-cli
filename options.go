@@ -6,10 +6,10 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/Hranoprovod/api-client"
-	"github.com/Hranoprovod/parser"
-	"github.com/Hranoprovod/processor"
-	"github.com/Hranoprovod/reporter"
+	"github.com/aquilax/hranoprovod-cli/api-client"
+	"github.com/aquilax/hranoprovod-cli/parser"
+	"github.com/aquilax/hranoprovod-cli/processor"
+	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/codegangsta/cli"
 	gcfg "gopkg.in/gcfg.v1"
 )

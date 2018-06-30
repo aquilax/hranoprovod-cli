@@ -1,4 +1,4 @@
-## hranoprovod-cli [![Build Status](https://travis-ci.org/Hranoprovod/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/Hranoprovod/hranoprovod-cli)
+## hranoprovod-cli [![Build Status](https://travis-ci.org/aquilax/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/aquilax/hranoprovod-cli)
 
 ## Description
 
@@ -11,8 +11,8 @@ First make sure you have go (golang) installed.
     http://golang.org/
 
 Download the source code.
-  
-    go get github.com/Hranoprovod/hranoprovod-cli
+
+    go get github.com/aquilax//hranoprovod-cli
 
 ## Help
 
@@ -47,7 +47,7 @@ Let's say you love tuna sandwiches then you can combine these two ingredients in
 sandwich/tuna/100g:
   fish/tuna/canned/100g: .6
   bread/white/100g: .4
-  
+
 sandwich/tuna/pc:
   sandwich/tuna/100g: 1.5
 ```

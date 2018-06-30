@@ -11,7 +11,7 @@ parts:
   hranoprovod-cli:
     source: .
     plugin: go
-    go-importpath: github.com/Hranoprovod/hranoprovod-cli
+    go-importpath: github.com/aquilax/hranoprovod-cli
 
 apps:
   hranoprovod-cli:
