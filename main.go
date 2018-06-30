@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.0.1"
+	appVersion = "2.0.2"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -84,6 +84,10 @@ func main() {
 				},
 				cli.BoolFlag{
 					Name:  "no-totals",
+					Usage: "Disable totals",
+				},
+				cli.BoolFlag{
+					Name:  "totals-only",
 					Usage: "Disable totals",
 				},
 				cli.BoolFlag{

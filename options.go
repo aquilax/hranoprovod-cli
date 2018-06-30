@@ -151,4 +151,8 @@ func (o *Options) populateReporter(c *cli.Context) {
 	if c.IsSet("no-totals") {
 		o.Processor.Totals = false
 	}
+
+	if c.IsSet("totals-only") {
+		o.Processor.TotalsOnly = true
+	}
 }
