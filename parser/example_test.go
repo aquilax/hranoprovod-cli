@@ -2,11 +2,12 @@ package parser_test
 
 import (
 	"fmt"
-	"github.com/aquilax/hranoprovod-cli/parser"
 	"strings"
+
+	"github.com/aquilax/hranoprovod-cli/parser"
 )
 
-func ExampleParseStream() {
+func ExampleParser_ParseStream() {
 	p := parser.NewParser(parser.NewDefaultOptions())
 	file := `2011/07/17:
   el1: 1.22

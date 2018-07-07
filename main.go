@@ -110,6 +110,34 @@ func main() {
 			},
 		},
 		{
+			Name:      "balance",
+			ShortName: "bal",
+			Usage:     "Shows food balance as tree",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "begin, b",
+					Usage: "Beginning of period",
+				},
+				cli.StringFlag{
+					Name:  "end, e",
+					Usage: "End of period",
+				},
+				cli.IntFlag{
+					Name:   "maxdepth",
+					Value:  defaultResolverMaxDepth,
+					Usage:  "resolve depth",
+					EnvVar: "HR_MAXDEPTH",
+				},
+			},
+			Action: func(c *cli.Context) {
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Balance())
+			},
+		},
+		{
 			Name:  "add",
 			Usage: "Adds new item to the log",
 			Action: func(c *cli.Context) {

@@ -13,7 +13,6 @@ func TestOptions(t *testing.T) {
 			So(o, ShouldNotBeNil)
 			So(o.Reporter, ShouldNotBeNil)
 			So(o.Reporter.Color, ShouldBeTrue)
-			So(o.Processor, ShouldNotBeNil)
 			So(o.Parser, ShouldNotBeNil)
 			So(o.API, ShouldNotBeNil)
 		})

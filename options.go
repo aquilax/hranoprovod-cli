@@ -8,7 +8,6 @@ import (
 
 	"github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
-	"github.com/aquilax/hranoprovod-cli/processor"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/codegangsta/cli"
 	gcfg "gopkg.in/gcfg.v1"
@@ -28,10 +27,9 @@ type Options struct {
 	Resolver struct {
 		ResolverMaxDepth int
 	}
-	Parser    parser.Options
-	Processor processor.Options
-	Reporter  reporter.Options
-	API       client.Options
+	Parser   parser.Options
+	Reporter reporter.Options
+	API      client.Options
 }
 
 // NewOptions returns new options structure.
@@ -39,7 +37,6 @@ func NewOptions() *Options {
 	o := &Options{}
 	o.Reporter = *reporter.NewDefaultOptions()
 	o.Reporter.Color = true
-	o.Processor = *processor.NewDefaultOptions()
 	o.Parser = *parser.NewDefaultOptions()
 	o.API = *client.NewDefaultOptions()
 	return o
@@ -100,7 +97,6 @@ func (o *Options) populateGlobals(c *cli.Context) {
 
 func (o *Options) populateLocals(c *cli.Context) {
 	o.populateResolver(c)
-	o.populateProcessor(c)
 	o.populateReporter(c)
 }
 
@@ -124,22 +120,6 @@ func mustGetTime(format string, date string) time.Time {
 	return customTime
 }
 
-func (o *Options) populateProcessor(c *cli.Context) {
-	if c.IsSet("begin") {
-		o.Processor.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
-		o.Processor.HasBeginning = true
-	}
-
-	if c.IsSet("end") {
-		o.Processor.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
-		o.Processor.HasEnd = true
-	}
-
-	o.Processor.Unresolved = c.Bool("unresolved")
-	o.Processor.SingleFood = c.String("single-food")
-	o.Processor.SingleElement = c.String("single-element")
-}
-
 func (o *Options) populateReporter(c *cli.Context) {
 	if c.IsSet("csv") {
 		o.Reporter.CSV = true
@@ -149,10 +129,24 @@ func (o *Options) populateReporter(c *cli.Context) {
 	}
 
 	if c.IsSet("no-totals") {
-		o.Processor.Totals = false
+		o.Reporter.Totals = false
 	}
 
 	if c.IsSet("totals-only") {
-		o.Processor.TotalsOnly = true
+		o.Reporter.TotalsOnly = true
 	}
+	if c.IsSet("begin") {
+		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
+		o.Reporter.HasBeginning = true
+	}
+
+	if c.IsSet("end") {
+		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
+		o.Reporter.HasEnd = true
+	}
+
+	o.Reporter.Unresolved = c.Bool("unresolved")
+	o.Reporter.SingleFood = c.String("single-food")
+	o.Reporter.SingleElement = c.String("single-element")
+
 }

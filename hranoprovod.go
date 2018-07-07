@@ -5,7 +5,6 @@ import (
 
 	"github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
-	"github.com/aquilax/hranoprovod-cli/processor"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/aquilax/hranoprovod-cli/resolver"
 	"github.com/aquilax/hranoprovod-cli/shared"
@@ -32,6 +31,17 @@ func (hr *Hranoprovod) Register() error {
 	return hr.processLog(parser, nl)
 }
 
+// Balance generates balance report
+func (hr *Hranoprovod) Balance() error {
+	parser := parser.NewParser(&hr.options.Parser)
+	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	if err != nil {
+		return err
+	}
+	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	return hr.processBalance(parser, nl)
+}
+
 // Search searches the API for the provided query
 func (hr *Hranoprovod) Search(q string) error {
 	api := client.NewAPIClient(&hr.options.API)
@@ -39,7 +49,7 @@ func (hr *Hranoprovod) Search(q string) error {
 	if err != nil {
 		return err
 	}
-	rp := reporter.NewReporter(&hr.options.Reporter, os.Stdout)
+	rp := reporter.NewAPIReporter(&hr.options.Reporter, os.Stdout)
 	return rp.PrintAPISearchResult(*nl)
 }
 
@@ -84,11 +94,7 @@ func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (*shared.
 }
 
 func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
-	pr := processor.NewProcessor(
-		&hr.options.Processor,
-		nl,
-		reporter.NewReporter(&hr.options.Reporter, os.Stdout),
-	)
+	r := reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
 
 	go p.ParseFile(hr.options.Global.LogFileName)
 	for {
@@ -98,11 +104,16 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 			if err != nil {
 				return err
 			}
-			pr.Process(ln)
+			r.Process(ln)
 		case breakingError := <-p.Errors:
 			return breakingError
 		case <-p.Done:
 			return nil
 		}
 	}
+}
+
+func (hr *Hranoprovod) processBalance(p *parser.Parser, nl *shared.NodeList) error {
+	_ = reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
+	return nil
 }
