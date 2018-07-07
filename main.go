@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.0.2"
+	appVersion = "2.1.0"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -97,7 +97,7 @@ func main() {
 				cli.IntFlag{
 					Name:   "maxdepth",
 					Value:  defaultResolverMaxDepth,
-					Usage:  "resolve depth",
+					Usage:  "Resolve depth",
 					EnvVar: "HR_MAXDEPTH",
 				},
 			},
@@ -125,8 +125,12 @@ func main() {
 				cli.IntFlag{
 					Name:   "maxdepth",
 					Value:  defaultResolverMaxDepth,
-					Usage:  "resolve depth",
+					Usage:  "Resolve depth",
 					EnvVar: "HR_MAXDEPTH",
+				},
+				cli.BoolFlag{
+					Name:  "collapse, c",
+					Usage: "Collapses last dimension",
 				},
 			},
 			Action: func(c *cli.Context) {

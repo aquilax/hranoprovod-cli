@@ -32,6 +32,7 @@ type Options struct {
 	Unresolved        bool
 	SingleElement     string
 	SingleFood        string
+	CollapseLast      bool
 }
 
 // NewDefaultOptions returns the default reporter options
@@ -47,6 +48,7 @@ func NewDefaultOptions() *Options {
 		Totals:            true,
 		BeginningTime:     time.Now(),
 		EndTime:           time.Now(),
+		CollapseLast:      false,
 	}
 }
 

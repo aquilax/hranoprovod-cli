@@ -42,6 +42,10 @@ func (r *BalanceReporter) printNode(node *accumulator.TreeNode, level int) {
 		child := node.Children[key]
 		if len(child.Children) == 0 {
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
+		} else if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
+			//
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
+			continue
 		} else {
 			fmt.Fprintf(r.output, "%10s | %s%s\n", " ", strings.Repeat("  ", level), child.Name)
 		}
