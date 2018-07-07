@@ -118,8 +118,26 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 }
 
 func (hr *Hranoprovod) processBalance(p *parser.Parser, nl *shared.NodeList) error {
-	_ = reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
-	return nil
+	r := reporter.NewReporter(reporter.Bal, &hr.options.Reporter, nl, os.Stdout)
+
+	go p.ParseFile(hr.options.Global.LogFileName)
+	for {
+		select {
+		case node := <-p.Nodes:
+			ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+			if err != nil {
+				return err
+			}
+			if hr.inInterval(ln.Time) {
+				r.Process(ln)
+			}
+		case breakingError := <-p.Errors:
+			return breakingError
+		case <-p.Done:
+			r.Flush()
+			return nil
+		}
+	}
 }
 
 func (hr *Hranoprovod) inInterval(t time.Time) bool {
