@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
@@ -104,7 +105,9 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 			if err != nil {
 				return err
 			}
-			r.Process(ln)
+			if hr.inInterval(ln.Time) {
+				r.Process(ln)
+			}
 		case breakingError := <-p.Errors:
 			return breakingError
 		case <-p.Done:
@@ -117,4 +120,31 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 func (hr *Hranoprovod) processBalance(p *parser.Parser, nl *shared.NodeList) error {
 	_ = reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
 	return nil
+}
+
+func (hr *Hranoprovod) inInterval(t time.Time) bool {
+	if hr.options.Reporter.HasBeginning && !isGoodDate(t, hr.options.Reporter.BeginningTime, dateBeginning) {
+		return false
+	}
+	if hr.options.Reporter.HasEnd && !isGoodDate(t, hr.options.Reporter.EndTime, dateEnd) {
+		return false
+	}
+	return true
+}
+
+type CompareType bool
+
+const (
+	dateBeginning CompareType = true
+	dateEnd       CompareType = false
+)
+
+func isGoodDate(time, compareTime time.Time, compareType CompareType) bool {
+	if time.Equal(compareTime) {
+		return true
+	}
+	if compareType == dateBeginning {
+		return time.After(compareTime)
+	}
+	return time.Before(compareTime)
 }

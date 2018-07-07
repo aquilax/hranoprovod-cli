@@ -1,12 +1,5 @@
 package reporter
 
-import "time"
-
-const (
-	dateBeginning = 0
-	dateEnd       = 1
-)
-
 const (
 	reset       = "\x1B[0m"
 	bold        = "\x1B[1m"
@@ -34,13 +27,3 @@ const (
 	bwhite      = "\x1B[47m"
 	newline     = "\r\n\x1B[0m"
 )
-
-func isGoodDate(time, compareTime time.Time, compareType int) bool {
-	if time.Equal(compareTime) {
-		return true
-	}
-	if compareType == dateBeginning {
-		return time.After(compareTime)
-	}
-	return time.Before(compareTime)
-}

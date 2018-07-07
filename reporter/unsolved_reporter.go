@@ -26,9 +26,6 @@ func NewUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer
 }
 
 func (r *UnsolvedReporter) Process(ln *shared.LogNode) error {
-	if (r.options.HasBeginning && !isGoodDate(ln.Time, r.options.BeginningTime, dateBeginning)) || (r.options.HasEnd && !isGoodDate(ln.Time, r.options.EndTime, dateEnd)) {
-		return nil
-	}
 	for _, e := range *ln.Elements {
 		_, found := (*r.db)[e.Name]
 		if !found {
