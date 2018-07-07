@@ -23,6 +23,7 @@ func TestReporter(t *testing.T) {
 			expected := `test
 `
 			err := rp.Process(ln)
+			rp.Flush()
 			So(err, ShouldBeNil)
 			So(b.String(), ShouldEqual, expected)
 		})

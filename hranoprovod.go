@@ -108,6 +108,7 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 		case breakingError := <-p.Errors:
 			return breakingError
 		case <-p.Done:
+			r.Flush()
 			return nil
 		}
 	}

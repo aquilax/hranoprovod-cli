@@ -52,6 +52,7 @@ func NewDefaultOptions() *Options {
 
 type Reporter interface {
 	Process(ln *shared.LogNode) error
+	Flush() error
 }
 
 func NewReporter(rt ReportType, options *Options, db *shared.NodeList, writer io.Writer) Reporter {
