@@ -59,6 +59,9 @@ type Reporter interface {
 
 func NewReporter(rt ReportType, options *Options, db *shared.NodeList, writer io.Writer) Reporter {
 	if rt == Bal {
+		if len(options.SingleElement) > 0 {
+			return NewBalanceSingleReporter(options, db, writer)
+		}
 		return NewBalanceReporter(options, db, writer)
 	}
 	if options.Unresolved {

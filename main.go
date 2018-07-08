@@ -132,6 +132,10 @@ func main() {
 					Name:  "collapse, c",
 					Usage: "Collapses last dimension",
 				},
+				cli.StringFlag{
+					Name:  "single-element, s",
+					Usage: "Show only single element",
+				},
 			},
 			Action: func(c *cli.Context) {
 				o := NewOptions()

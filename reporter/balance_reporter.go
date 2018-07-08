@@ -26,6 +26,24 @@ func NewBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer)
 }
 
 func (r *BalanceReporter) Process(ln *shared.LogNode) error {
+	if len(r.options.SingleElement) > 0 {
+		for _, el := range *ln.Elements {
+			repl, found := (*r.db)[el.Name]
+			if found {
+				for _, repl := range *repl.Elements {
+					if repl.Name == r.options.SingleElement {
+						r.root.AddDeep(shared.NewElement(el.Name, repl.Val*el.Val))
+					}
+				}
+			} else {
+				if el.Name == r.options.SingleElement {
+					r.root.AddDeep(shared.NewElement(el.Name, 0))
+				}
+			}
+		}
+		return nil
+	}
+
 	for _, el := range *ln.Elements {
 		r.root.AddDeep(el)
 	}
@@ -43,7 +61,7 @@ func (r *BalanceReporter) printNode(node *accumulator.TreeNode, level int) {
 		if len(child.Children) == 0 {
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
 		} else if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
-			//
+			// combine the last two levels
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
 			continue
 		} else {
