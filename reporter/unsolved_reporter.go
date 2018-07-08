@@ -7,17 +7,15 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-// Reporter is the main report structure
-type UnsolvedReporter struct {
+type unsolvedReporter struct {
 	options *Options
 	db      *shared.NodeList
 	output  io.Writer
 	list    map[string]bool
 }
 
-// NewReporter creates new reporter
-func NewUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer) *UnsolvedReporter {
-	return &UnsolvedReporter{
+func newUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer) *unsolvedReporter {
+	return &unsolvedReporter{
 		options,
 		db,
 		writer,
@@ -25,7 +23,7 @@ func NewUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer
 	}
 }
 
-func (r *UnsolvedReporter) Process(ln *shared.LogNode) error {
+func (r *unsolvedReporter) Process(ln *shared.LogNode) error {
 	for _, e := range *ln.Elements {
 		_, found := (*r.db)[e.Name]
 		if !found {
@@ -35,13 +33,9 @@ func (r *UnsolvedReporter) Process(ln *shared.LogNode) error {
 	return nil
 }
 
-func (r *UnsolvedReporter) Flush() error {
-	for name, _ := range r.list {
-		r.PrintUnresolvedRow(name)
+func (r *unsolvedReporter) Flush() error {
+	for name := range r.list {
+		fmt.Fprintln(r.output, name)
 	}
 	return nil
-}
-
-func (r *UnsolvedReporter) PrintUnresolvedRow(name string) {
-	fmt.Fprintln(r.output, name)
 }

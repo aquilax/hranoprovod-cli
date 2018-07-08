@@ -38,13 +38,13 @@ func (el *Elements) Index(name string) (int, bool) {
 	return 0, false
 }
 
-// SumMerge merges the element list with new one multiplied by coef
-func (el *Elements) SumMerge(left *Elements, coef float32) {
+// SumMerge merges the element list with new one multiplied by mult
+func (el *Elements) SumMerge(left *Elements, mult float32) {
 	for _, v := range *left {
 		if ndx, exists := (*el).Index(v.Name); exists {
-			(*el)[ndx].Val += v.Val * coef
+			(*el)[ndx].Val += v.Val * mult
 		} else {
-			(*el).Add(v.Name, v.Val*coef)
+			(*el).Add(v.Name, v.Val*mult)
 		}
 	}
 }

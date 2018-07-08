@@ -9,15 +9,15 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-type BalanceReporter struct {
+type balanceReporter struct {
 	options *Options
 	db      *shared.NodeList
 	output  io.Writer
 	root    *accumulator.TreeNode
 }
 
-func NewBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer) *BalanceReporter {
-	return &BalanceReporter{
+func newBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer) *balanceReporter {
+	return &balanceReporter{
 		options,
 		db,
 		writer,
@@ -25,7 +25,7 @@ func NewBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer)
 	}
 }
 
-func (r *BalanceReporter) Process(ln *shared.LogNode) error {
+func (r *balanceReporter) Process(ln *shared.LogNode) error {
 	if len(r.options.SingleElement) > 0 {
 		for _, el := range *ln.Elements {
 			repl, found := (*r.db)[el.Name]
@@ -50,12 +50,12 @@ func (r *BalanceReporter) Process(ln *shared.LogNode) error {
 	return nil
 }
 
-func (r *BalanceReporter) Flush() error {
+func (r *balanceReporter) Flush() error {
 	r.printNode(r.root, 0)
 	return nil
 }
 
-func (r *BalanceReporter) printNode(node *accumulator.TreeNode, level int) {
+func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 		if len(child.Children) == 0 {

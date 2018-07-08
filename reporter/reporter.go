@@ -7,10 +7,13 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
+// ReportType represents the type of the report
 type ReportType int8
 
 const (
+	// Reg is register report type
 	Reg ReportType = iota
+	// Bal is balance report type
 	Bal
 )
 
@@ -52,26 +55,28 @@ func NewDefaultOptions() *Options {
 	}
 }
 
+// Reporter is the reporting interface
 type Reporter interface {
 	Process(ln *shared.LogNode) error
 	Flush() error
 }
 
+// NewReporter creates new response handler
 func NewReporter(rt ReportType, options *Options, db *shared.NodeList, writer io.Writer) Reporter {
 	if rt == Bal {
 		if len(options.SingleElement) > 0 {
-			return NewBalanceSingleReporter(options, db, writer)
+			return newBalanceSingleReporter(options, db, writer)
 		}
-		return NewBalanceReporter(options, db, writer)
+		return newBalanceReporter(options, db, writer)
 	}
 	if options.Unresolved {
-		return NewUnsolvedReporter(options, db, writer)
+		return newUnsolvedReporter(options, db, writer)
 	}
 	if len(options.SingleElement) > 0 {
-		return NewSingleReporter(options, db, writer)
+		return newSingleReporter(options, db, writer)
 	}
 	if len(options.SingleFood) > 0 {
-		return NewSingleFoodReporter(options, db, writer)
+		return newSingleFoodReporter(options, db, writer)
 	}
-	return NewRegReporter(options, db, writer)
+	return newRegReporter(options, db, writer)
 }

@@ -9,23 +9,22 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-// Reporter is the main report structure
-type SingleReporter struct {
+// singleReporter outputs report for single food
+type singleReporter struct {
 	options *Options
 	db      *shared.NodeList
 	output  io.Writer
 }
 
-// NewReporter creates new reporter
-func NewSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *SingleReporter {
-	return &SingleReporter{
+func newSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *singleReporter {
+	return &singleReporter{
 		options,
 		db,
 		writer,
 	}
 }
 
-func (r *SingleReporter) Process(ln *shared.LogNode) error {
+func (r *singleReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	singleElement := r.options.SingleElement
 	for _, e := range *ln.Elements {
@@ -44,17 +43,17 @@ func (r *SingleReporter) Process(ln *shared.LogNode) error {
 	}
 	if len(*acc) > 0 {
 		arr := (*acc)[singleElement]
-		r.PrintSingleElementRow(ln.Time, r.options.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
+		r.printSingleElementRow(ln.Time, r.options.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
 	}
 	return nil
 
 }
 
-func (r *SingleReporter) Flush() error {
+func (r *singleReporter) Flush() error {
 	return nil
 }
 
-func (r *SingleReporter) PrintSingleElementRow(ts time.Time, name string, pos float32, neg float32) {
+func (r *singleReporter) printSingleElementRow(ts time.Time, name string, pos float32, neg float32) {
 	format := "%s %20s %10.2f %10.2f =%10.2f\n"
 	if r.options.CSV {
 		format = "%s;\"%s\";%0.2f;%0.2f;%0.2f\n"

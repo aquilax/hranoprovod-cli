@@ -1,8 +1,10 @@
 ## hranoprovod-cli [![Build Status](https://travis-ci.org/aquilax/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/aquilax/hranoprovod-cli)
 
+[![GoDoc](https://godoc.org/github.com/aquilax/hranoprovod-cli?status.svg)](https://godoc.org/github.com/aquilax/hranoprovod-cli)
+
 ## Description
 
-Hranoprovod is command line tracking tool. It supports nested recipies and custom defined tracking elements, which makes it perfect for tracking calories, nutionin data, excercises and other accumulative data.
+Hranoprovod is command line tracking tool. It supports nested recipies and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
 
 ## Installation
 
@@ -17,6 +19,38 @@ Download the source code.
 ## Help
 
 Running the `hranoprovod-cli` command will show you the command line options
+
+```
+$ ./hranoprovod-cli
+NAME:
+   hranoprovod-cli - Lifestyle tracker
+
+USAGE:
+   hranoprovod-cli [global options] command [command options] [arguments...]
+
+VERSION:
+   2.1.0
+
+AUTHOR(S):
+   aquilax <aquilax@gmail.com>
+
+COMMANDS:
+     register, reg  Shows the log register report
+     balance, bal   Shows food balance as tree
+     add            Adds new item to the log
+     api            Service API commands
+     lint           Lints file
+     help, h        Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --database value, -d value  database file name (default: "food.yaml") [$HR_DATABASE]
+   --logfile value, -l value   log file name (default: "log.yaml") [$HR_LOGFILE]
+   --config value, -c value    Configuration file (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
+   --date-format value         Date format for parsing and printing dates (default: "2006/01/02") [$HR_DATE_FORMAT]
+   --help, -h                  show help
+   --version, -v               print the version
+
+```
 
 ## Usage
 
@@ -39,7 +73,6 @@ bread/white/100g:
   carbohydrate: 49
   protein: 9
 ```
-
 
 Let's say you love tuna sandwiches then you can combine these two ingredients into one:
 
@@ -70,10 +103,12 @@ The log file contains dated usage of the recipes, defined in the database file.
 
 Note: it's not mandatory to have the elements in the database file. Elements which are not found will be represented as they are. They can always be added later to the database.
 
+#### Register
+
 Given this example, the result will look like:
 
 ```
-$hranoprovod-cli -d food.yaml -l log.yaml  reg
+$hranoprovod-cli -d food.yaml -l log.yaml reg
 2014/12/17
 	tea/cup                     :      1.00
 		             tea/cup       1.00
@@ -93,4 +128,67 @@ $hranoprovod-cli -d food.yaml -l log.yaml  reg
 		                 fat      14.64       0.00 =     14.64
 		             protein      10.80       0.00 =     10.80
 		             tea/cup       1.00       0.00 =      1.00
+```
+
+#### Balance tree
+
+You can also generate balance tree for single nutrition value:
+
+```
+$ hranoprovod-cli bal -b yesterday -s calories
+    329.82 | butter
+    329.82 |   cow milk
+    329.82 |     100g
+     44.20 | cream
+     44.20 |   heavy
+     44.20 |     36%
+     44.20 |       100g
+  -1632.00 | day
+  -1632.00 |   nonworking
+      2.40 | drinks
+      2.40 |   coffee
+      2.40 |     cup
+    305.61 | eggs
+    305.61 |   fried
+    305.61 |     pc
+      8.94 | garlic
+      8.94 |   100g
+    100.80 | olives
+    100.80 |   brown
+    100.80 |     100g
+      7.20 | rucola
+      7.20 |   100g
+     54.90 | vegetables
+     54.90 |   spinach
+     54.90 |     frozen
+     54.90 |       100g
+    148.40 | vegokorv
+    148.40 |   pc
+-----------|
+   -629.73 | calories
+```
+
+Same result in slightly more compact format:
+```
+$ hranoprovod-cli bal -b yesterday -s calories -c
+    329.82 | butter
+    329.82 |   cow milk/100g
+     44.20 | cream
+     44.20 |   heavy
+     44.20 |     36%/100g
+  -1632.00 | day/nonworking
+      2.40 | drinks
+      2.40 |   coffee/cup
+    305.61 | eggs
+    305.61 |   fried/pc
+      8.94 | garlic/100g
+    100.80 | olives
+    100.80 |   brown/100g
+      7.20 | rucola/100g
+     54.90 | vegetables
+     54.90 |   spinach
+     54.90 |     frozen/100g
+    148.40 | vegokorv/pc
+-----------|
+   -629.73 | calories
 ```

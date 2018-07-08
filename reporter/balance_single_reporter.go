@@ -9,7 +9,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-type BalanceSingleReporter struct {
+type balanceSingleReporter struct {
 	options *Options
 	db      *shared.NodeList
 	output  io.Writer
@@ -17,8 +17,8 @@ type BalanceSingleReporter struct {
 	total   float32
 }
 
-func NewBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *BalanceSingleReporter {
-	return &BalanceSingleReporter{
+func newBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *balanceSingleReporter {
+	return &balanceSingleReporter{
 		options,
 		db,
 		writer,
@@ -27,7 +27,7 @@ func NewBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.W
 	}
 }
 
-func (r *BalanceSingleReporter) Process(ln *shared.LogNode) error {
+func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 	for _, el := range *ln.Elements {
 		repl, found := (*r.db)[el.Name]
 		if found {
@@ -47,18 +47,17 @@ func (r *BalanceSingleReporter) Process(ln *shared.LogNode) error {
 	return nil
 }
 
-func (r *BalanceSingleReporter) Flush() error {
+func (r *balanceSingleReporter) Flush() error {
 	r.printNode(r.root, 0)
-	fmt.Printf(strings.Repeat("-", 11) + "|\n")
+	fmt.Fprintf(r.output, "%s|\n", strings.Repeat("-", 11))
 	fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.options.SingleElement)
 	return nil
 }
 
-func (r *BalanceSingleReporter) printNode(node *accumulator.TreeNode, level int) {
+func (r *balanceSingleReporter) printNode(node *accumulator.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 		if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
-			//
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
 			continue
 		} else {

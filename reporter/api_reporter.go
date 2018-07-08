@@ -7,13 +7,13 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-// Reporter is the main report structure
+// APIReporter outputs api search results
 type APIReporter struct {
 	options *Options
 	output  io.Writer
 }
 
-// NewAPIReporter creates new reporter
+// NewAPIReporter creates new API result reporter
 func NewAPIReporter(ro *Options, writer io.Writer) *APIReporter {
 	return &APIReporter{
 		ro,
@@ -21,7 +21,7 @@ func NewAPIReporter(ro *Options, writer io.Writer) *APIReporter {
 	}
 }
 
-// PrintAPISearchResult prints a list of search resilts
+// PrintAPISearchResult prints a list of search results
 func (r *APIReporter) PrintAPISearchResult(nl shared.APINodeList) error {
 	for _, n := range nl {
 		err := r.PrintAPINode(n)
