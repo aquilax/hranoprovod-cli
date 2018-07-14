@@ -7,14 +7,17 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
+// Separator is used to separate the categories
 const Separator = "/"
 
+// TreeNode contains data for a single balance tree node
 type TreeNode struct {
 	Name     string
 	Sum      float32
 	Children map[string]*TreeNode
 }
 
+// NewTreeNode creates new tree node
 func NewTreeNode(name string, sum float32) *TreeNode {
 	return &TreeNode{
 		Name:     name,
@@ -23,6 +26,7 @@ func NewTreeNode(name string, sum float32) *TreeNode {
 	}
 }
 
+// Add appends child node to the current tree node
 func (tn *TreeNode) Add(child *TreeNode) *TreeNode {
 	if _, ok := tn.Children[child.Name]; !ok {
 		tn.Children[child.Name] = child
@@ -32,6 +36,7 @@ func (tn *TreeNode) Add(child *TreeNode) *TreeNode {
 	return tn.Children[child.Name]
 }
 
+// AddDeep adds recursive child nodes to the current node given an element
 func (tn *TreeNode) AddDeep(el *shared.Element) {
 	parent := tn
 	names := strings.Split(el.Name, Separator)
@@ -41,6 +46,7 @@ func (tn *TreeNode) AddDeep(el *shared.Element) {
 	}
 }
 
+// Keys returns array of children keys
 func (tn *TreeNode) Keys() []string {
 	keys := make([]string, len(tn.Children))
 

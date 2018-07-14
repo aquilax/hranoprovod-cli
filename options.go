@@ -42,7 +42,7 @@ func NewOptions() *Options {
 	return o
 }
 
-// Load loads the settigns from config file/command line params/defauls from given context.
+// Load loads the settings from config file/command line params/defaults from given context.
 func (o *Options) Load(c *cli.Context) error {
 	fileName := c.GlobalString("config")
 	// First try to load the o file
