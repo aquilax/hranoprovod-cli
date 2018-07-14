@@ -113,6 +113,12 @@ func mustGetTime(format string, date string) time.Time {
 	if date == "yesterday" {
 		return time.Now().AddDate(0, 0, -1)
 	}
+	if date == "last7" {
+		return time.Now().AddDate(0, 0, -7)
+	}
+	if date == "last30" {
+		return time.Now().AddDate(0, 0, -30)
+	}
 	customTime, err := time.Parse(format, date)
 	if err != nil {
 		panic(err)
