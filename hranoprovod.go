@@ -150,6 +150,7 @@ func (hr *Hranoprovod) inInterval(t time.Time) bool {
 	return true
 }
 
+// CompareType identifies the type of date comparison
 type CompareType bool
 
 const (
