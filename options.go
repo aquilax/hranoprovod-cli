@@ -9,7 +9,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	gcfg "gopkg.in/gcfg.v1"
 )
 
