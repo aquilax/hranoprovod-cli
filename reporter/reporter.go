@@ -36,6 +36,7 @@ type Options struct {
 	SingleElement     string
 	SingleFood        string
 	CollapseLast      bool
+	Collapse          bool
 }
 
 // NewDefaultOptions returns the default reporter options
@@ -52,6 +53,7 @@ func NewDefaultOptions() *Options {
 		BeginningTime:     time.Now(),
 		EndTime:           time.Now(),
 		CollapseLast:      false,
+		Collapse:          false,
 	}
 }
 

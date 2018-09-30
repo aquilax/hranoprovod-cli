@@ -51,6 +51,10 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceReporter) Flush() error {
+	if r.options.Collapse {
+		r.printNodeCollapsed(r.root, 0)
+		return nil
+	}
 	r.printNode(r.root, 0)
 	return nil
 }
@@ -68,5 +72,29 @@ func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
 			fmt.Fprintf(r.output, "%10s | %s%s\n", " ", strings.Repeat("  ", level), child.Name)
 		}
 		r.printNode(child, level+1)
+	}
+}
+
+func getJump(node *accumulator.TreeNode) []string {
+	if len(node.Children) > 1 {
+		return []string{}
+	}
+	if len(node.Children) == 0 {
+		return []string{node.Name}
+	}
+	return append([]string{node.Name}, getJump(node.Children[node.Keys()[0]])...)
+}
+
+func (r *balanceReporter) printNodeCollapsed(node *accumulator.TreeNode, level int) {
+	for _, key := range node.Keys() {
+		child := node.Children[key]
+
+		jump := getJump(child)
+		if len(jump) > 0 {
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), strings.Join(jump, "/"))
+			continue
+		}
+		fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
+		r.printNodeCollapsed(child, level+1)
 	}
 }

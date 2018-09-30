@@ -134,8 +134,12 @@ func (o *Options) populateReporter(c *cli.Context) {
 		o.Reporter.Color = false
 	}
 
-	if c.IsSet("collapse") {
+	if c.IsSet("collapse-last") {
 		o.Reporter.CollapseLast = true
+	}
+
+	if c.IsSet("collapse") {
+		o.Reporter.Collapse = true
 	}
 
 	if c.IsSet("no-totals") {

@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.0"
+	appVersion = "2.1.1"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -129,8 +129,12 @@ func main() {
 					EnvVar: "HR_MAXDEPTH",
 				},
 				cli.BoolFlag{
-					Name:  "collapse, c",
+					Name:  "collapse-last",
 					Usage: "Collapses last dimension",
+				},
+				cli.BoolFlag{
+					Name:  "collapse, c",
+					Usage: "Collapses sole branches",
 				},
 				cli.StringFlag{
 					Name:  "single-element, s",
