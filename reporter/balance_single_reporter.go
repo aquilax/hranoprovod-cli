@@ -48,7 +48,12 @@ func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceSingleReporter) Flush() error {
-	r.printNode(r.root, 0)
+	if r.options.Collapse {
+		r.printNodeCollapsed(r.root, 0)
+	} else {
+		r.printNode(r.root, 0)
+	}
+
 	fmt.Fprintf(r.output, "%s|\n", strings.Repeat("-", 11))
 	fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.options.SingleElement)
 	return nil
@@ -64,5 +69,19 @@ func (r *balanceSingleReporter) printNode(node *accumulator.TreeNode, level int)
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
 		}
 		r.printNode(child, level+1)
+	}
+}
+
+func (r *balanceSingleReporter) printNodeCollapsed(node *accumulator.TreeNode, level int) {
+	for _, key := range node.Keys() {
+		child := node.Children[key]
+
+		jump := getJump(child)
+		if len(jump) > 0 {
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), strings.Join(jump, "/"))
+			continue
+		}
+		fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
+		r.printNodeCollapsed(child, level+1)
 	}
 }
