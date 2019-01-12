@@ -5,7 +5,6 @@ description: |
   Hranoprovod is command line tracking tool. It supports nested recipies and custom defined tracking elements, which makes it perfect for tracking calories, nutionin data, excercises and other accumulative data.
 
 grade: devel
-confinement: devmode
 
 parts:
   hranoprovod-cli:
