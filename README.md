@@ -12,7 +12,7 @@ First make sure you have go (golang) installed.
 
 Download the source code.
 
-    go get github.com/aquilax//hranoprovod-cli
+    go get github.com/aquilax/hranoprovod-cli
 
 ## Help
 
