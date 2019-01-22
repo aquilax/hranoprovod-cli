@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.1"
+	appVersion = "2.1.2"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -68,6 +68,10 @@ func main() {
 				cli.StringFlag{
 					Name:  "single-food, f",
 					Usage: "Show only single element",
+				},
+				cli.BoolFlag{
+					Name:  "group-food, g",
+					Usage: "Single element grouped by food",
 				},
 				cli.StringFlag{
 					Name:  "single-element, s",

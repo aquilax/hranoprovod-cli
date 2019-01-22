@@ -161,6 +161,7 @@ func (o *Options) populateReporter(c *cli.Context) {
 
 	o.Reporter.Unresolved = c.Bool("unresolved")
 	o.Reporter.SingleFood = c.String("single-food")
+	o.Reporter.ElementGroupByFood = c.Bool("group-food")
 	o.Reporter.SingleElement = c.String("single-element")
 
 }
