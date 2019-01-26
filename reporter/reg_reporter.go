@@ -68,7 +68,7 @@ func (r *regReporter) Flush() error {
 	return nil
 }
 
-func (r *regReporter) cNum(num float32) string {
+func (r *regReporter) cNum(num float64) string {
 	if r.options.Color {
 		if num > 0 {
 			return red + fmt.Sprintf("%10.2f", num) + reset
@@ -88,7 +88,7 @@ func (r *regReporter) printElement(element *shared.Element) {
 	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Val))
 }
 
-func (r *regReporter) printIngredient(name string, value float32) {
+func (r *regReporter) printIngredient(name string, value float64) {
 	fmt.Fprintf(r.output, "\t\t%20s %s\n", name, r.cNum(value))
 }
 
@@ -96,7 +96,7 @@ func (r *regReporter) printTotalHeader() {
 	fmt.Fprintf(r.output, "\t-- %s %s\n", "TOTAL ", strings.Repeat("-", 52))
 }
 
-func (r *regReporter) printTotalRow(name string, pos float32, neg float32) {
+func (r *regReporter) printTotalRow(name string, pos float64, neg float64) {
 	fmt.Fprintf(r.output, "\t\t%20s %s %s =%s\n", name, r.cNum(pos), r.cNum(neg), r.cNum(pos+neg))
 }
 

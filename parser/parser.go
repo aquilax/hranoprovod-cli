@@ -104,16 +104,16 @@ func (p *Parser) ParseStream(reader io.Reader) {
 
 			//get element value
 			sValue = trim(trimmedLine[separator:])
-			fValue, err = strconv.ParseFloat(sValue, 32)
+			fValue, err = strconv.ParseFloat(sValue, 64)
 			if err != nil {
 				p.Errors <- NewErrorConversion(sValue, lineNumber, line)
 				return
 			}
 
 			if ndx, exists := node.Elements.Index(title); exists {
-				(*node.Elements)[ndx].Val += float32(fValue)
+				(*node.Elements)[ndx].Val += fValue
 			} else {
-				node.Elements.Add(title, float32(fValue))
+				node.Elements.Add(title, fValue)
 			}
 		}
 	}

@@ -7,14 +7,14 @@ import (
 // Element contains single element data
 type Element struct {
 	Name string
-	Val  float32
+	Val  float64
 }
 
 // Elements contains array of elements
 type Elements []*Element
 
 // NewElement creates new element
-func NewElement(name string, val float32) *Element {
+func NewElement(name string, val float64) *Element {
 	return &Element{name, val}
 }
 
@@ -24,7 +24,7 @@ func NewElements() *Elements {
 }
 
 // Add adds new element to the list
-func (el *Elements) Add(name string, val float32) {
+func (el *Elements) Add(name string, val float64) {
 	*el = append(*el, NewElement(name, val))
 }
 
@@ -39,7 +39,7 @@ func (el *Elements) Index(name string) (int, bool) {
 }
 
 // SumMerge merges the element list with new one multiplied by mult
-func (el *Elements) SumMerge(left *Elements, mult float32) {
+func (el *Elements) SumMerge(left *Elements, mult float64) {
 	for _, v := range *left {
 		if ndx, exists := (*el).Index(v.Name); exists {
 			(*el)[ndx].Val += v.Val * mult

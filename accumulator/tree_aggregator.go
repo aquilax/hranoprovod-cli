@@ -13,12 +13,12 @@ const Separator = "/"
 // TreeNode contains data for a single balance tree node
 type TreeNode struct {
 	Name     string
-	Sum      float32
+	Sum      float64
 	Children map[string]*TreeNode
 }
 
 // NewTreeNode creates new tree node
-func NewTreeNode(name string, sum float32) *TreeNode {
+func NewTreeNode(name string, sum float64) *TreeNode {
 	return &TreeNode{
 		Name:     name,
 		Sum:      sum,
