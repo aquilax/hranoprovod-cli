@@ -53,7 +53,7 @@ func (r *singleReporter) Flush() error {
 	return nil
 }
 
-func (r *singleReporter) printSingleElementRow(ts time.Time, name string, pos float32, neg float32) {
+func (r *singleReporter) printSingleElementRow(ts time.Time, name string, pos float64, neg float64) {
 	format := "%s %20s %10.2f %10.2f =%10.2f\n"
 	if r.options.CSV {
 		format = "%s;\"%s\";%0.2f;%0.2f;%0.2f\n"

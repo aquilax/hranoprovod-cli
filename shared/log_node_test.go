@@ -1,9 +1,10 @@
 package shared
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestNewLogNode(t *testing.T) {
@@ -20,7 +21,17 @@ func TestNewLogNode(t *testing.T) {
 		})
 	})
 	Convey("Given Node", t, func() {
-		Convey("Creates new node on valid date", nil)
-		Convey("Generates error on invalid date", nil)
+		Convey("Creates new node on valid date", func() {
+			node := NewNode("2006/01/02")
+			logNode, err := NewLogNodeFromNode(node, "2006/01/02")
+			So(logNode, ShouldNotBeNil)
+			So(err, ShouldBeNil)
+		})
+		Convey("Generates error on invalid date", func() {
+			node := NewNode("2006/13/02")
+			logNode, err := NewLogNodeFromNode(node, "2006/01/02")
+			So(logNode, ShouldBeNil)
+			So(err, ShouldNotBeNil)
+		})
 	})
 }

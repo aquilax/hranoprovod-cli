@@ -8,7 +8,7 @@ const (
 )
 
 // AccValues contains accumulator values
-type AccValues [2]float32
+type AccValues [2]float64
 
 // Accumulator accumulates element values by name
 type Accumulator map[string]*AccValues
@@ -19,7 +19,7 @@ func NewAccumulator() *Accumulator {
 }
 
 // Add adds name/value to the accumulator
-func (acc *Accumulator) Add(name string, val float32) {
+func (acc *Accumulator) Add(name string, val float64) {
 	sign := Positive
 	if val < 0 {
 		sign = Negative

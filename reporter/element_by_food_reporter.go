@@ -47,7 +47,7 @@ func (r *elementByFoodReporter) Flush() error {
 	return nil
 }
 
-func (r *elementByFoodReporter) printSingleElementByFoodRow(name string, pos float32, neg float32) {
+func (r *elementByFoodReporter) printSingleElementByFoodRow(name string, pos float64, neg float64) {
 	format := "%10.2f\t%s\n"
 	fmt.Fprintf(r.output, format, pos+neg, name)
 }

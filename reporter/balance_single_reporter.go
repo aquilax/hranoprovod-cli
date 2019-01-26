@@ -14,7 +14,7 @@ type balanceSingleReporter struct {
 	db      *shared.NodeList
 	output  io.Writer
 	root    *accumulator.TreeNode
-	total   float32
+	total   float64
 }
 
 func newBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *balanceSingleReporter {
