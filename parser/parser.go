@@ -3,11 +3,12 @@ package parser
 
 import (
 	"bufio"
-	"github.com/aquilax/hranoprovod-cli/shared"
 	"io"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
 const (
@@ -24,6 +25,10 @@ type Options struct {
 // NewDefaultOptions returns the default set of parser options
 func NewDefaultOptions() *Options {
 	return &Options{'#'}
+}
+
+func trim(s string) string {
+	return strings.Trim(s, "\t \n:")
 }
 
 // Parser is the parser data structure
@@ -63,7 +68,7 @@ func (p *Parser) ParseStream(reader io.Reader) {
 	for lineScanner.Scan() {
 		lineNumber++
 		line := lineScanner.Text()
-		trimmedLine := mytrim(line)
+		trimmedLine := trim(line)
 
 		//skip empty lines and lines starting with #
 		if trimmedLine == "" || line[0] == p.options.CommentChar {
@@ -86,10 +91,10 @@ func (p *Parser) ParseStream(reader io.Reader) {
 				p.Errors <- NewErrorBadSyntax(lineNumber, line)
 				return
 			}
-			ename := mytrim(trimmedLine[0:separator])
+			ename := trim(trimmedLine[0:separator])
 
 			//get element value
-			snum := mytrim(trimmedLine[separator:])
+			snum := trim(trimmedLine[separator:])
 			enum, err := strconv.ParseFloat(snum, 32)
 			if err != nil {
 				p.Errors <- NewErrorConversion(snum, lineNumber, line)
