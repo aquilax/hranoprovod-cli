@@ -16,6 +16,10 @@ const (
 	runeSpace = ' '
 )
 
+func trim(s string) string {
+	return strings.Trim(s, "\t \n:")
+}
+
 // Options contains the parser related options
 type Options struct {
 	// CommentChar contains the character used to indicate that the line is a comment
@@ -25,10 +29,6 @@ type Options struct {
 // NewDefaultOptions returns the default set of parser options
 func NewDefaultOptions() *Options {
 	return &Options{'#'}
-}
-
-func trim(s string) string {
-	return strings.Trim(s, "\t \n:")
 }
 
 // Parser is the parser data structure
@@ -63,12 +63,19 @@ func (p *Parser) ParseFile(fileName string) {
 // ParseStream parses the contents of stream
 func (p *Parser) ParseStream(reader io.Reader) {
 	var node *shared.Node
+	var line string
+	var trimmedLine string
+	var title string
+	var sValue string
+	var err error
+	var fValue float64
+
 	lineNumber := 0
 	lineScanner := bufio.NewScanner(reader)
 	for lineScanner.Scan() {
 		lineNumber++
-		line := lineScanner.Text()
-		trimmedLine := trim(line)
+		line = lineScanner.Text()
+		trimmedLine = trim(line)
 
 		//skip empty lines and lines starting with #
 		if trimmedLine == "" || line[0] == p.options.CommentChar {
@@ -78,8 +85,10 @@ func (p *Parser) ParseStream(reader io.Reader) {
 		//new nodes start at the beginning of the line
 		if line[0] != runeSpace && line[0] != runeTab {
 			if node != nil {
+				// flush complete node
 				p.Nodes <- node
 			}
+			// start new node
 			node = shared.NewNode(trimmedLine)
 			continue
 		}
@@ -91,20 +100,20 @@ func (p *Parser) ParseStream(reader io.Reader) {
 				p.Errors <- NewErrorBadSyntax(lineNumber, line)
 				return
 			}
-			ename := trim(trimmedLine[0:separator])
+			title = trim(trimmedLine[0:separator])
 
 			//get element value
-			snum := trim(trimmedLine[separator:])
-			enum, err := strconv.ParseFloat(snum, 32)
+			sValue = trim(trimmedLine[separator:])
+			fValue, err = strconv.ParseFloat(sValue, 32)
 			if err != nil {
-				p.Errors <- NewErrorConversion(snum, lineNumber, line)
+				p.Errors <- NewErrorConversion(sValue, lineNumber, line)
 				return
 			}
 
-			if ndx, exists := node.Elements.Index(ename); exists {
-				(*node.Elements)[ndx].Val += float32(enum)
+			if ndx, exists := node.Elements.Index(title); exists {
+				(*node.Elements)[ndx].Val += float32(fValue)
 			} else {
-				node.Elements.Add(ename, float32(enum))
+				node.Elements.Add(title, float32(fValue))
 			}
 		}
 	}
