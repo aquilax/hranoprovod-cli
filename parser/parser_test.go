@@ -1,10 +1,12 @@
 package parser
 
 import (
+	"strings"
+	"sync"
+	"testing"
+
 	"github.com/aquilax/hranoprovod-cli/shared"
 	. "github.com/smartystreets/goconvey/convey"
-	"strings"
-	"testing"
 )
 
 func readChannels(parser *Parser) (*shared.NodeList, error) {
@@ -87,4 +89,67 @@ func TestParser(t *testing.T) {
 			So(cErr.Line, ShouldEqual, "  asdasd2 s")
 		})
 	})
+}
+
+func createTestFile(n int) string {
+	dummy := `2011/07/17:
+	el1: 1.22
+	ел 2:  4
+	el/3:  3
+
+# comment
+2011/07/18:
+	el1: 1.33
+	ел 5:  5
+	el/7:  4
+	el1: 1.35
+`
+	return strings.Repeat(dummy, n)
+}
+
+func TestParseWg(t *testing.T) {
+	parser := NewParser(NewDefaultOptions())
+	testBuffer := createTestFile(100)
+	var wg sync.WaitGroup
+	go parser.ParseStream(strings.NewReader(testBuffer))
+	wg.Add(1)
+	go func() {
+		for {
+			select {
+			case _ = <-parser.Nodes:
+				continue
+			case _ = <-parser.Errors:
+				continue
+			case <-parser.Done:
+				wg.Done()
+				break
+			}
+		}
+	}()
+	wg.Wait()
+}
+
+func BenchmarkParse(b *testing.B) {
+	// run the Fib function b.N times
+	parser := NewParser(NewDefaultOptions())
+	testBuffer := createTestFile(100000)
+	var wg sync.WaitGroup
+	for n := 0; n < b.N; n++ {
+		go parser.ParseStream(strings.NewReader(testBuffer))
+		wg.Add(1)
+		go func() {
+			for {
+				select {
+				case _ = <-parser.Nodes:
+					continue
+				case _ = <-parser.Errors:
+					continue
+				case <-parser.Done:
+					wg.Done()
+					break
+				}
+			}
+		}()
+	}
+	wg.Wait()
 }
