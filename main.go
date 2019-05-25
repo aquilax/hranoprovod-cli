@@ -192,6 +192,23 @@ func main() {
 				handleExit(NewHranoprovod(o).Lint(c.Args().First()))
 			},
 		},
+		{
+			Name:  "report",
+			Usage: "Generates report from the database file",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "desc",
+					Usage: "Descending order",
+				},
+			},
+			Action: func(c *cli.Context) {
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Report(c.Args().First(), c.IsSet("desc")))
+			},
+		},
 	}
 	app.Run(os.Args)
 }
