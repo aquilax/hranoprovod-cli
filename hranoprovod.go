@@ -97,11 +97,11 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 	}
 	if ascending {
 		sort.SliceStable(list, func(i, j int) bool {
-			return list[i].Val < list[j].Val
+			return list[i].Val > list[j].Val
 		})
 	} else {
 		sort.SliceStable(list, func(i, j int) bool {
-			return list[i].Val > list[j].Val
+			return list[i].Val < list[j].Val
 		})
 	}
 	for _, el := range list {
