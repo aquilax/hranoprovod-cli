@@ -1,8 +1,9 @@
 package accumulator
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestAccumulator(t *testing.T) {
@@ -28,7 +29,7 @@ func TestAccumulator(t *testing.T) {
 			})
 			Convey("When negative element is added", func() {
 				acc.Add("test2", -1.32)
-				Convey("It should go to the negative acccumulator", func() {
+				Convey("It should go to the negative accumulator", func() {
 					So((*acc)["test2"][Negative], ShouldEqual, -1.32)
 				})
 			})

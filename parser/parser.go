@@ -17,7 +17,7 @@ const (
 )
 
 func trim(s string) string {
-	return strings.Trim(s, "\t \n:")
+	return strings.Trim(s, "\t \n:\"")
 }
 
 // Options contains the parser related options

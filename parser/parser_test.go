@@ -36,7 +36,7 @@ func TestParser(t *testing.T) {
 		Convey("It processes valid node", func() {
 			file := `2011/07/17:
   el1: 1.22
-  ел 2:  4
+  "ел 2":  4
   el/3:  3
 
 2011/07/18:
