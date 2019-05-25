@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"sort"
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/api-client"
@@ -75,6 +77,37 @@ func (hr *Hranoprovod) Lint(fileName string) error {
 			}
 		}
 	}()
+}
+
+// Report generates report for single element
+func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
+	p := parser.NewParser(&hr.options.Parser)
+	nl, err := hr.loadDatabase(p, hr.options.Global.DbFileName)
+	if err != nil {
+		return err
+	}
+	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	var list []*shared.Element
+	for name, node := range *nl {
+		for _, el := range *node.Elements {
+			if el.Name == elementName {
+				list = append(list, shared.NewElement(name, el.Val))
+			}
+		}
+	}
+	if ascending {
+		sort.SliceStable(list, func(i, j int) bool {
+			return list[i].Val < list[j].Val
+		})
+	} else {
+		sort.SliceStable(list, func(i, j int) bool {
+			return list[i].Val > list[j].Val
+		})
+	}
+	for _, el := range list {
+		fmt.Printf("%0.2f\t%s\n", el.Val, el.Name)
+	}
+	return nil
 }
 
 func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (*shared.NodeList, error) {
