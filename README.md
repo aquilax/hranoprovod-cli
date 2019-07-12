@@ -10,9 +10,11 @@ First make sure you have go (golang) installed.
 
     http://golang.org/
 
-Download the source code:
+Clone the repository and build/install the tool:
 
-    go get github.com/aquilax/hranoprovod-cli
+    git clone https://github.com/aquilax/hranoprovod-cli.git
+    cd hranoprovod-cli
+    go install
 
 ## Help
 
