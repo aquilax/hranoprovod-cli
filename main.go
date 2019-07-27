@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.2"
+	appVersion = "2.1.3"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -207,6 +207,17 @@ func main() {
 					handleExit(err)
 				}
 				handleExit(NewHranoprovod(o).Report(c.Args().First(), c.IsSet("desc")))
+			},
+		},
+		{
+			Name:  "csv",
+			Usage: "Generates csv log export",
+			Action: func(c *cli.Context) {
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).CSV())
 			},
 		},
 	}

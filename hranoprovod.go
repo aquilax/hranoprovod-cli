@@ -1,12 +1,13 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"sort"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/api-client"
+	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/aquilax/hranoprovod-cli/resolver"
@@ -181,6 +182,43 @@ func (hr *Hranoprovod) inInterval(t time.Time) bool {
 		return false
 	}
 	return true
+}
+
+// CSV generates CSV export
+func (hr *Hranoprovod) CSV() error {
+	p := parser.NewParser(&hr.options.Parser)
+
+	processLog := func(p *parser.Parser, w *csv.Writer) error {
+		go p.ParseFile(hr.options.Global.LogFileName)
+		for {
+			select {
+			case node := <-p.Nodes:
+				ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+				if err != nil {
+					return err
+				}
+				for _, e := range *ln.Elements {
+					if err = w.Write([]string{
+						ln.Time.Format("2006-01-02"),
+						e.Name,
+						fmt.Sprintf("%0.2f", e.Val),
+					}); err != nil {
+						return err
+					}
+				}
+
+			case breakingError := <-p.Errors:
+				return breakingError
+			case <-p.Done:
+				w.Flush()
+				return nil
+			}
+		}
+
+	}
+	w := csv.NewWriter(os.Stdout)
+	w.Comma = ';'
+	return processLog(p, w)
 }
 
 // CompareType identifies the type of date comparison
