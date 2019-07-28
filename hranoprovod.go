@@ -197,13 +197,15 @@ func (hr *Hranoprovod) CSV() error {
 				if err != nil {
 					return err
 				}
-				for _, e := range *ln.Elements {
-					if err = w.Write([]string{
-						ln.Time.Format("2006-01-02"),
-						e.Name,
-						fmt.Sprintf("%0.2f", e.Val),
-					}); err != nil {
-						return err
+				if hr.inInterval(ln.Time) {
+					for _, e := range *ln.Elements {
+						if err = w.Write([]string{
+							ln.Time.Format("2006-01-02"),
+							e.Name,
+							fmt.Sprintf("%0.2f", e.Val),
+						}); err != nil {
+							return err
+						}
 					}
 				}
 

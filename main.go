@@ -212,6 +212,16 @@ func main() {
 		{
 			Name:  "csv",
 			Usage: "Generates csv log export",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "begin, b",
+					Usage: "Beginning of period",
+				},
+				cli.StringFlag{
+					Name:  "end, e",
+					Usage: "End of period",
+				},
+			},
 			Action: func(c *cli.Context) {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
