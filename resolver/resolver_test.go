@@ -10,11 +10,11 @@ import (
 func TestResolver(t *testing.T) {
 	Convey("Given nodes database and reslover", t, func() {
 		nl := shared.NewDBNodeList()
-		node1 := shared.NewNode("node1")
+		node1 := shared.NewParserNode("node1")
 		node1.Elements.Add("element1", 100)
 		node1.Elements.Add("element2", 200)
 		nl.Push(shared.NewDBNodeFromNode(node1))
-		node2 := shared.NewNode("node2")
+		node2 := shared.NewParserNode("node2")
 		node2.Elements.Add("node1", 2)
 		nl.Push(shared.NewDBNodeFromNode(node2))
 		resolver := NewResolver(nl, 1)

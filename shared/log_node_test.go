@@ -21,13 +21,13 @@ func TestNewLogNode(t *testing.T) {
 	})
 	Convey("Given Node", t, func() {
 		Convey("Creates new node on valid date", func() {
-			node := NewNode("2006/01/02")
+			node := NewParserNode("2006/01/02")
 			logNode, err := NewLogNodeFromNode(node, "2006/01/02")
 			So(logNode, ShouldNotBeNil)
 			So(err, ShouldBeNil)
 		})
 		Convey("Generates error on invalid date", func() {
-			node := NewNode("2006/13/02")
+			node := NewParserNode("2006/13/02")
 			logNode, err := NewLogNodeFromNode(node, "2006/01/02")
 			So(logNode, ShouldBeNil)
 			So(err, ShouldNotBeNil)

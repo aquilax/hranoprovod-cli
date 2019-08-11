@@ -15,8 +15,8 @@ func NewLogNode(time time.Time, elements Elements) *LogNode {
 	return &LogNode{time, elements}
 }
 
-// NewLogNodeFromNode creates new LogNode from Node
-func NewLogNodeFromNode(node *Node, dateFormat string) (*LogNode, error) {
+// NewLogNodeFromNode creates new LogNode from ParserNode
+func NewLogNodeFromNode(node *ParserNode, dateFormat string) (*LogNode, error) {
 	t, err := time.Parse(dateFormat, node.Header)
 	if err != nil {
 		return nil, err

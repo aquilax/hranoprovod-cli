@@ -34,7 +34,7 @@ func NewDefaultOptions() *Options {
 // Parser is the parser data structure
 type Parser struct {
 	options *Options
-	Nodes   chan *shared.Node
+	Nodes   chan *shared.ParserNode
 	Errors  chan error
 	Done    chan bool
 }
@@ -43,7 +43,7 @@ type Parser struct {
 func NewParser(options *Options) *Parser {
 	return &Parser{
 		options,
-		make(chan *shared.Node),
+		make(chan *shared.ParserNode),
 		make(chan error),
 		make(chan bool),
 	}
@@ -62,7 +62,7 @@ func (p *Parser) ParseFile(fileName string) {
 
 // ParseStream parses the contents of stream
 func (p *Parser) ParseStream(reader io.Reader) {
-	var node *shared.Node
+	var node *shared.ParserNode
 	var line string
 	var trimmedLine string
 	var title string
@@ -89,7 +89,7 @@ func (p *Parser) ParseStream(reader io.Reader) {
 				p.Nodes <- node
 			}
 			// start new node
-			node = shared.NewNode(trimmedLine)
+			node = shared.NewParserNode(trimmedLine)
 			continue
 		}
 
