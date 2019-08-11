@@ -13,7 +13,7 @@ type elementByFoodReporter struct {
 	options *Options
 	db      shared.DBNodeList
 	output  io.Writer
-	acc     *accumulator.Accumulator
+	acc     accumulator.Accumulator
 }
 
 func newElementByFoodReporter(options *Options, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
@@ -41,7 +41,7 @@ func (r *elementByFoodReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *elementByFoodReporter) Flush() error {
-	for name, arr := range *r.acc {
+	for name, arr := range r.acc {
 		r.printSingleElementByFoodRow(name, arr[accumulator.Positive], arr[accumulator.Negative])
 	}
 	return nil

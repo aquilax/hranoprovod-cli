@@ -14,21 +14,21 @@ type AccValues [2]float64
 type Accumulator map[string]*AccValues
 
 // NewAccumulator returns new accumulator
-func NewAccumulator() *Accumulator {
-	return &Accumulator{}
+func NewAccumulator() Accumulator {
+	return Accumulator{}
 }
 
 // Add adds name/value to the accumulator
-func (acc *Accumulator) Add(name string, val float64) {
+func (acc Accumulator) Add(name string, val float64) {
 	sign := Positive
 	if val < 0 {
 		sign = Negative
 	}
-	if _, exists := (*acc)[name]; exists {
-		(*acc)[name][sign] += val
+	if _, exists := acc[name]; exists {
+		acc[name][sign] += val
 	} else {
 		newVal := &AccValues{0, 0}
 		newVal[sign] = val
-		(*acc)[name] = newVal
+		acc[name] = newVal
 	}
 }
