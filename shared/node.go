@@ -14,20 +14,6 @@ func NewParserNode(header string) *ParserNode {
 	}
 }
 
-// NodeList contains list of general nodes
-type NodeList map[string]*ParserNode
-
-// NewNodeList creates new list of general nodes
-func NewNodeList() NodeList {
-	nl := &NodeList{}
-	return *nl
-}
-
-// Push adds node to the node list
-func (db *NodeList) Push(node *ParserNode) {
-	(*db)[(*node).Header] = node
-}
-
 // DBNode contains general node data
 type DBNode struct {
 	Header   string

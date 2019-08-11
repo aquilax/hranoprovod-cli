@@ -9,12 +9,20 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func readChannels(parser *Parser) (shared.NodeList, error) {
-	nodeList := shared.NewNodeList()
+// NodeList contains list of general nodes
+type nodeList map[string]*shared.ParserNode
+
+// Push adds node to the node list
+func (db nodeList) push(node *shared.ParserNode) {
+	db[(*node).Header] = node
+}
+
+func readChannels(parser *Parser) (nodeList, error) {
+	nodeList := nodeList{}
 	for {
 		select {
 		case node := <-parser.Nodes:
-			nodeList.Push(node)
+			nodeList.push(node)
 		case breakingError := <-parser.Errors:
 			return nil, breakingError
 		case <-parser.Done:
