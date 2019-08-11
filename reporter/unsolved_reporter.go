@@ -9,12 +9,12 @@ import (
 
 type unsolvedReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 	list    map[string]bool
 }
 
-func newUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer) *unsolvedReporter {
+func newUnsolvedReporter(options *Options, db shared.DBNodeList, writer io.Writer) *unsolvedReporter {
 	return &unsolvedReporter{
 		options,
 		db,
@@ -25,7 +25,7 @@ func newUnsolvedReporter(options *Options, db *shared.NodeList, writer io.Writer
 
 func (r *unsolvedReporter) Process(ln *shared.LogNode) error {
 	for _, e := range *ln.Elements {
-		_, found := (*r.db)[e.Name]
+		_, found := r.db[e.Name]
 		if !found {
 			r.list[e.Name] = true
 		}

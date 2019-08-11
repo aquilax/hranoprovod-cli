@@ -13,11 +13,11 @@ import (
 
 type regReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newRegReporter(options *Options, db *shared.NodeList, writer io.Writer) *regReporter {
+func newRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) *regReporter {
 	return &regReporter{
 		options,
 		db,
@@ -32,7 +32,7 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 		if !r.options.TotalsOnly {
 			r.printElement(element)
 		}
-		if repl, found := (*r.db)[element.Name]; found {
+		if repl, found := r.db[element.Name]; found {
 			for _, repl := range *repl.Elements {
 				res := repl.Val * element.Val
 				if !r.options.TotalsOnly {

@@ -89,7 +89,7 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
 	var list []shared.Element
-	for name, node := range *nl {
+	for name, node := range nl {
 		for _, el := range *node.Elements {
 			if el.Name == elementName {
 				list = append(list, shared.NewElement(name, el.Val))
@@ -111,16 +111,16 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 	return nil
 }
 
-func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (*shared.NodeList, error) {
-	nodeList := shared.NewNodeList()
+func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (shared.DBNodeList, error) {
+	nodeList := shared.NewDBNodeList()
 	go p.ParseFile(fileName)
-	return func() (*shared.NodeList, error) {
+	return func() (shared.DBNodeList, error) {
 		for {
 			select {
 			case node := <-p.Nodes:
-				nodeList.Push(node)
+				nodeList.Push(shared.NewDBNodeFromNode(node))
 			case error := <-p.Errors:
-				return nil, error
+				return nodeList, error
 			case <-p.Done:
 				return nodeList, nil
 			}
@@ -128,7 +128,7 @@ func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (*shared.
 	}()
 }
 
-func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
+func (hr *Hranoprovod) processLog(p *parser.Parser, nl shared.DBNodeList) error {
 	r := reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
 
 	go p.ParseFile(hr.options.Global.LogFileName)
@@ -151,7 +151,7 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl *shared.NodeList) error {
 	}
 }
 
-func (hr *Hranoprovod) processBalance(p *parser.Parser, nl *shared.NodeList) error {
+func (hr *Hranoprovod) processBalance(p *parser.Parser, nl shared.DBNodeList) error {
 	r := reporter.NewReporter(reporter.Bal, &hr.options.Reporter, nl, os.Stdout)
 
 	go p.ParseFile(hr.options.Global.LogFileName)

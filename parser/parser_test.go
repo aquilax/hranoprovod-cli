@@ -9,7 +9,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func readChannels(parser *Parser) (*shared.NodeList, error) {
+func readChannels(parser *Parser) (shared.DBNodeList, error) {
 	nodeList := shared.NewNodeList()
 	for {
 		select {
@@ -79,7 +79,6 @@ func TestParser(t *testing.T) {
 			So((*elements)[0].Name, ShouldEqual, "el1")
 			So((*elements)[0].Val, ShouldEqual, 2.44)
 		})
-
 
 		Convey("It raises bad syntax error", func() {
 			file := `asdasd

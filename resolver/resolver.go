@@ -6,18 +6,18 @@ import (
 
 // Resolver contains the resolver data
 type Resolver struct {
-	db       *shared.NodeList
+	db       shared.DBNodeList
 	maxDepth int
 }
 
 // NewResolver creates new resolver
-func NewResolver(db *shared.NodeList, maxDepth int) *Resolver {
+func NewResolver(db shared.DBNodeList, maxDepth int) *Resolver {
 	return &Resolver{db, maxDepth}
 }
 
 // Resolve resolves the current database
 func (r *Resolver) Resolve() {
-	for name := range *r.db {
+	for name := range r.db {
 		r.resolveNode(name, 0)
 	}
 }
@@ -27,7 +27,7 @@ func (r *Resolver) resolveNode(name string, level int) {
 		return
 	}
 
-	node, exists := (*r.db)[name]
+	node, exists := r.db[name]
 	if !exists {
 		return
 	}
@@ -36,7 +36,7 @@ func (r *Resolver) resolveNode(name string, level int) {
 
 	for _, e := range *node.Elements {
 		r.resolveNode(e.Name, level+1)
-		snode, exists := (*r.db)[e.Name]
+		snode, exists := r.db[e.Name]
 		if exists {
 			nel.SumMerge(snode.Elements, e.Val)
 		} else {
@@ -46,5 +46,5 @@ func (r *Resolver) resolveNode(name string, level int) {
 		}
 	}
 	nel.Sort()
-	(*r.db)[name].Elements = nel
+	r.db[name].Elements = nel
 }

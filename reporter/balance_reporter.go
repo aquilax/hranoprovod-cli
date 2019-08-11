@@ -11,12 +11,12 @@ import (
 
 type balanceReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 	root    *accumulator.TreeNode
 }
 
-func newBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer) *balanceReporter {
+func newBalanceReporter(options *Options, db shared.DBNodeList, writer io.Writer) *balanceReporter {
 	return &balanceReporter{
 		options,
 		db,
@@ -28,7 +28,7 @@ func newBalanceReporter(options *Options, db *shared.NodeList, writer io.Writer)
 func (r *balanceReporter) Process(ln *shared.LogNode) error {
 	if len(r.options.SingleElement) > 0 {
 		for _, el := range *ln.Elements {
-			repl, found := (*r.db)[el.Name]
+			repl, found := r.db[el.Name]
 			if found {
 				for _, repl := range *repl.Elements {
 					if repl.Name == r.options.SingleElement {

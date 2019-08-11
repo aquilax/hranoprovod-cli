@@ -66,7 +66,7 @@ type Reporter interface {
 }
 
 // NewReporter creates new response handler
-func NewReporter(rt ReportType, options *Options, db *shared.NodeList, writer io.Writer) Reporter {
+func NewReporter(rt ReportType, options *Options, db shared.DBNodeList, writer io.Writer) Reporter {
 	if rt == Bal {
 		if len(options.SingleElement) > 0 {
 			return newBalanceSingleReporter(options, db, writer)
