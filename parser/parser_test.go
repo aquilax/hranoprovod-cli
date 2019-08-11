@@ -17,7 +17,7 @@ func (db nodeList) push(node *shared.ParserNode) {
 	db[(*node).Header] = node
 }
 
-func readChannels(parser *Parser) (nodeList, error) {
+func readChannels(parser Parser) (nodeList, error) {
 	nodeList := nodeList{}
 	for {
 		select {

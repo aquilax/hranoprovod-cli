@@ -20,12 +20,12 @@ type Hranoprovod struct {
 }
 
 // NewHranoprovod creates new application
-func NewHranoprovod(options *Options) *Hranoprovod {
-	return &Hranoprovod{options}
+func NewHranoprovod(options *Options) Hranoprovod {
+	return Hranoprovod{options}
 }
 
 // Register generates report
-func (hr *Hranoprovod) Register() error {
+func (hr Hranoprovod) Register() error {
 	parser := parser.NewParser(&hr.options.Parser)
 	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
@@ -36,7 +36,7 @@ func (hr *Hranoprovod) Register() error {
 }
 
 // Balance generates balance report
-func (hr *Hranoprovod) Balance() error {
+func (hr Hranoprovod) Balance() error {
 	parser := parser.NewParser(&hr.options.Parser)
 	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
@@ -47,7 +47,7 @@ func (hr *Hranoprovod) Balance() error {
 }
 
 // Search searches the API for the provided query
-func (hr *Hranoprovod) Search(q string) error {
+func (hr Hranoprovod) Search(q string) error {
 	api := client.NewAPIClient(&hr.options.API)
 	nl, err := api.Search(q)
 	if err != nil {
@@ -58,13 +58,13 @@ func (hr *Hranoprovod) Search(q string) error {
 }
 
 // Add adds new item to the log
-func (hr *Hranoprovod) Add(name string, qty string) error {
+func (hr Hranoprovod) Add(name string, qty string) error {
 	println("Adding " + name + " : " + qty)
 	return nil
 }
 
 // Lint lints file
-func (hr *Hranoprovod) Lint(fileName string) error {
+func (hr Hranoprovod) Lint(fileName string) error {
 	p := parser.NewParser(&hr.options.Parser)
 	go p.ParseFile(fileName)
 	return func() error {
@@ -81,7 +81,7 @@ func (hr *Hranoprovod) Lint(fileName string) error {
 }
 
 // Report generates report for single element
-func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
+func (hr Hranoprovod) Report(elementName string, ascending bool) error {
 	p := parser.NewParser(&hr.options.Parser)
 	nl, err := hr.loadDatabase(p, hr.options.Global.DbFileName)
 	if err != nil {
@@ -111,7 +111,7 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 	return nil
 }
 
-func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (shared.DBNodeList, error) {
+func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
 	go p.ParseFile(fileName)
 	return func() (shared.DBNodeList, error) {
@@ -128,7 +128,7 @@ func (hr *Hranoprovod) loadDatabase(p *parser.Parser, fileName string) (shared.D
 	}()
 }
 
-func (hr *Hranoprovod) processLog(p *parser.Parser, nl shared.DBNodeList) error {
+func (hr Hranoprovod) processLog(p parser.Parser, nl shared.DBNodeList) error {
 	r := reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
 
 	go p.ParseFile(hr.options.Global.LogFileName)
@@ -151,7 +151,7 @@ func (hr *Hranoprovod) processLog(p *parser.Parser, nl shared.DBNodeList) error 
 	}
 }
 
-func (hr *Hranoprovod) processBalance(p *parser.Parser, nl shared.DBNodeList) error {
+func (hr Hranoprovod) processBalance(p parser.Parser, nl shared.DBNodeList) error {
 	r := reporter.NewReporter(reporter.Bal, &hr.options.Reporter, nl, os.Stdout)
 
 	go p.ParseFile(hr.options.Global.LogFileName)
@@ -174,7 +174,7 @@ func (hr *Hranoprovod) processBalance(p *parser.Parser, nl shared.DBNodeList) er
 	}
 }
 
-func (hr *Hranoprovod) inInterval(t time.Time) bool {
+func (hr Hranoprovod) inInterval(t time.Time) bool {
 	if hr.options.Reporter.HasBeginning && !isGoodDate(t, hr.options.Reporter.BeginningTime, dateBeginning) {
 		return false
 	}
@@ -185,10 +185,10 @@ func (hr *Hranoprovod) inInterval(t time.Time) bool {
 }
 
 // CSV generates CSV export
-func (hr *Hranoprovod) CSV() error {
+func (hr Hranoprovod) CSV() error {
 	p := parser.NewParser(&hr.options.Parser)
 
-	processLog := func(p *parser.Parser, w *csv.Writer) error {
+	processLog := func(p parser.Parser, w *csv.Writer) error {
 		go p.ParseFile(hr.options.Global.LogFileName)
 		for {
 			select {

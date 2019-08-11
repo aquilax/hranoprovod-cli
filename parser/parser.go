@@ -40,8 +40,8 @@ type Parser struct {
 }
 
 // NewParser returns new parser
-func NewParser(options *Options) *Parser {
-	return &Parser{
+func NewParser(options *Options) Parser {
+	return Parser{
 		options,
 		make(chan *shared.ParserNode),
 		make(chan error),
@@ -50,7 +50,7 @@ func NewParser(options *Options) *Parser {
 }
 
 // ParseFile parsers the contents of file
-func (p *Parser) ParseFile(fileName string) {
+func (p Parser) ParseFile(fileName string) {
 	f, err := os.Open(fileName)
 	if err != nil {
 		p.Errors <- NewErrorIO(err, fileName)
@@ -61,7 +61,7 @@ func (p *Parser) ParseFile(fileName string) {
 }
 
 // ParseStream parses the contents of stream
-func (p *Parser) ParseStream(reader io.Reader) {
+func (p Parser) ParseStream(reader io.Reader) {
 	var node *shared.ParserNode
 	var line string
 	var trimmedLine string
