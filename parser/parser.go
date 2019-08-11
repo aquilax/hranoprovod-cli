@@ -110,11 +110,7 @@ func (p *Parser) ParseStream(reader io.Reader) {
 				return
 			}
 
-			if ndx, exists := node.Elements.Index(title); exists {
-				(*node.Elements)[ndx].Val += fValue
-			} else {
-				node.Elements.Add(title, fValue)
-			}
+			node.Elements.Add(title, fValue)
 		}
 	}
 	// push last node

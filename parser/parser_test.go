@@ -75,9 +75,9 @@ func TestParser(t *testing.T) {
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
 			So(elements, ShouldNotBeNil)
-			So(len(*elements), ShouldEqual, 1)
+			So(len(*elements), ShouldEqual, 2)
 			So((*elements)[0].Name, ShouldEqual, "el1")
-			So((*elements)[0].Val, ShouldEqual, 2.44)
+			So((*elements)[0].Val, ShouldEqual, 1.22)
 		})
 
 		Convey("It raises bad syntax error", func() {

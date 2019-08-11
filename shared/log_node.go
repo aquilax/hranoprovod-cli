@@ -21,5 +21,16 @@ func NewLogNodeFromNode(node *Node, dateFormat string) (*LogNode, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewLogNode(t, node.Elements), nil
+
+	elList := NewElements()
+
+	for _, el := range *node.Elements {
+		if ndx, exists := elList.Index(el.Name); exists {
+			(*elList)[ndx].Val += el.Val
+		} else {
+			elList.Add(el.Name, el.Val)
+		}
+	}
+
+	return NewLogNode(t, elList), nil
 }
