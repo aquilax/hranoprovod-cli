@@ -15,6 +15,8 @@ const (
 	Reg ReportType = iota
 	// Bal is balance report type
 	Bal
+	// CSV is cv report type
+	CSV
 )
 
 // Options contains the options for the reporter

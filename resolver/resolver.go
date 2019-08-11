@@ -11,18 +11,18 @@ type Resolver struct {
 }
 
 // NewResolver creates new resolver
-func NewResolver(db shared.DBNodeList, maxDepth int) *Resolver {
-	return &Resolver{db, maxDepth}
+func NewResolver(db shared.DBNodeList, maxDepth int) Resolver {
+	return Resolver{db, maxDepth}
 }
 
 // Resolve resolves the current database
-func (r *Resolver) Resolve() {
+func (r Resolver) Resolve() {
 	for name := range r.db {
 		r.resolveNode(name, 0)
 	}
 }
 
-func (r *Resolver) resolveNode(name string, level int) {
+func (r Resolver) resolveNode(name string, level int) {
 	if level >= r.maxDepth {
 		return
 	}

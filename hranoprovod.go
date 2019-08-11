@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/csv"
 	"fmt"
 	"os"
 	"sort"
@@ -188,39 +187,34 @@ func (hr Hranoprovod) inInterval(t time.Time) bool {
 func (hr Hranoprovod) CSV() error {
 	p := parser.NewParser(&hr.options.Parser)
 
-	processLog := func(p parser.Parser, w *csv.Writer) error {
+	r := reporter.NewCSVReporter(&hr.options.Reporter, os.Stdout)
+
+	processLog := func(p parser.Parser) error {
+		var node *shared.ParserNode
+		var ln *shared.LogNode
+		var err error
+
 		go p.ParseFile(hr.options.Global.LogFileName)
 		for {
 			select {
-			case node := <-p.Nodes:
-				ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+			case node = <-p.Nodes:
+				ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
 				if err != nil {
 					return err
 				}
-				if hr.inInterval(ln.Time) {
-					for _, e := range ln.Elements {
-						if err = w.Write([]string{
-							ln.Time.Format("2006-01-02"),
-							e.Name,
-							fmt.Sprintf("%0.2f", e.Val),
-						}); err != nil {
-							return err
-						}
-					}
+				if err = r.Process(ln); err != nil {
+					return err
 				}
-
 			case breakingError := <-p.Errors:
 				return breakingError
 			case <-p.Done:
-				w.Flush()
+				r.Flush()
 				return nil
 			}
 		}
 
 	}
-	w := csv.NewWriter(os.Stdout)
-	w.Comma = ';'
-	return processLog(p, w)
+	return processLog(p)
 }
 
 // CompareType identifies the type of date comparison
