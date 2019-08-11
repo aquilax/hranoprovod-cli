@@ -128,13 +128,16 @@ func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBN
 }
 
 func (hr Hranoprovod) processLog(p parser.Parser, nl shared.DBNodeList) error {
-	r := reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewRegReporter(&hr.options.Reporter, nl, os.Stdout)
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
 
 	go p.ParseFile(hr.options.Global.LogFileName)
 	for {
 		select {
-		case node := <-p.Nodes:
-			ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
 			if err != nil {
 				return err
 			}
@@ -151,13 +154,16 @@ func (hr Hranoprovod) processLog(p parser.Parser, nl shared.DBNodeList) error {
 }
 
 func (hr Hranoprovod) processBalance(p parser.Parser, nl shared.DBNodeList) error {
-	r := reporter.NewReporter(reporter.Bal, &hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewBalanceReporter(&hr.options.Reporter, nl, os.Stdout)
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
 
 	go p.ParseFile(hr.options.Global.LogFileName)
 	for {
 		select {
-		case node := <-p.Nodes:
-			ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
 			if err != nil {
 				return err
 			}
@@ -186,35 +192,32 @@ func (hr Hranoprovod) inInterval(t time.Time) bool {
 // CSV generates CSV export
 func (hr Hranoprovod) CSV() error {
 	p := parser.NewParser(&hr.options.Parser)
-
 	r := reporter.NewCSVReporter(&hr.options.Reporter, os.Stdout)
 
-	processLog := func(p parser.Parser) error {
-		var node *shared.ParserNode
-		var ln *shared.LogNode
-		var err error
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
 
-		go p.ParseFile(hr.options.Global.LogFileName)
-		for {
-			select {
-			case node = <-p.Nodes:
-				ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
-				if err != nil {
-					return err
-				}
+	go p.ParseFile(hr.options.Global.LogFileName)
+	for {
+		select {
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+			if err != nil {
+				return err
+			}
+			if hr.inInterval(ln.Time) {
 				if err = r.Process(ln); err != nil {
 					return err
 				}
-			case breakingError := <-p.Errors:
-				return breakingError
-			case <-p.Done:
-				r.Flush()
-				return nil
 			}
+		case breakingError := <-p.Errors:
+			return breakingError
+		case <-p.Done:
+			r.Flush()
+			return nil
 		}
-
 	}
-	return processLog(p)
 }
 
 // CompareType identifies the type of date comparison

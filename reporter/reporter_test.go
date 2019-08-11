@@ -15,7 +15,7 @@ func TestReporter(t *testing.T) {
 		nl := shared.NewDBNodeList()
 		o := NewDefaultOptions()
 		o.Unresolved = true
-		rp := NewReporter(Reg, o, nl, &b)
+		rp := NewRegReporter(o, nl, &b)
 		Convey("Prints list of unresolved items", func() {
 			el := shared.NewElements()
 			el.Add("test", 3.55)
