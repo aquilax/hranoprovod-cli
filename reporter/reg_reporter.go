@@ -84,7 +84,7 @@ func (r *regReporter) printDate(ts time.Time) {
 	fmt.Fprintf(r.output, "%s\n", ts.Format(r.options.DateFormat))
 }
 
-func (r *regReporter) printElement(element *shared.Element) {
+func (r *regReporter) printElement(element shared.Element) {
 	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Val))
 }
 

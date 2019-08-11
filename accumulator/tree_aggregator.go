@@ -37,7 +37,7 @@ func (tn *TreeNode) Add(child *TreeNode) *TreeNode {
 }
 
 // AddDeep adds recursive child nodes to the current node given an element
-func (tn *TreeNode) AddDeep(el *shared.Element) {
+func (tn *TreeNode) AddDeep(el shared.Element) {
 	parent := tn
 	names := strings.Split(el.Name, Separator)
 	for _, name := range names {

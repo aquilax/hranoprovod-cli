@@ -1,4 +1,4 @@
-// Package parser provides function to parse hrandoprovod formatted files
+// Package parser provides function to parse hranoprovod formatted files
 package parser
 
 import (

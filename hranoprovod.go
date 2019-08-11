@@ -88,7 +88,7 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 		return err
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
-	var list []*shared.Element
+	var list []shared.Element
 	for name, node := range *nl {
 		for _, el := range *node.Elements {
 			if el.Name == elementName {

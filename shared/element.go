@@ -11,11 +11,12 @@ type Element struct {
 }
 
 // Elements contains array of elements
-type Elements []*Element
+type Elements []Element
 
 // NewElement creates new element
-func NewElement(name string, val float64) *Element {
-	return &Element{name, val}
+func NewElement(name string, val float64) Element {
+	el := &Element{name, val}
+	return *el
 }
 
 // NewElements creates new element list
