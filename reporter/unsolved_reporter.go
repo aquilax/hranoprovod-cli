@@ -24,7 +24,7 @@ func newUnsolvedReporter(options *Options, db shared.DBNodeList, writer io.Write
 }
 
 func (r *unsolvedReporter) Process(ln *shared.LogNode) error {
-	for _, e := range *ln.Elements {
+	for _, e := range ln.Elements {
 		_, found := r.db[e.Name]
 		if !found {
 			r.list[e.Name] = true

@@ -27,10 +27,10 @@ func newSingleReporter(options *Options, db shared.DBNodeList, writer io.Writer)
 func (r *singleReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	singleElement := r.options.SingleElement
-	for _, e := range *ln.Elements {
+	for _, e := range ln.Elements {
 		repl, found := r.db[e.Name]
 		if found {
-			for _, repl := range *repl.Elements {
+			for _, repl := range repl.Elements {
 				if repl.Name == singleElement {
 					acc.Add(repl.Name, repl.Val*e.Val)
 				}

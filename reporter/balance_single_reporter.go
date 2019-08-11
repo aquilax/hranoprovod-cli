@@ -28,10 +28,10 @@ func newBalanceSingleReporter(options *Options, db shared.DBNodeList, writer io.
 }
 
 func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
-	for _, el := range *ln.Elements {
+	for _, el := range ln.Elements {
 		repl, found := r.db[el.Name]
 		if found {
-			for _, repl := range *repl.Elements {
+			for _, repl := range repl.Elements {
 				if repl.Name == r.options.SingleElement {
 					r.root.AddDeep(shared.NewElement(el.Name, repl.Val*el.Val))
 					// Add to grand total

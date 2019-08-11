@@ -1,8 +1,9 @@
 package shared
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestElement(t *testing.T) {
@@ -63,12 +64,12 @@ func TestElements(t *testing.T) {
 							index, found := el.Index("test1")
 							So(found, ShouldBeTrue)
 							So(index, ShouldEqual, 3)
-							So((*el)[index].Val, ShouldEqual, 233)
+							So(el[index].Val, ShouldEqual, 233)
 						})
 						Convey("New elements are added", func() {
 							index, found := el.Index("test4")
 							So(found, ShouldBeTrue)
-							So((*el)[index].Val, ShouldEqual, 888)
+							So(el[index].Val, ShouldEqual, 888)
 						})
 					})
 				})

@@ -15,9 +15,8 @@ func TestNewLogNode(t *testing.T) {
 		logNode := NewLogNode(now, elements)
 		Convey("Creates new log node with the proper fields", func() {
 			So(logNode.Time.Equal(now), ShouldBeTrue)
-			So(logNode.Elements, ShouldEqual, elements)
-			So((*logNode.Elements)[0].Name, ShouldEqual, "test")
-			So((*logNode.Elements)[0].Val, ShouldEqual, 1.22)
+			So((logNode.Elements)[0].Name, ShouldEqual, "test")
+			So((logNode.Elements)[0].Val, ShouldEqual, 1.22)
 		})
 	})
 	Convey("Given Node", t, func() {

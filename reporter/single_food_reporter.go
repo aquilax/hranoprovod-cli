@@ -23,7 +23,7 @@ func newSingleFoodReporter(options *Options, db shared.DBNodeList, writer io.Wri
 }
 
 func (r *singleFoodReporter) Process(ln *shared.LogNode) error {
-	for _, e := range *ln.Elements {
+	for _, e := range ln.Elements {
 		matched, err := regexp.MatchString(r.options.SingleFood, e.Name)
 		if err != nil {
 			return err

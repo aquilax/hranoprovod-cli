@@ -22,15 +22,15 @@ func TestResolver(t *testing.T) {
 			resolver.Resolve()
 			Convey("Elements are resolved", func() {
 				n1 := nl["node1"]
-				So((*n1.Elements)[0].Name, ShouldEqual, "element1")
-				So((*n1.Elements)[0].Val, ShouldEqual, 100)
-				So((*n1.Elements)[1].Name, ShouldEqual, "element2")
-				So((*n1.Elements)[1].Val, ShouldEqual, 200)
+				So(n1.Elements[0].Name, ShouldEqual, "element1")
+				So(n1.Elements[0].Val, ShouldEqual, 100)
+				So(n1.Elements[1].Name, ShouldEqual, "element2")
+				So(n1.Elements[1].Val, ShouldEqual, 200)
 				n2 := nl["node2"]
-				So((*n2.Elements)[0].Name, ShouldEqual, "element1")
-				So((*n2.Elements)[0].Val, ShouldEqual, 200)
-				So((*n2.Elements)[1].Name, ShouldEqual, "element2")
-				So((*n2.Elements)[1].Val, ShouldEqual, 400)
+				So(n2.Elements[0].Name, ShouldEqual, "element1")
+				So(n2.Elements[0].Val, ShouldEqual, 200)
+				So(n2.Elements[1].Name, ShouldEqual, "element2")
+				So(n2.Elements[1].Val, ShouldEqual, 400)
 			})
 		})
 	})

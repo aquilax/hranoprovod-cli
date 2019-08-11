@@ -27,10 +27,10 @@ func newElementByFoodReporter(options *Options, db shared.DBNodeList, writer io.
 
 func (r *elementByFoodReporter) Process(ln *shared.LogNode) error {
 	singleElement := r.options.SingleElement
-	for _, e := range *ln.Elements {
+	for _, e := range ln.Elements {
 		node, found := r.db[e.Name]
 		if found {
-			for _, repl := range *node.Elements {
+			for _, repl := range node.Elements {
 				if repl.Name == singleElement {
 					r.acc.Add(node.Header, repl.Val*e.Val)
 				}

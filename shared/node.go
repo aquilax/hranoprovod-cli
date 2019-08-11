@@ -3,7 +3,7 @@ package shared
 // Node contains general node data
 type Node struct {
 	Header   string
-	Elements *Elements
+	Elements Elements
 }
 
 // NewNode creates new geneal node
@@ -31,7 +31,7 @@ func (db *NodeList) Push(node *Node) {
 // DBNode contains general node data
 type DBNode struct {
 	Header   string
-	Elements *Elements
+	Elements Elements
 }
 
 func NewDBNodeFromNode(n *Node) *DBNode {

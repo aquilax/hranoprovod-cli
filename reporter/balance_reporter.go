@@ -27,10 +27,10 @@ func newBalanceReporter(options *Options, db shared.DBNodeList, writer io.Writer
 
 func (r *balanceReporter) Process(ln *shared.LogNode) error {
 	if len(r.options.SingleElement) > 0 {
-		for _, el := range *ln.Elements {
+		for _, el := range ln.Elements {
 			repl, found := r.db[el.Name]
 			if found {
-				for _, repl := range *repl.Elements {
+				for _, repl := range repl.Elements {
 					if repl.Name == r.options.SingleElement {
 						r.root.AddDeep(shared.NewElement(el.Name, repl.Val*el.Val))
 					}
@@ -44,7 +44,7 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 		return nil
 	}
 
-	for _, el := range *ln.Elements {
+	for _, el := range ln.Elements {
 		r.root.AddDeep(el)
 	}
 	return nil

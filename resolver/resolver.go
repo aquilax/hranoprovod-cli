@@ -34,7 +34,7 @@ func (r *Resolver) resolveNode(name string, level int) {
 
 	nel := shared.NewElements()
 
-	for _, e := range *node.Elements {
+	for _, e := range node.Elements {
 		r.resolveNode(e.Name, level+1)
 		snode, exists := r.db[e.Name]
 		if exists {
@@ -42,7 +42,7 @@ func (r *Resolver) resolveNode(name string, level int) {
 		} else {
 			var tm shared.Elements
 			tm.Add(e.Name, e.Val)
-			nel.SumMerge(&tm, 1)
+			nel.SumMerge(tm, 1)
 		}
 	}
 	nel.Sort()

@@ -53,13 +53,13 @@ func TestParser(t *testing.T) {
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
 			So(elements, ShouldNotBeNil)
-			So(len(*elements), ShouldEqual, 3)
-			So((*elements)[0].Name, ShouldEqual, "el1")
-			So((*elements)[0].Val, ShouldEqual, 1.22)
-			So((*elements)[1].Name, ShouldEqual, "ел 2")
-			So((*elements)[1].Val, ShouldEqual, 4.0)
-			So((*elements)[2].Name, ShouldEqual, "el/3")
-			So((*elements)[2].Val, ShouldEqual, 3.0)
+			So(len(elements), ShouldEqual, 3)
+			So(elements[0].Name, ShouldEqual, "el1")
+			So(elements[0].Val, ShouldEqual, 1.22)
+			So(elements[1].Name, ShouldEqual, "ел 2")
+			So(elements[1].Val, ShouldEqual, 4.0)
+			So(elements[2].Name, ShouldEqual, "el/3")
+			So(elements[2].Val, ShouldEqual, 3.0)
 		})
 
 		Convey("Groups elements", func() {
@@ -74,10 +74,9 @@ func TestParser(t *testing.T) {
 			node := (nodeList)["2011/07/17"]
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
-			So(elements, ShouldNotBeNil)
-			So(len(*elements), ShouldEqual, 2)
-			So((*elements)[0].Name, ShouldEqual, "el1")
-			So((*elements)[0].Val, ShouldEqual, 1.22)
+			So(len(elements), ShouldEqual, 2)
+			So(elements[0].Name, ShouldEqual, "el1")
+			So(elements[0].Val, ShouldEqual, 1.22)
 		})
 
 		Convey("It raises bad syntax error", func() {

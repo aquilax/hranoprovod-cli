@@ -7,11 +7,11 @@ import (
 // LogNode contains log node data
 type LogNode struct {
 	Time     time.Time
-	Elements *Elements
+	Elements Elements
 }
 
 // NewLogNode creates new log node
-func NewLogNode(time time.Time, elements *Elements) *LogNode {
+func NewLogNode(time time.Time, elements Elements) *LogNode {
 	return &LogNode{time, elements}
 }
 
@@ -24,9 +24,9 @@ func NewLogNodeFromNode(node *Node, dateFormat string) (*LogNode, error) {
 
 	elList := NewElements()
 
-	for _, el := range *node.Elements {
+	for _, el := range node.Elements {
 		if ndx, exists := elList.Index(el.Name); exists {
-			(*elList)[ndx].Val += el.Val
+			elList[ndx].Val += el.Val
 		} else {
 			elList.Add(el.Name, el.Val)
 		}

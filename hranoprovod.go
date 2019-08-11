@@ -90,7 +90,7 @@ func (hr *Hranoprovod) Report(elementName string, ascending bool) error {
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
 	var list []shared.Element
 	for name, node := range nl {
-		for _, el := range *node.Elements {
+		for _, el := range node.Elements {
 			if el.Name == elementName {
 				list = append(list, shared.NewElement(name, el.Val))
 			}
@@ -198,7 +198,7 @@ func (hr *Hranoprovod) CSV() error {
 					return err
 				}
 				if hr.inInterval(ln.Time) {
-					for _, e := range *ln.Elements {
+					for _, e := range ln.Elements {
 						if err = w.Write([]string{
 							ln.Time.Format("2006-01-02"),
 							e.Name,
