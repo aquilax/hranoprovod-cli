@@ -1,28 +1,40 @@
 package shared
 
-// Node contains general node data
-type Node struct {
+// ParserNode contains general node data
+type ParserNode struct {
 	Header   string
-	Elements *Elements
+	Elements Elements
 }
 
-// NewNode creates new geneal node
-func NewNode(header string) *Node {
-	return &Node{
+// NewParserNode creates new geneal node
+func NewParserNode(header string) *ParserNode {
+	return &ParserNode{
 		header,
 		NewElements(),
 	}
 }
 
-// NodeList contains list of general nodes
-type NodeList map[string]*Node
+// DBNode contains general node data
+type DBNode struct {
+	Header   string
+	Elements Elements
+}
 
-// NewNodeList creates new list of general nodes
-func NewNodeList() *NodeList {
-	return &NodeList{}
+func NewDBNodeFromNode(n *ParserNode) *DBNode {
+	dbn := DBNode(*n)
+	return &dbn
+}
+
+// DBNodeList contains list of general nodes
+type DBNodeList map[string]*DBNode
+
+// NewDBNodeList creates new list of general nodes
+func NewDBNodeList() DBNodeList {
+	dbnl := &DBNodeList{}
+	return *dbnl
 }
 
 // Push adds node to the node list
-func (db *NodeList) Push(node *Node) {
+func (db *DBNodeList) Push(node *DBNode) {
 	(*db)[(*node).Header] = node
 }

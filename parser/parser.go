@@ -1,4 +1,4 @@
-// Package parser provides function to parse hrandoprovod formatted files
+// Package parser provides function to parse hranoprovod formatted files
 package parser
 
 import (
@@ -34,23 +34,23 @@ func NewDefaultOptions() *Options {
 // Parser is the parser data structure
 type Parser struct {
 	options *Options
-	Nodes   chan *shared.Node
+	Nodes   chan *shared.ParserNode
 	Errors  chan error
 	Done    chan bool
 }
 
 // NewParser returns new parser
-func NewParser(options *Options) *Parser {
-	return &Parser{
+func NewParser(options *Options) Parser {
+	return Parser{
 		options,
-		make(chan *shared.Node),
+		make(chan *shared.ParserNode),
 		make(chan error),
 		make(chan bool),
 	}
 }
 
 // ParseFile parsers the contents of file
-func (p *Parser) ParseFile(fileName string) {
+func (p Parser) ParseFile(fileName string) {
 	f, err := os.Open(fileName)
 	if err != nil {
 		p.Errors <- NewErrorIO(err, fileName)
@@ -60,13 +60,17 @@ func (p *Parser) ParseFile(fileName string) {
 	p.ParseStream(f)
 }
 
-// ParseStream parses the contents of stream
-func (p *Parser) ParseStream(reader io.Reader) {
-	var node *shared.Node
+// ParseCallback is called on node or error event when parsing the stream
+type ParseCallback func(n *shared.ParserNode, err error) (stop bool)
+
+// ParseStreamCallback parses stream and calls callback on node or error
+func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCallback) {
+	var node *shared.ParserNode
 	var line string
 	var trimmedLine string
 	var title string
 	var sValue string
+	var separatorPos int
 	var err error
 	var fValue float64
 
@@ -78,7 +82,7 @@ func (p *Parser) ParseStream(reader io.Reader) {
 		trimmedLine = trim(line)
 
 		//skip empty lines and lines starting with #
-		if trimmedLine == "" || line[0] == p.options.CommentChar {
+		if trimmedLine == "" || line[0] == commentChar {
 			continue
 		}
 
@@ -86,40 +90,48 @@ func (p *Parser) ParseStream(reader io.Reader) {
 		if line[0] != runeSpace && line[0] != runeTab {
 			if node != nil {
 				// flush complete node
-				p.Nodes <- node
+				callback(node, nil)
 			}
 			// start new node
-			node = shared.NewNode(trimmedLine)
+			node = shared.NewParserNode(trimmedLine)
 			continue
 		}
 
 		if node != nil {
-			separator := strings.LastIndexAny(trimmedLine, "\t ")
+			separatorPos = strings.LastIndexAny(trimmedLine, "\t ")
 
-			if separator == -1 {
-				p.Errors <- NewErrorBadSyntax(lineNumber, line)
+			if separatorPos == -1 {
+				callback(nil, NewErrorBadSyntax(lineNumber, line))
 				return
 			}
-			title = trim(trimmedLine[0:separator])
+			title = trim(trimmedLine[0:separatorPos])
 
 			//get element value
-			sValue = trim(trimmedLine[separator:])
+			sValue = trim(trimmedLine[separatorPos:])
 			fValue, err = strconv.ParseFloat(sValue, 64)
 			if err != nil {
-				p.Errors <- NewErrorConversion(sValue, lineNumber, line)
+				callback(nil, NewErrorConversion(sValue, lineNumber, line))
 				return
 			}
 
-			if ndx, exists := node.Elements.Index(title); exists {
-				(*node.Elements)[ndx].Val += fValue
-			} else {
-				node.Elements.Add(title, fValue)
-			}
+			node.Elements.Add(title, fValue)
 		}
 	}
 	// push last node
 	if node != nil {
-		p.Nodes <- node
+		callback(node, nil)
 	}
+}
+
+// ParseStream parses the contents of stream
+func (p Parser) ParseStream(reader io.Reader) {
+	ParseStreamCallback(reader, p.options.CommentChar, func(n *shared.ParserNode, err error) (stop bool) {
+		if err != nil {
+			p.Errors <- err
+			return true
+		}
+		p.Nodes <- n
+		return false
+	})
 	p.Done <- true
 }

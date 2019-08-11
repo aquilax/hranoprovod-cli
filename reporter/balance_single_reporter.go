@@ -11,13 +11,13 @@ import (
 
 type balanceSingleReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 	root    *accumulator.TreeNode
 	total   float64
 }
 
-func newBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *balanceSingleReporter {
+func newBalanceSingleReporter(options *Options, db shared.DBNodeList, writer io.Writer) *balanceSingleReporter {
 	return &balanceSingleReporter{
 		options,
 		db,
@@ -28,10 +28,10 @@ func newBalanceSingleReporter(options *Options, db *shared.NodeList, writer io.W
 }
 
 func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
-	for _, el := range *ln.Elements {
-		repl, found := (*r.db)[el.Name]
+	for _, el := range ln.Elements {
+		repl, found := r.db[el.Name]
 		if found {
-			for _, repl := range *repl.Elements {
+			for _, repl := range repl.Elements {
 				if repl.Name == r.options.SingleElement {
 					r.root.AddDeep(shared.NewElement(el.Name, repl.Val*el.Val))
 					// Add to grand total

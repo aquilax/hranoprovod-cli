@@ -10,11 +10,11 @@ import (
 
 type singleFoodReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newSingleFoodReporter(options *Options, db *shared.NodeList, writer io.Writer) *singleFoodReporter {
+func newSingleFoodReporter(options *Options, db shared.DBNodeList, writer io.Writer) *singleFoodReporter {
 	return &singleFoodReporter{
 		options,
 		db,
@@ -23,7 +23,7 @@ func newSingleFoodReporter(options *Options, db *shared.NodeList, writer io.Writ
 }
 
 func (r *singleFoodReporter) Process(ln *shared.LogNode) error {
-	for _, e := range *ln.Elements {
+	for _, e := range ln.Elements {
 		matched, err := regexp.MatchString(r.options.SingleFood, e.Name)
 		if err != nil {
 			return err

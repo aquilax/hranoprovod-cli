@@ -9,12 +9,20 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func readChannels(parser *Parser) (*shared.NodeList, error) {
-	nodeList := shared.NewNodeList()
+// NodeList contains list of general nodes
+type nodeList map[string]*shared.ParserNode
+
+// Push adds node to the node list
+func (db nodeList) push(node *shared.ParserNode) {
+	db[(*node).Header] = node
+}
+
+func readChannels(parser Parser) (nodeList, error) {
+	nodeList := nodeList{}
 	for {
 		select {
 		case node := <-parser.Nodes:
-			nodeList.Push(node)
+			nodeList.push(node)
 		case breakingError := <-parser.Errors:
 			return nil, breakingError
 		case <-parser.Done:
@@ -29,7 +37,7 @@ func TestParser(t *testing.T) {
 		Convey("It completes successfully on empty string", func() {
 			go parser.ParseStream(strings.NewReader(""))
 			nodeList, error := readChannels(parser)
-			So(len(*nodeList), ShouldEqual, 0)
+			So(len(nodeList), ShouldEqual, 0)
 			So(error, ShouldBeNil)
 		})
 
@@ -47,19 +55,36 @@ func TestParser(t *testing.T) {
   `
 			go parser.ParseStream(strings.NewReader(file))
 			nodeList, err := readChannels(parser)
-			So(len(*nodeList), ShouldEqual, 2)
+			So(len(nodeList), ShouldEqual, 2)
 			So(err, ShouldBeNil)
-			node := (*nodeList)["2011/07/17"]
+			node := (nodeList)["2011/07/17"]
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
 			So(elements, ShouldNotBeNil)
-			So(len(*elements), ShouldEqual, 3)
-			So((*elements)[0].Name, ShouldEqual, "el1")
-			So((*elements)[0].Val, ShouldEqual, 1.22)
-			So((*elements)[1].Name, ShouldEqual, "ел 2")
-			So((*elements)[1].Val, ShouldEqual, 4.0)
-			So((*elements)[2].Name, ShouldEqual, "el/3")
-			So((*elements)[2].Val, ShouldEqual, 3.0)
+			So(len(elements), ShouldEqual, 3)
+			So(elements[0].Name, ShouldEqual, "el1")
+			So(elements[0].Val, ShouldEqual, 1.22)
+			So(elements[1].Name, ShouldEqual, "ел 2")
+			So(elements[1].Val, ShouldEqual, 4.0)
+			So(elements[2].Name, ShouldEqual, "el/3")
+			So(elements[2].Val, ShouldEqual, 3.0)
+		})
+
+		Convey("Groups elements", func() {
+			file := `2011/07/17:
+  el1: 1.22
+  el1: 1.22
+`
+			go parser.ParseStream(strings.NewReader(file))
+			nodeList, err := readChannels(parser)
+			So(len(nodeList), ShouldEqual, 1)
+			So(err, ShouldBeNil)
+			node := (nodeList)["2011/07/17"]
+			So(node.Header, ShouldEqual, "2011/07/17")
+			elements := node.Elements
+			So(len(elements), ShouldEqual, 2)
+			So(elements[0].Name, ShouldEqual, "el1")
+			So(elements[0].Val, ShouldEqual, 1.22)
 		})
 
 		Convey("It raises bad syntax error", func() {

@@ -11,16 +11,17 @@ type Element struct {
 }
 
 // Elements contains array of elements
-type Elements []*Element
+type Elements []Element
 
 // NewElement creates new element
-func NewElement(name string, val float64) *Element {
-	return &Element{name, val}
+func NewElement(name string, val float64) Element {
+	el := &Element{name, val}
+	return *el
 }
 
 // NewElements creates new element list
-func NewElements() *Elements {
-	return &Elements{}
+func NewElements() Elements {
+	return Elements{}
 }
 
 // Add adds new element to the list
@@ -39,8 +40,8 @@ func (el *Elements) Index(name string) (int, bool) {
 }
 
 // SumMerge merges the element list with new one multiplied by mult
-func (el *Elements) SumMerge(left *Elements, mult float64) {
-	for _, v := range *left {
+func (el *Elements) SumMerge(left Elements, mult float64) {
+	for _, v := range left {
 		if ndx, exists := (*el).Index(v.Name); exists {
 			(*el)[ndx].Val += v.Val * mult
 		} else {

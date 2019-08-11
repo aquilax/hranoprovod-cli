@@ -12,11 +12,11 @@ import (
 // singleReporter outputs report for single food
 type singleReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) *singleReporter {
+func newSingleReporter(options *Options, db shared.DBNodeList, writer io.Writer) *singleReporter {
 	return &singleReporter{
 		options,
 		db,
@@ -27,10 +27,10 @@ func newSingleReporter(options *Options, db *shared.NodeList, writer io.Writer) 
 func (r *singleReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	singleElement := r.options.SingleElement
-	for _, e := range *ln.Elements {
-		repl, found := (*r.db)[e.Name]
+	for _, e := range ln.Elements {
+		repl, found := r.db[e.Name]
 		if found {
-			for _, repl := range *repl.Elements {
+			for _, repl := range repl.Elements {
 				if repl.Name == singleElement {
 					acc.Add(repl.Name, repl.Val*e.Val)
 				}

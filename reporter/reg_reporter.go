@@ -13,11 +13,11 @@ import (
 
 type regReporter struct {
 	options *Options
-	db      *shared.NodeList
+	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newRegReporter(options *Options, db *shared.NodeList, writer io.Writer) *regReporter {
+func newRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) *regReporter {
 	return &regReporter{
 		options,
 		db,
@@ -28,12 +28,12 @@ func newRegReporter(options *Options, db *shared.NodeList, writer io.Writer) *re
 func (r *regReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	r.printDate(ln.Time)
-	for _, element := range *ln.Elements {
+	for _, element := range ln.Elements {
 		if !r.options.TotalsOnly {
 			r.printElement(element)
 		}
-		if repl, found := (*r.db)[element.Name]; found {
-			for _, repl := range *repl.Elements {
+		if repl, found := r.db[element.Name]; found {
+			for _, repl := range repl.Elements {
 				res := repl.Val * element.Val
 				if !r.options.TotalsOnly {
 					r.printIngredient(repl.Name, res)
@@ -84,7 +84,7 @@ func (r *regReporter) printDate(ts time.Time) {
 	fmt.Fprintf(r.output, "%s\n", ts.Format(r.options.DateFormat))
 }
 
-func (r *regReporter) printElement(element *shared.Element) {
+func (r *regReporter) printElement(element shared.Element) {
 	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Val))
 }
 
