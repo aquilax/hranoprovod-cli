@@ -49,14 +49,14 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 	}
 	if r.options.Totals {
 		var ss sort.StringSlice
-		if len(*acc) > 0 {
+		if len(acc) > 0 {
 			r.printTotalHeader()
-			for name := range *acc {
+			for name := range acc {
 				ss = append(ss, name)
 			}
 			sort.Sort(ss)
 			for _, name := range ss {
-				arr := (*acc)[name]
+				arr := acc[name]
 				r.printTotalRow(name, arr[accumulator.Positive], arr[accumulator.Negative])
 			}
 		}

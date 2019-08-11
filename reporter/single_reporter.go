@@ -41,8 +41,8 @@ func (r *singleReporter) Process(ln *shared.LogNode) error {
 			}
 		}
 	}
-	if len(*acc) > 0 {
-		arr := (*acc)[singleElement]
+	if len(acc) > 0 {
+		arr := (acc)[singleElement]
 		r.printSingleElementRow(ln.Time, r.options.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
 	}
 	return nil
