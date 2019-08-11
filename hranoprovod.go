@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/csv"
 	"fmt"
 	"os"
 	"sort"
@@ -129,13 +128,16 @@ func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBN
 }
 
 func (hr Hranoprovod) processLog(p parser.Parser, nl shared.DBNodeList) error {
-	r := reporter.NewReporter(reporter.Reg, &hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewRegReporter(&hr.options.Reporter, nl, os.Stdout)
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
 
 	go p.ParseFile(hr.options.Global.LogFileName)
 	for {
 		select {
-		case node := <-p.Nodes:
-			ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
 			if err != nil {
 				return err
 			}
@@ -152,13 +154,16 @@ func (hr Hranoprovod) processLog(p parser.Parser, nl shared.DBNodeList) error {
 }
 
 func (hr Hranoprovod) processBalance(p parser.Parser, nl shared.DBNodeList) error {
-	r := reporter.NewReporter(reporter.Bal, &hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewBalanceReporter(&hr.options.Reporter, nl, os.Stdout)
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
 
 	go p.ParseFile(hr.options.Global.LogFileName)
 	for {
 		select {
-		case node := <-p.Nodes:
-			ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
 			if err != nil {
 				return err
 			}
@@ -187,40 +192,32 @@ func (hr Hranoprovod) inInterval(t time.Time) bool {
 // CSV generates CSV export
 func (hr Hranoprovod) CSV() error {
 	p := parser.NewParser(&hr.options.Parser)
+	r := reporter.NewCSVReporter(&hr.options.Reporter, os.Stdout)
 
-	processLog := func(p parser.Parser, w *csv.Writer) error {
-		go p.ParseFile(hr.options.Global.LogFileName)
-		for {
-			select {
-			case node := <-p.Nodes:
-				ln, err := shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
-				if err != nil {
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+	var err error
+
+	go p.ParseFile(hr.options.Global.LogFileName)
+	for {
+		select {
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+			if err != nil {
+				return err
+			}
+			if hr.inInterval(ln.Time) {
+				if err = r.Process(ln); err != nil {
 					return err
 				}
-				if hr.inInterval(ln.Time) {
-					for _, e := range ln.Elements {
-						if err = w.Write([]string{
-							ln.Time.Format("2006-01-02"),
-							e.Name,
-							fmt.Sprintf("%0.2f", e.Val),
-						}); err != nil {
-							return err
-						}
-					}
-				}
-
-			case breakingError := <-p.Errors:
-				return breakingError
-			case <-p.Done:
-				w.Flush()
-				return nil
 			}
+		case breakingError := <-p.Errors:
+			return breakingError
+		case <-p.Done:
+			r.Flush()
+			return nil
 		}
-
 	}
-	w := csv.NewWriter(os.Stdout)
-	w.Comma = ';'
-	return processLog(p, w)
 }
 
 // CompareType identifies the type of date comparison
