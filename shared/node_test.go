@@ -1,8 +1,9 @@
 package shared
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestNodeList(t *testing.T) {
@@ -15,7 +16,7 @@ func TestNodeList(t *testing.T) {
 			node := NewNode("test")
 			nl.Push(node)
 			Convey("Increases the number of nodes in the list", func() {
-				So(len(*nl), ShouldEqual, 1)
+				So(len(nl), ShouldEqual, 1)
 			})
 		})
 	})

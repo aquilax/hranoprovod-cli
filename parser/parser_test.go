@@ -9,7 +9,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func readChannels(parser *Parser) (shared.DBNodeList, error) {
+func readChannels(parser *Parser) (shared.NodeList, error) {
 	nodeList := shared.NewNodeList()
 	for {
 		select {
@@ -29,7 +29,7 @@ func TestParser(t *testing.T) {
 		Convey("It completes successfully on empty string", func() {
 			go parser.ParseStream(strings.NewReader(""))
 			nodeList, error := readChannels(parser)
-			So(len(*nodeList), ShouldEqual, 0)
+			So(len(nodeList), ShouldEqual, 0)
 			So(error, ShouldBeNil)
 		})
 
@@ -47,9 +47,9 @@ func TestParser(t *testing.T) {
   `
 			go parser.ParseStream(strings.NewReader(file))
 			nodeList, err := readChannels(parser)
-			So(len(*nodeList), ShouldEqual, 2)
+			So(len(nodeList), ShouldEqual, 2)
 			So(err, ShouldBeNil)
-			node := (*nodeList)["2011/07/17"]
+			node := (nodeList)["2011/07/17"]
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
 			So(elements, ShouldNotBeNil)
@@ -69,9 +69,9 @@ func TestParser(t *testing.T) {
 `
 			go parser.ParseStream(strings.NewReader(file))
 			nodeList, err := readChannels(parser)
-			So(len(*nodeList), ShouldEqual, 1)
+			So(len(nodeList), ShouldEqual, 1)
 			So(err, ShouldBeNil)
-			node := (*nodeList)["2011/07/17"]
+			node := (nodeList)["2011/07/17"]
 			So(node.Header, ShouldEqual, "2011/07/17")
 			elements := node.Elements
 			So(elements, ShouldNotBeNil)

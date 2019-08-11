@@ -18,8 +18,9 @@ func NewNode(header string) *Node {
 type NodeList map[string]*Node
 
 // NewNodeList creates new list of general nodes
-func NewNodeList() *NodeList {
-	return &NodeList{}
+func NewNodeList() NodeList {
+	nl := &NodeList{}
+	return *nl
 }
 
 // Push adds node to the node list
@@ -33,9 +34,9 @@ type DBNode struct {
 	Elements *Elements
 }
 
-func NewDBNodeFromNode (n *Node) *DBNode {
+func NewDBNodeFromNode(n *Node) *DBNode {
 	dbn := DBNode(*n)
-	return &dbn;
+	return &dbn
 }
 
 // DBNodeList contains list of general nodes
