@@ -6,7 +6,7 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/api-client"
+	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/urfave/cli"
@@ -101,7 +101,7 @@ func (o *Options) populateLocals(c *cli.Context) {
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
-	if c.IsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
+	if c.GlobalIsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
 		o.Resolver.ResolverMaxDepth = c.Int("maxdepth")
 	}
 }

@@ -50,6 +50,12 @@ func main() {
 			Usage:  "Date format for parsing and printing dates",
 			EnvVar: "HR_DATE_FORMAT",
 		},
+		cli.IntFlag{
+			Name:   "maxdepth",
+			Value:  defaultResolverMaxDepth,
+			Usage:  "Resolve depth",
+			EnvVar: "HR_MAXDEPTH",
+		},
 	}
 	app.Commands = []cli.Command{
 		{
@@ -77,7 +83,6 @@ func main() {
 					Name:  "single-element, s",
 					Usage: "Show only single element",
 				},
-
 				cli.BoolFlag{
 					Name:  "csv",
 					Usage: "Export as CSV",
@@ -97,12 +102,6 @@ func main() {
 				cli.BoolFlag{
 					Name:  "unresolved",
 					Usage: "Show unresolved elements only",
-				},
-				cli.IntFlag{
-					Name:   "maxdepth",
-					Value:  defaultResolverMaxDepth,
-					Usage:  "Resolve depth",
-					EnvVar: "HR_MAXDEPTH",
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -125,12 +124,6 @@ func main() {
 				cli.StringFlag{
 					Name:  "end, e",
 					Usage: "End of period",
-				},
-				cli.IntFlag{
-					Name:   "maxdepth",
-					Value:  defaultResolverMaxDepth,
-					Usage:  "Resolve depth",
-					EnvVar: "HR_MAXDEPTH",
 				},
 				cli.BoolFlag{
 					Name:  "collapse-last",
