@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.4"
+	appVersion = "2.1.3"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -198,8 +198,8 @@ func main() {
 			Usage: "Generates various reports",
 			Subcommands: []cli.Command{
 				{
-					Name:  "element",
-					Usage: "Generates report for a single element",
+					Name:  "element-total",
+					Usage: "Generates total sum for element grouped by food",
 					Flags: []cli.Flag{
 						cli.BoolFlag{
 							Name:  "desc",
