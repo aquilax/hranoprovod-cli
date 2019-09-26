@@ -110,6 +110,7 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	return nil
 }
 
+// Stats generates statistics report
 func (hr Hranoprovod) Stats() error {
 	f, err := os.Open(hr.options.Global.LogFileName)
 	if err != nil {
