@@ -27,6 +27,14 @@ func main() {
 	app.Email = appEmail
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
+			Name:  "begin, b",
+			Usage: "Beginning of period",
+		},
+		cli.StringFlag{
+			Name:  "end, e",
+			Usage: "End of period",
+		},
+		cli.StringFlag{
 			Name:   "database, d",
 			Value:  defaultDbFilename,
 			Usage:  "database file name",
@@ -43,14 +51,6 @@ func main() {
 			Value:  GetDefaultFileName(),
 			Usage:  "Configuration file",
 			EnvVar: "HR_CONFIG",
-		},
-		cli.StringFlag{
-			Name:  "begin, b",
-			Usage: "Beginning of period",
-		},
-		cli.StringFlag{
-			Name:  "end, e",
-			Usage: "End of period",
 		},
 		cli.StringFlag{
 			Name:   "date-format",
