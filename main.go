@@ -229,23 +229,29 @@ func main() {
 		},
 		{
 			Name:  "csv",
-			Usage: "Generates csv log export",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "begin, b",
-					Usage: "Beginning of period",
+			Usage: "Generates csv exports",
+			Subcommands: []cli.Command{
+				{
+					Name:  "log",
+					Usage: "Exports the log file as CSV",
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:  "begin, b",
+							Usage: "Beginning of period",
+						},
+						cli.StringFlag{
+							Name:  "end, e",
+							Usage: "End of period",
+						},
+					},
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).CSV())
+					},
 				},
-				cli.StringFlag{
-					Name:  "end, e",
-					Usage: "End of period",
-				},
-			},
-			Action: func(c *cli.Context) {
-				o := NewOptions()
-				if err := o.Load(c); err != nil {
-					handleExit(err)
-				}
-				handleExit(NewHranoprovod(o).CSV())
 			},
 		},
 	}
