@@ -102,7 +102,7 @@ func (o *Options) populateLocals(c *cli.Context) {
 
 func (o *Options) populateResolver(c *cli.Context) {
 	if c.GlobalIsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
-		o.Resolver.ResolverMaxDepth = c.Int("maxdepth")
+		o.Resolver.ResolverMaxDepth = c.GlobalInt("maxdepth")
 	}
 }
 

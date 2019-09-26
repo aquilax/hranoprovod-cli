@@ -1,3 +1,6 @@
+2.2.1
+* Bugfix: fixes maxdepth config
+
 2.2.0
 * Re-organized the command line commands/parameters
 
