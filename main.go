@@ -254,6 +254,17 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:  "stats",
+			Usage: "Provide summary information",
+			Action: func(c *cli.Context) {
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					handleExit(err)
+				}
+				handleExit(NewHranoprovod(o).Stats())
+			},
+		},
 	}
 	app.Run(os.Args)
 }

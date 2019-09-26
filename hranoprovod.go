@@ -110,6 +110,26 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	return nil
 }
 
+func (hr Hranoprovod) Stats() error {
+	f, err := os.Open(hr.options.Global.LogFileName)
+	if err != nil {
+		return parser.NewErrorIO(err, hr.options.Global.LogFileName)
+	}
+	defer f.Close()
+
+	count := 0
+	parser.ParseStreamCallback(f, '#', func(n *shared.ParserNode, err error) (stop bool) {
+		count++
+		return false
+	})
+
+	fmt.Printf("Food database: %s\n", hr.options.Global.DbFileName)
+	fmt.Printf("Log database: %s\n", hr.options.Global.LogFileName)
+	fmt.Println("")
+	fmt.Printf("Log records: %d\n", count)
+	return nil
+}
+
 // ReportUnresolved generates report for unresolved elements
 func (hr Hranoprovod) ReportUnresolved() error {
 	var err error
