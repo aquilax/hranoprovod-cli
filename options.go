@@ -6,7 +6,7 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/api-client"
+	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/urfave/cli"
@@ -101,7 +101,7 @@ func (o *Options) populateLocals(c *cli.Context) {
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
-	if c.IsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
+	if c.GlobalIsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
 		o.Resolver.ResolverMaxDepth = c.Int("maxdepth")
 	}
 }
@@ -149,11 +149,22 @@ func (o *Options) populateReporter(c *cli.Context) {
 	if c.IsSet("totals-only") {
 		o.Reporter.TotalsOnly = true
 	}
+
+	// Get the global beginning first
+	if c.GlobalIsSet("begin") {
+		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.GlobalString("begin"))
+		o.Reporter.HasBeginning = true
+	}
 	if c.IsSet("begin") {
 		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
 		o.Reporter.HasBeginning = true
 	}
 
+	// Get the global end first
+	if c.GlobalIsSet("end") {
+		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.GlobalString("end"))
+		o.Reporter.HasEnd = true
+	}
 	if c.IsSet("end") {
 		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
 		o.Reporter.HasEnd = true

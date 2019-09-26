@@ -58,7 +58,7 @@ type Reporter interface {
 // NewRegReporter creates new response handler
 func NewRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) Reporter {
 	if options.Unresolved {
-		return newUnsolvedReporter(options, db, writer)
+		return NewUnsolvedReporter(options, db, writer)
 	}
 	if len(options.SingleElement) > 0 {
 		if options.ElementGroupByFood {

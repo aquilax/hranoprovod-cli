@@ -23,7 +23,7 @@ Clone the repository and build/install the tool:
 Running the `hranoprovod-cli` command will show you the command line options
 
 ```
-$ ./hranoprovod-cli
+$ hranoprovod-cli
 NAME:
    hranoprovod-cli - Lifestyle tracker
 
@@ -31,9 +31,9 @@ USAGE:
    hranoprovod-cli [global options] command [command options] [arguments...]
 
 VERSION:
-   2.1.0
+   2.2.0
 
-AUTHOR(S):
+AUTHOR:
    aquilax <aquilax@gmail.com>
 
 COMMANDS:
@@ -42,16 +42,21 @@ COMMANDS:
      add            Adds new item to the log
      api            Service API commands
      lint           Lints file
+     report         Generates various reports
+     csv            Generates csv exports
+     stats          Provide summary information
      help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
+   --begin value, -b value     Beginning of period
+   --end value, -e value       End of period
    --database value, -d value  database file name (default: "food.yaml") [$HR_DATABASE]
    --logfile value, -l value   log file name (default: "log.yaml") [$HR_LOGFILE]
    --config value, -c value    Configuration file (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
    --date-format value         Date format for parsing and printing dates (default: "2006/01/02") [$HR_DATE_FORMAT]
+   --maxdepth value            Resolve depth (default: 10) [$HR_MAXDEPTH]
    --help, -h                  show help
    --version, -v               print the version
-
 ```
 
 ## Usage

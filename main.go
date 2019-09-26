@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.3"
+	appVersion = "2.2.0"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -26,6 +26,14 @@ func main() {
 	app.Author = appAuthor
 	app.Email = appEmail
 	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "begin, b",
+			Usage: "Beginning of period",
+		},
+		cli.StringFlag{
+			Name:  "end, e",
+			Usage: "End of period",
+		},
 		cli.StringFlag{
 			Name:   "database, d",
 			Value:  defaultDbFilename,
@@ -49,6 +57,12 @@ func main() {
 			Value:  "2006/01/02",
 			Usage:  "Date format for parsing and printing dates",
 			EnvVar: "HR_DATE_FORMAT",
+		},
+		cli.IntFlag{
+			Name:   "maxdepth",
+			Value:  defaultResolverMaxDepth,
+			Usage:  "Resolve depth",
+			EnvVar: "HR_MAXDEPTH",
 		},
 	}
 	app.Commands = []cli.Command{
@@ -77,7 +91,6 @@ func main() {
 					Name:  "single-element, s",
 					Usage: "Show only single element",
 				},
-
 				cli.BoolFlag{
 					Name:  "csv",
 					Usage: "Export as CSV",
@@ -96,13 +109,7 @@ func main() {
 				},
 				cli.BoolFlag{
 					Name:  "unresolved",
-					Usage: "Show unresolved elements only",
-				},
-				cli.IntFlag{
-					Name:   "maxdepth",
-					Value:  defaultResolverMaxDepth,
-					Usage:  "Resolve depth",
-					EnvVar: "HR_MAXDEPTH",
+					Usage: "Deprecated: Show unresolved elements only (moved to `report unresolved`)",
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -125,12 +132,6 @@ func main() {
 				cli.StringFlag{
 					Name:  "end, e",
 					Usage: "End of period",
-				},
-				cli.IntFlag{
-					Name:   "maxdepth",
-					Value:  defaultResolverMaxDepth,
-					Usage:  "Resolve depth",
-					EnvVar: "HR_MAXDEPTH",
 				},
 				cli.BoolFlag{
 					Name:  "collapse-last",
@@ -194,40 +195,74 @@ func main() {
 		},
 		{
 			Name:  "report",
-			Usage: "Generates report from the database file",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "desc",
-					Usage: "Descending order",
+			Usage: "Generates various reports",
+			Subcommands: []cli.Command{
+				{
+					Name:  "element-total",
+					Usage: "Generates total sum for element grouped by food",
+					Flags: []cli.Flag{
+						cli.BoolFlag{
+							Name:  "desc",
+							Usage: "Descending order",
+						},
+					},
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc")))
+					},
 				},
-			},
-			Action: func(c *cli.Context) {
-				o := NewOptions()
-				if err := o.Load(c); err != nil {
-					handleExit(err)
-				}
-				handleExit(NewHranoprovod(o).Report(c.Args().First(), c.IsSet("desc")))
+				{
+					Name:  "unresolved",
+					Usage: "Print list of unresolved elements",
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).ReportUnresolved())
+					},
+				},
 			},
 		},
 		{
 			Name:  "csv",
-			Usage: "Generates csv log export",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "begin, b",
-					Usage: "Beginning of period",
-				},
-				cli.StringFlag{
-					Name:  "end, e",
-					Usage: "End of period",
+			Usage: "Generates csv exports",
+			Subcommands: []cli.Command{
+				{
+					Name:  "log",
+					Usage: "Exports the log file as CSV",
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:  "begin, b",
+							Usage: "Beginning of period",
+						},
+						cli.StringFlag{
+							Name:  "end, e",
+							Usage: "End of period",
+						},
+					},
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).CSV())
+					},
 				},
 			},
+		},
+		{
+			Name:  "stats",
+			Usage: "Provide summary information",
 			Action: func(c *cli.Context) {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
 					handleExit(err)
 				}
-				handleExit(NewHranoprovod(o).CSV())
+				handleExit(NewHranoprovod(o).Stats())
 			},
 		},
 	}
