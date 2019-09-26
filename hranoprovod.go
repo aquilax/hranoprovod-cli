@@ -79,8 +79,8 @@ func (hr Hranoprovod) Lint(fileName string) error {
 	}()
 }
 
-// Report generates report for single element
-func (hr Hranoprovod) Report(elementName string, ascending bool) error {
+// ReportElement generates report for single element
+func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	p := parser.NewParser(&hr.options.Parser)
 	nl, err := hr.loadDatabase(p, hr.options.Global.DbFileName)
 	if err != nil {
@@ -108,6 +108,39 @@ func (hr Hranoprovod) Report(elementName string, ascending bool) error {
 		fmt.Printf("%0.2f\t%s\n", el.Val, el.Name)
 	}
 	return nil
+}
+
+// ReportUnresolved generates report for unresolved elements
+func (hr Hranoprovod) ReportUnresolved() error {
+	var err error
+	p := parser.NewParser(&hr.options.Parser)
+	nl, err := hr.loadDatabase(p, hr.options.Global.DbFileName)
+	if err != nil {
+		return err
+	}
+	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	r := reporter.NewUnsolvedReporter(&hr.options.Reporter, nl, os.Stdout)
+	var node *shared.ParserNode
+	var ln *shared.LogNode
+
+	go p.ParseFile(hr.options.Global.LogFileName)
+	for {
+		select {
+		case node = <-p.Nodes:
+			ln, err = shared.NewLogNodeFromNode(node, hr.options.Global.DateFormat)
+			if err != nil {
+				return err
+			}
+			if hr.inInterval(ln.Time) {
+				r.Process(ln)
+			}
+		case breakingError := <-p.Errors:
+			return breakingError
+		case <-p.Done:
+			r.Flush()
+			return nil
+		}
+	}
 }
 
 func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {

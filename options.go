@@ -149,11 +149,22 @@ func (o *Options) populateReporter(c *cli.Context) {
 	if c.IsSet("totals-only") {
 		o.Reporter.TotalsOnly = true
 	}
+
+	// Get the global beginning first
+	if c.GlobalIsSet("begin") {
+		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.GlobalString("begin"))
+		o.Reporter.HasBeginning = true
+	}
 	if c.IsSet("begin") {
 		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
 		o.Reporter.HasBeginning = true
 	}
 
+	// Get the global end first
+	if c.GlobalIsSet("end") {
+		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.GlobalString("end"))
+		o.Reporter.HasEnd = true
+	}
 	if c.IsSet("end") {
 		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
 		o.Reporter.HasEnd = true

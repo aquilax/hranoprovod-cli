@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.3"
+	appVersion = "2.1.4"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -43,6 +43,14 @@ func main() {
 			Value:  GetDefaultFileName(),
 			Usage:  "Configuration file",
 			EnvVar: "HR_CONFIG",
+		},
+		cli.StringFlag{
+			Name:  "begin, b",
+			Usage: "Beginning of period",
+		},
+		cli.StringFlag{
+			Name:  "end, e",
+			Usage: "End of period",
 		},
 		cli.StringFlag{
 			Name:   "date-format",
@@ -101,7 +109,7 @@ func main() {
 				},
 				cli.BoolFlag{
 					Name:  "unresolved",
-					Usage: "Show unresolved elements only",
+					Usage: "Deprecated: Show unresolved elements only (moved to `report unresolved`)",
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -187,19 +195,36 @@ func main() {
 		},
 		{
 			Name:  "report",
-			Usage: "Generates report from the database file",
-			Flags: []cli.Flag{
-				cli.BoolFlag{
-					Name:  "desc",
-					Usage: "Descending order",
+			Usage: "Generates various reports",
+			Subcommands: []cli.Command{
+				{
+					Name:  "element",
+					Usage: "Generates report for a single element",
+					Flags: []cli.Flag{
+						cli.BoolFlag{
+							Name:  "desc",
+							Usage: "Descending order",
+						},
+					},
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc")))
+					},
 				},
-			},
-			Action: func(c *cli.Context) {
-				o := NewOptions()
-				if err := o.Load(c); err != nil {
-					handleExit(err)
-				}
-				handleExit(NewHranoprovod(o).Report(c.Args().First(), c.IsSet("desc")))
+				{
+					Name:  "unresolved",
+					Usage: "Print list of unresolved elements",
+					Action: func(c *cli.Context) {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							handleExit(err)
+						}
+						handleExit(NewHranoprovod(o).ReportUnresolved())
+					},
+				},
 			},
 		},
 		{

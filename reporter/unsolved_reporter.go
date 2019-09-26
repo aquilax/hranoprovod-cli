@@ -14,7 +14,7 @@ type unsolvedReporter struct {
 	list    map[string]bool
 }
 
-func newUnsolvedReporter(options *Options, db shared.DBNodeList, writer io.Writer) *unsolvedReporter {
+func NewUnsolvedReporter(options *Options, db shared.DBNodeList, writer io.Writer) *unsolvedReporter {
 	return &unsolvedReporter{
 		options,
 		db,
