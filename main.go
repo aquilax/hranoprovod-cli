@@ -9,7 +9,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.1.3"
+	appVersion = "2.2.0"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
