@@ -28,6 +28,7 @@ type Options struct {
 	CollapseLast       bool
 	Collapse           bool
 	ElementGroupByFood bool
+	ShortenStrings     bool
 }
 
 // NewDefaultOptions returns the default reporter options
@@ -46,6 +47,7 @@ func NewDefaultOptions() *Options {
 		CollapseLast:       false,
 		Collapse:           false,
 		ElementGroupByFood: false,
+		ShortenStrings:     false,
 	}
 }
 
