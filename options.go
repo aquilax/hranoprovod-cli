@@ -150,6 +150,10 @@ func (o *Options) populateReporter(c *cli.Context) {
 		o.Reporter.TotalsOnly = true
 	}
 
+	if c.IsSet("shorten") {
+		o.Reporter.ShortenStrings = true
+	}
+
 	// Get the global beginning first
 	if c.GlobalIsSet("begin") {
 		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.GlobalString("begin"))

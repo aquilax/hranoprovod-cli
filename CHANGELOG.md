@@ -1,3 +1,6 @@
+2.2.2
+* Feature: Adds string shortening option to the reg report
+
 2.2.1
 * Bugfix: fixes maxdepth config
 
