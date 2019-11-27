@@ -97,6 +97,7 @@ func (o *Options) populateGlobals(c *cli.Context) {
 
 func (o *Options) populateLocals(c *cli.Context) {
 	o.populateResolver(c)
+	o.populateReporter(c)
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
@@ -126,56 +127,45 @@ func mustGetTime(format string, date string) time.Time {
 }
 
 func (o *Options) populateReporter(c *cli.Context) {
-	if c.IsSet("csv") {
-		o.Reporter.CSV = true
-	}
-	if c.IsSet("no-color") {
-		o.Reporter.Color = false
-	}
+	for i := len(c.Lineage()) - 1; i >= 0; i-- {
+		if c.Lineage()[i].IsSet("csv") {
+			o.Reporter.CSV = true
+		}
+		if c.Lineage()[i].IsSet("no-color") {
+			o.Reporter.Color = false
+		}
 
-	if c.IsSet("collapse-last") {
-		o.Reporter.CollapseLast = true
-	}
+		if c.Lineage()[i].IsSet("collapse-last") {
+			o.Reporter.CollapseLast = true
+		}
 
-	if c.IsSet("collapse") {
-		o.Reporter.Collapse = true
-	}
+		if c.Lineage()[i].IsSet("collapse") {
+			o.Reporter.Collapse = true
+		}
 
-	if c.IsSet("no-totals") {
-		o.Reporter.Totals = false
-	}
+		if c.Lineage()[i].IsSet("no-totals") {
+			o.Reporter.Totals = false
+		}
 
-	if c.IsSet("totals-only") {
-		o.Reporter.TotalsOnly = true
-	}
+		if c.Lineage()[i].IsSet("totals-only") {
+			o.Reporter.TotalsOnly = true
+		}
 
-	if c.IsSet("shorten") {
-		o.Reporter.ShortenStrings = true
-	}
+		if c.Lineage()[i].IsSet("shorten") {
+			o.Reporter.ShortenStrings = true
+		}
 
-	// Get the global beginning first
-	if c.IsSet("begin") {
-		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
-		o.Reporter.HasBeginning = true
+		if c.Lineage()[i].IsSet("begin") {
+			o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
+			o.Reporter.HasBeginning = true
+		}
+		if c.Lineage()[i].IsSet("end") {
+			o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("end"))
+			o.Reporter.HasEnd = true
+		}
 	}
-	if c.IsSet("begin") {
-		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
-		o.Reporter.HasBeginning = true
-	}
-
-	// Get the global end first
-	if c.IsSet("end") {
-		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
-		o.Reporter.HasEnd = true
-	}
-	if c.IsSet("end") {
-		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
-		o.Reporter.HasEnd = true
-	}
-
 	o.Reporter.Unresolved = c.Bool("unresolved")
 	o.Reporter.SingleFood = c.String("single-food")
 	o.Reporter.ElementGroupByFood = c.Bool("group-food")
 	o.Reporter.SingleElement = c.String("single-element")
-
 }

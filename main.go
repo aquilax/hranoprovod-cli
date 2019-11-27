@@ -27,32 +27,32 @@ func main() {
 		&cli.StringFlag{
 			Name:    "begin",
 			Aliases: []string{"b"},
-			Usage:   "Beginning of period",
+			Usage:   "Beginning of period `DATE`",
 		},
 		&cli.StringFlag{
 			Name:    "end, e",
 			Aliases: []string{"e"},
-			Usage:   "End of period",
+			Usage:   "End of period `DATE`",
 		},
 		&cli.StringFlag{
 			Name:    "database",
 			Aliases: []string{"d"},
 			Value:   defaultDbFilename,
-			Usage:   "database file name",
+			Usage:   "database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
 			Name:    "logfile",
 			Aliases: []string{"l"},
 			Value:   defaultLogFilename,
-			Usage:   "log file name",
+			Usage:   "log file name `FILE`",
 			EnvVars: []string{"HR_LOGFILE"},
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Aliases: []string{"c"},
 			Value:   GetDefaultFileName(),
-			Usage:   "Configuration file",
+			Usage:   "Configuration file `FILE`",
 			EnvVars: []string{"HR_CONFIG"},
 		},
 		&cli.StringFlag{
@@ -64,7 +64,7 @@ func main() {
 		&cli.IntFlag{
 			Name:    "maxdepth",
 			Value:   defaultResolverMaxDepth,
-			Usage:   "Resolve depth",
+			Usage:   "Resolve depth `DEPTH`",
 			EnvVars: []string{"HR_MAXDEPTH"},
 		},
 	}
@@ -254,12 +254,12 @@ func main() {
 						&cli.StringFlag{
 							Name:    "begin",
 							Aliases: []string{"b"},
-							Usage:   "Beginning of period",
+							Usage:   "Beginning of period `DATE`",
 						},
 						&cli.StringFlag{
 							Name:    "end",
 							Aliases: []string{"e"},
-							Usage:   "End of period",
+							Usage:   "End of period `DATE`",
 						},
 					},
 					Action: func(c *cli.Context) error {
