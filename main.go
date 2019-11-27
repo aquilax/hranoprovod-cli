@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 const (
@@ -23,165 +23,177 @@ func main() {
 	app.Name = appName
 	app.Usage = appUsage
 	app.Version = appVersion
-	app.Author = appAuthor
-	app.Email = appEmail
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "begin, b",
-			Usage: "Beginning of period",
+		&cli.StringFlag{
+			Name:    "begin",
+			Aliases: []string{"b"},
+			Usage:   "Beginning of period",
 		},
-		cli.StringFlag{
-			Name:  "end, e",
-			Usage: "End of period",
+		&cli.StringFlag{
+			Name:    "end, e",
+			Aliases: []string{"e"},
+			Usage:   "End of period",
 		},
-		cli.StringFlag{
-			Name:   "database, d",
-			Value:  defaultDbFilename,
-			Usage:  "database file name",
-			EnvVar: "HR_DATABASE",
+		&cli.StringFlag{
+			Name:    "database",
+			Aliases: []string{"d"},
+			Value:   defaultDbFilename,
+			Usage:   "database file name",
+			EnvVars: []string{"HR_DATABASE"},
 		},
-		cli.StringFlag{
-			Name:   "logfile, l",
-			Value:  defaultLogFilename,
-			Usage:  "log file name",
-			EnvVar: "HR_LOGFILE",
+		&cli.StringFlag{
+			Name:    "logfile",
+			Aliases: []string{"l"},
+			Value:   defaultLogFilename,
+			Usage:   "log file name",
+			EnvVars: []string{"HR_LOGFILE"},
 		},
-		cli.StringFlag{
-			Name:   "config, c",
-			Value:  GetDefaultFileName(),
-			Usage:  "Configuration file",
-			EnvVar: "HR_CONFIG",
+		&cli.StringFlag{
+			Name:    "config",
+			Aliases: []string{"c"},
+			Value:   GetDefaultFileName(),
+			Usage:   "Configuration file",
+			EnvVars: []string{"HR_CONFIG"},
 		},
-		cli.StringFlag{
-			Name:   "date-format",
-			Value:  "2006/01/02",
-			Usage:  "Date format for parsing and printing dates",
-			EnvVar: "HR_DATE_FORMAT",
+		&cli.StringFlag{
+			Name:    "date-format",
+			Value:   "2006/01/02",
+			Usage:   "Date format for parsing and printing dates",
+			EnvVars: []string{"HR_DATE_FORMAT"},
 		},
-		cli.IntFlag{
-			Name:   "maxdepth",
-			Value:  defaultResolverMaxDepth,
-			Usage:  "Resolve depth",
-			EnvVar: "HR_MAXDEPTH",
+		&cli.IntFlag{
+			Name:    "maxdepth",
+			Value:   defaultResolverMaxDepth,
+			Usage:   "Resolve depth",
+			EnvVars: []string{"HR_MAXDEPTH"},
 		},
 	}
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
-			Name:      "register",
-			ShortName: "reg",
-			Usage:     "Shows the log register report",
+			Name:    "register",
+			Aliases: []string{"reg"},
+			Usage:   "Shows the log register report",
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "begin, b",
-					Usage: "Beginning of period",
+				&cli.StringFlag{
+					Name:    "begin",
+					Aliases: []string{"b"},
+					Usage:   "Beginning of period",
 				},
-				cli.StringFlag{
-					Name:  "end, e",
-					Usage: "End of period",
+				&cli.StringFlag{
+					Name:    "end",
+					Aliases: []string{"e"},
+					Usage:   "End of period",
 				},
-				cli.StringFlag{
-					Name:  "single-food, f",
-					Usage: "Show only single element",
+				&cli.StringFlag{
+					Name:    "single-food",
+					Aliases: []string{"f"},
+					Usage:   "Show only single element",
 				},
-				cli.BoolFlag{
-					Name:  "group-food, g",
-					Usage: "Single element grouped by food",
+				&cli.BoolFlag{
+					Name:    "group-food",
+					Aliases: []string{"g"},
+					Usage:   "Single element grouped by food",
 				},
-				cli.StringFlag{
-					Name:  "single-element, s",
-					Usage: "Show only single element",
+				&cli.StringFlag{
+					Name:    "single-element",
+					Aliases: []string{"s"},
+					Usage:   "Show only single element",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "csv",
 					Usage: "Export as CSV",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "no-color",
 					Usage: "Disable color output",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "no-totals",
 					Usage: "Disable totals",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "totals-only",
 					Usage: "Show only totals",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "shorten",
 					Usage: "Shorten longer strings",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "unresolved",
 					Usage: "Deprecated: Show unresolved elements only (moved to `report unresolved`)",
 				},
 			},
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
-					handleExit(err)
+					return err
 				}
-				handleExit(NewHranoprovod(o).Register())
+				return NewHranoprovod(o).Register()
 			},
 		},
 		{
-			Name:      "balance",
-			ShortName: "bal",
-			Usage:     "Shows food balance as tree",
+			Name:    "balance",
+			Aliases: []string{"bal"},
+			Usage:   "Shows food balance as tree",
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "begin, b",
-					Usage: "Beginning of period",
+				&cli.StringFlag{
+					Name:    "begin",
+					Aliases: []string{"b"},
+					Usage:   "Beginning of period",
 				},
-				cli.StringFlag{
-					Name:  "end, e",
-					Usage: "End of period",
+				&cli.StringFlag{
+					Name:    "end",
+					Aliases: []string{"e"},
+					Usage:   "End of period",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "collapse-last",
 					Usage: "Collapses last dimension",
 				},
-				cli.BoolFlag{
-					Name:  "collapse, c",
-					Usage: "Collapses sole branches",
+				&cli.BoolFlag{
+					Name:    "collapse",
+					Aliases: []string{"c"},
+					Usage:   "Collapses sole branches",
 				},
-				cli.StringFlag{
-					Name:  "single-element, s",
-					Usage: "Show only single element",
+				&cli.StringFlag{
+					Name:    "single-element, s",
+					Aliases: []string{"s"},
+					Usage:   "Show only single element",
 				},
 			},
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
-					handleExit(err)
+					return err
 				}
-				handleExit(NewHranoprovod(o).Balance())
+				return NewHranoprovod(o).Balance()
 			},
 		},
 		{
 			Name:  "add",
 			Usage: "Adds new item to the log",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
-					handleExit(err)
+					return err
 				}
-				handleExit(NewHranoprovod(o).Add(c.Args().First(), c.Args().Get(1)))
+				return NewHranoprovod(o).Add(c.Args().First(), c.Args().Get(1))
 			},
 		},
 		{
 			Name:  "api",
 			Usage: "Service API commands",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:  "search",
 					Usage: "Search for food online",
-					Action: func(c *cli.Context) {
+					Action: func(c *cli.Context) error {
 						o := NewOptions()
 						if err := o.Load(c); err != nil {
-							handleExit(err)
+							return err
 						}
-						handleExit(NewHranoprovod(o).Search(c.Args().First()))
+						return NewHranoprovod(o).Search(c.Args().First())
 					},
 				},
 			},
@@ -189,44 +201,44 @@ func main() {
 		{
 			Name:  "lint",
 			Usage: "Lints file",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
-					handleExit(err)
+					return err
 				}
-				handleExit(NewHranoprovod(o).Lint(c.Args().First()))
+				return NewHranoprovod(o).Lint(c.Args().First())
 			},
 		},
 		{
 			Name:  "report",
 			Usage: "Generates various reports",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:  "element-total",
 					Usage: "Generates total sum for element grouped by food",
 					Flags: []cli.Flag{
-						cli.BoolFlag{
+						&cli.BoolFlag{
 							Name:  "desc",
 							Usage: "Descending order",
 						},
 					},
-					Action: func(c *cli.Context) {
+					Action: func(c *cli.Context) error {
 						o := NewOptions()
 						if err := o.Load(c); err != nil {
-							handleExit(err)
+							return err
 						}
-						handleExit(NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc")))
+						return NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"))
 					},
 				},
 				{
 					Name:  "unresolved",
 					Usage: "Print list of unresolved elements",
-					Action: func(c *cli.Context) {
+					Action: func(c *cli.Context) error {
 						o := NewOptions()
 						if err := o.Load(c); err != nil {
-							handleExit(err)
+							return err
 						}
-						handleExit(NewHranoprovod(o).ReportUnresolved())
+						return NewHranoprovod(o).ReportUnresolved()
 					},
 				},
 			},
@@ -234,26 +246,28 @@ func main() {
 		{
 			Name:  "csv",
 			Usage: "Generates csv exports",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:  "log",
 					Usage: "Exports the log file as CSV",
 					Flags: []cli.Flag{
-						cli.StringFlag{
-							Name:  "begin, b",
-							Usage: "Beginning of period",
+						&cli.StringFlag{
+							Name:    "begin",
+							Aliases: []string{"b"},
+							Usage:   "Beginning of period",
 						},
-						cli.StringFlag{
-							Name:  "end, e",
-							Usage: "End of period",
+						&cli.StringFlag{
+							Name:    "end",
+							Aliases: []string{"e"},
+							Usage:   "End of period",
 						},
 					},
-					Action: func(c *cli.Context) {
+					Action: func(c *cli.Context) error {
 						o := NewOptions()
 						if err := o.Load(c); err != nil {
-							handleExit(err)
+							return err
 						}
-						handleExit(NewHranoprovod(o).CSV())
+						return NewHranoprovod(o).CSV()
 					},
 				},
 			},
@@ -261,21 +275,14 @@ func main() {
 		{
 			Name:  "stats",
 			Usage: "Provide summary information",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
-					handleExit(err)
+					return err
 				}
-				handleExit(NewHranoprovod(o).Stats())
+				return NewHranoprovod(o).Stats()
 			},
 		},
 	}
 	app.Run(os.Args)
-}
-
-func handleExit(err error) {
-	if err != nil {
-		println(err.Error())
-		os.Exit(1)
-	}
 }
