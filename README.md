@@ -8,6 +8,8 @@ Hranoprovod is command line tracking tool. It supports nested recipies and custo
 
 ## Installation
 
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/hranoprovod-cli)
+
 First make sure you have go (golang) installed.
 
     http://golang.org/
