@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/urfave/cli/v2"
@@ -18,11 +19,17 @@ const (
 	defaultResolverMaxDepth = 10
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	app := cli.NewApp()
 	app.Name = appName
 	app.Usage = appUsage
-	app.Version = appVersion
+	app.Version = fmt.Sprintf("%v, commit %v, built at %v", version, commit, date)
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "begin",
