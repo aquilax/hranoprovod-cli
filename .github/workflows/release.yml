@@ -16,11 +16,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: '1.13.4'
-      - 
-        name: Go Action
-        uses: actions-contrib/go@v0.1.0
-        with:
-          args: test -v ./...
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v1.0.2
