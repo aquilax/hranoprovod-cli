@@ -1,8 +1,11 @@
 name: goreleaser
 
 on:
-  pull_request:
   push:
+    branches:
+      - "!*"
+    tags:
+      - "v*.*.*"
 
 jobs:
   goreleaser:
