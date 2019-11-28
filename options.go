@@ -9,7 +9,7 @@ import (
 	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"
 )
 
@@ -44,14 +44,14 @@ func NewOptions() *Options {
 
 // Load loads the settings from config file/command line params/defaults from given context.
 func (o *Options) Load(c *cli.Context) error {
-	fileName := c.GlobalString("config")
+	fileName := c.String("config")
 	// First try to load the o file
 	exists, err := fileExists(fileName)
 	if err != nil {
 		return err
 	}
 	// Non existing file passed
-	if !exists && c.GlobalIsSet("config") {
+	if !exists && c.IsSet("config") {
 		return errors.New("File " + fileName + "not found")
 	}
 	if exists {
@@ -82,16 +82,16 @@ func fileExists(name string) (bool, error) {
 }
 
 func (o *Options) populateGlobals(c *cli.Context) {
-	if c.GlobalIsSet("database") || o.Global.DbFileName == "" {
-		o.Global.DbFileName = c.GlobalString("database")
+	if c.IsSet("database") || o.Global.DbFileName == "" {
+		o.Global.DbFileName = c.String("database")
 	}
 
-	if c.GlobalIsSet("logfile") || o.Global.LogFileName == "" {
-		o.Global.LogFileName = c.GlobalString("logfile")
+	if c.IsSet("logfile") || o.Global.LogFileName == "" {
+		o.Global.LogFileName = c.String("logfile")
 	}
 
-	if c.GlobalIsSet("date-format") || o.Global.DateFormat == "" {
-		o.Global.DateFormat = c.GlobalString("date-format")
+	if c.IsSet("date-format") || o.Global.DateFormat == "" {
+		o.Global.DateFormat = c.String("date-format")
 	}
 }
 
@@ -101,8 +101,8 @@ func (o *Options) populateLocals(c *cli.Context) {
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
-	if c.GlobalIsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
-		o.Resolver.ResolverMaxDepth = c.GlobalInt("maxdepth")
+	if c.IsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
+		o.Resolver.ResolverMaxDepth = c.Int("maxdepth")
 	}
 }
 
@@ -127,56 +127,45 @@ func mustGetTime(format string, date string) time.Time {
 }
 
 func (o *Options) populateReporter(c *cli.Context) {
-	if c.IsSet("csv") {
-		o.Reporter.CSV = true
-	}
-	if c.IsSet("no-color") {
-		o.Reporter.Color = false
-	}
+	for i := len(c.Lineage()) - 1; i >= 0; i-- {
+		if c.Lineage()[i].IsSet("csv") {
+			o.Reporter.CSV = true
+		}
+		if c.Lineage()[i].IsSet("no-color") {
+			o.Reporter.Color = false
+		}
 
-	if c.IsSet("collapse-last") {
-		o.Reporter.CollapseLast = true
-	}
+		if c.Lineage()[i].IsSet("collapse-last") {
+			o.Reporter.CollapseLast = true
+		}
 
-	if c.IsSet("collapse") {
-		o.Reporter.Collapse = true
-	}
+		if c.Lineage()[i].IsSet("collapse") {
+			o.Reporter.Collapse = true
+		}
 
-	if c.IsSet("no-totals") {
-		o.Reporter.Totals = false
-	}
+		if c.Lineage()[i].IsSet("no-totals") {
+			o.Reporter.Totals = false
+		}
 
-	if c.IsSet("totals-only") {
-		o.Reporter.TotalsOnly = true
-	}
+		if c.Lineage()[i].IsSet("totals-only") {
+			o.Reporter.TotalsOnly = true
+		}
 
-	if c.IsSet("shorten") {
-		o.Reporter.ShortenStrings = true
-	}
+		if c.Lineage()[i].IsSet("shorten") {
+			o.Reporter.ShortenStrings = true
+		}
 
-	// Get the global beginning first
-	if c.GlobalIsSet("begin") {
-		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.GlobalString("begin"))
-		o.Reporter.HasBeginning = true
+		if c.Lineage()[i].IsSet("begin") {
+			o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
+			o.Reporter.HasBeginning = true
+		}
+		if c.Lineage()[i].IsSet("end") {
+			o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("end"))
+			o.Reporter.HasEnd = true
+		}
 	}
-	if c.IsSet("begin") {
-		o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.String("begin"))
-		o.Reporter.HasBeginning = true
-	}
-
-	// Get the global end first
-	if c.GlobalIsSet("end") {
-		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.GlobalString("end"))
-		o.Reporter.HasEnd = true
-	}
-	if c.IsSet("end") {
-		o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.String("end"))
-		o.Reporter.HasEnd = true
-	}
-
 	o.Reporter.Unresolved = c.Bool("unresolved")
 	o.Reporter.SingleFood = c.String("single-food")
 	o.Reporter.ElementGroupByFood = c.Bool("group-food")
 	o.Reporter.SingleElement = c.String("single-element")
-
 }
