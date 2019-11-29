@@ -30,6 +30,8 @@ snapcrafts:
 -
   summary: Life metrics plaintext tracker
   publish: true
+  grade: devel
+  confinement: devmode
   description: |
     Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
 nfpms:
