@@ -5,9 +5,13 @@ before:
 builds:
 - env:
   - CGO_ENABLED=0
+  goos:
+    - linux
+  goarch:
+    - amd64
+
 archives:
 - replacements:
-    darwin: Darwin
     linux: Linux
     windows: Windows
     386: i386
@@ -22,3 +26,22 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+snapcrafts:
+-
+  summary: Life metrics plaintext tracker
+  publish: true
+  description: |
+    Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
+nfpms:
+-
+  vendor: "avtobiografia.com"
+  homepage: "https://github.com/aquilax/hranoprovod-cli"
+  maintainer: "Evgeniy Vasilev <aquilax@gmail.com>"
+  description: "Command line life tracking tool"
+  license: "MIT"
+  replacements:
+    amd64: 64bit
+    386: 32bit
+  formats:
+    - deb
+    - rpm
