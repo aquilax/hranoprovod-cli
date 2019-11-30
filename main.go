@@ -65,7 +65,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "date-format",
 			Value:   "2006/01/02",
-			Usage:   "Date format for parsing and printing dates",
+			Usage:   "Date format for parsing and printing dates `DATE_FORMAT`",
 			EnvVars: []string{"HR_DATE_FORMAT"},
 		},
 		&cli.IntFlag{
