@@ -182,17 +182,6 @@ func main() {
 			},
 		},
 		{
-			Name:  "add",
-			Usage: "Adds new item to the log",
-			Action: func(c *cli.Context) error {
-				o := NewOptions()
-				if err := o.Load(c); err != nil {
-					return err
-				}
-				return NewHranoprovod(o).Add(c.Args().First(), c.Args().Get(1))
-			},
-		},
-		{
 			Name:  "api",
 			Usage: "Service API commands",
 			Subcommands: []*cli.Command{
