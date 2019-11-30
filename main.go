@@ -65,7 +65,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "date-format",
 			Value:   "2006/01/02",
-			Usage:   "Date format for parsing and printing dates",
+			Usage:   "Date format for parsing and printing dates `DATE_FORMAT`",
 			EnvVars: []string{"HR_DATE_FORMAT"},
 		},
 		&cli.IntFlag{
@@ -179,34 +179,6 @@ func main() {
 					return err
 				}
 				return NewHranoprovod(o).Balance()
-			},
-		},
-		{
-			Name:  "add",
-			Usage: "Adds new item to the log",
-			Action: func(c *cli.Context) error {
-				o := NewOptions()
-				if err := o.Load(c); err != nil {
-					return err
-				}
-				return NewHranoprovod(o).Add(c.Args().First(), c.Args().Get(1))
-			},
-		},
-		{
-			Name:  "api",
-			Usage: "Service API commands",
-			Subcommands: []*cli.Command{
-				{
-					Name:  "search",
-					Usage: "Search for food online",
-					Action: func(c *cli.Context) error {
-						o := NewOptions()
-						if err := o.Load(c); err != nil {
-							return err
-						}
-						return NewHranoprovod(o).Search(c.Args().First())
-					},
-				},
 			},
 		},
 		{

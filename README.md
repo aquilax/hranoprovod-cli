@@ -33,32 +33,27 @@ USAGE:
    hranoprovod-cli [global options] command [command options] [arguments...]
 
 VERSION:
-   2.2.0
-
-AUTHOR:
-   aquilax <aquilax@gmail.com>
+   dev, commit none, built at unknown
 
 COMMANDS:
-     register, reg  Shows the log register report
-     balance, bal   Shows food balance as tree
-     add            Adds new item to the log
-     api            Service API commands
-     lint           Lints file
-     report         Generates various reports
-     csv            Generates csv exports
-     stats          Provide summary information
-     help, h        Shows a list of commands or help for one command
+   register, reg  Shows the log register report
+   balance, bal   Shows food balance as tree
+   lint           Lints file
+   report         Generates various reports
+   csv            Generates csv exports
+   stats          Provide summary information
+   help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --begin value, -b value     Beginning of period
-   --end value, -e value       End of period
-   --database value, -d value  database file name (default: "food.yaml") [$HR_DATABASE]
-   --logfile value, -l value   log file name (default: "log.yaml") [$HR_LOGFILE]
-   --config value, -c value    Configuration file (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
-   --date-format value         Date format for parsing and printing dates (default: "2006/01/02") [$HR_DATE_FORMAT]
-   --maxdepth value            Resolve depth (default: 10) [$HR_MAXDEPTH]
-   --help, -h                  show help
-   --version, -v               print the version
+   --begin DATE, -b DATE      Beginning of period DATE
+   --end DATE, -e DATE        End of period DATE
+   --database FILE, -d FILE   database file name FILE (default: "/home/aquilax/ledger/food.yaml") [$HR_DATABASE]
+   --logfile FILE, -l FILE    log file name FILE (default: "/home/aquilax/ledger/log.yaml") [$HR_LOGFILE]
+   --config FILE, -c FILE     Configuration file FILE (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
+   --date-format DATE_FORMAT  Date format for parsing and printing dates DATE_FORMAT (default: "2006/01/02") [$HR_DATE_FORMAT]
+   --maxdepth DEPTH           Resolve depth DEPTH (default: 10) [$HR_MAXDEPTH]
+   --help, -h                 show help (default: false)
+   --version, -v              print the version (default: false)
 ```
 
 ## Usage

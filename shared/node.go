@@ -54,16 +54,16 @@ func NewLogNode(time time.Time, elements Elements) *LogNode {
 	return &LogNode{time, elements}
 }
 
-// NewLogNodeFromNode creates new LogNode from ParserNode
-func NewLogNodeFromNode(node *ParserNode, dateFormat string) (*LogNode, error) {
-	t, err := time.Parse(dateFormat, node.Header)
-	if err != nil {
-		return nil, err
-	}
+// GetHeaderTimeFromNode tries to parse node's time from the header and returns it as time.Time
+func ParseTime(header string, dateFormat string) (time.Time, error) {
+	return time.Parse(dateFormat, header)
+}
 
+// NewLogNodeFromElements creates new LogNode from ParserNode elements and time
+func NewLogNodeFromElements(time time.Time, elements Elements) (*LogNode, error) {
 	elList := NewElements()
 
-	for _, el := range node.Elements {
+	for _, el := range elements {
 		if ndx, exists := elList.Index(el.Name); exists {
 			elList[ndx].Val += el.Val
 		} else {
@@ -71,5 +71,5 @@ func NewLogNodeFromNode(node *ParserNode, dateFormat string) (*LogNode, error) {
 		}
 	}
 
-	return NewLogNode(t, elList), nil
+	return NewLogNode(time, elList), nil
 }
