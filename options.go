@@ -155,6 +155,10 @@ func (o *Options) populateReporter(c *cli.Context) {
 			o.Reporter.ShortenStrings = true
 		}
 
+		if c.Lineage()[i].IsSet("new-reg-reporter") {
+			o.Reporter.UseNewRegReporter = true
+		}
+
 		if c.Lineage()[i].IsSet("begin") {
 			o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
 			o.Reporter.HasBeginning = true

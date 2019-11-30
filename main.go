@@ -84,17 +84,17 @@ func main() {
 				&cli.StringFlag{
 					Name:    "begin",
 					Aliases: []string{"b"},
-					Usage:   "Beginning of period",
+					Usage:   "Beginning of period `DATE`",
 				},
 				&cli.StringFlag{
 					Name:    "end",
 					Aliases: []string{"e"},
-					Usage:   "End of period",
+					Usage:   "End of period `DATE`",
 				},
 				&cli.StringFlag{
 					Name:    "single-food",
 					Aliases: []string{"f"},
-					Usage:   "Show only single element",
+					Usage:   "Show only single food",
 				},
 				&cli.BoolFlag{
 					Name:    "group-food",
@@ -127,8 +127,12 @@ func main() {
 					Usage: "Shorten longer strings",
 				},
 				&cli.BoolFlag{
+					Name:  "new-reg-reporter",
+					Usage: "Use the new reg reporter",
+				},
+				&cli.BoolFlag{
 					Name:  "unresolved",
-					Usage: "Deprecated: Show unresolved elements only (moved to `report unresolved`)",
+					Usage: "Deprecated: Show unresolved elements only (moved to 'report unresolved')",
 				},
 			},
 			Action: func(c *cli.Context) error {

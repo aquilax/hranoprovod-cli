@@ -29,6 +29,7 @@ type Options struct {
 	Collapse           bool
 	ElementGroupByFood bool
 	ShortenStrings     bool
+	UseNewRegReporter  bool
 }
 
 // NewDefaultOptions returns the default reporter options
@@ -48,6 +49,7 @@ func NewDefaultOptions() *Options {
 		Collapse:           false,
 		ElementGroupByFood: false,
 		ShortenStrings:     false,
+		UseNewRegReporter:  false,
 	}
 }
 
@@ -70,6 +72,9 @@ func NewRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) Re
 	}
 	if len(options.SingleFood) > 0 {
 		return newSingleFoodReporter(options, db, writer)
+	}
+	if options.UseNewRegReporter {
+		return newRegReporterTemplate(options, db, writer)
 	}
 	return newRegReporter(options, db, writer)
 }
