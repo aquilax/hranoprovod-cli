@@ -26,23 +26,23 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
-# snapcrafts:
-# -
-#   summary: Life metrics plaintext tracker
-#   publish: true
-#   grade: devel
-#   confinement: strict
-#   description: |
-#     Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
-#   apps:
-#     hranoprovod-cli:
-#       plugs: ['personal-files']
-#   plugs:
-#     personal-files:
-#       read:
-#         - $HOME/.hranoprovod/food.yaml
-#         - $HOME/.hranoprovod/log.yaml
-#         - $HOME/.hranoprovod/config
+snapcrafts:
+-
+  summary: Life metrics plaintext tracker
+  # publish: true
+  grade: devel
+  confinement: strict
+  description: |
+    Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
+  apps:
+    hranoprovod-cli:
+      plugs: ['personal-files']
+  plugs:
+    personal-files:
+      read:
+        - $HOME/.hranoprovod/food.yaml
+        - $HOME/.hranoprovod/log.yaml
+        - $HOME/.hranoprovod/config
 nfpms:
 -
   vendor: "avtobiografia.com"
