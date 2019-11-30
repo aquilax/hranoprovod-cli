@@ -182,23 +182,6 @@ func main() {
 			},
 		},
 		{
-			Name:  "api",
-			Usage: "Service API commands",
-			Subcommands: []*cli.Command{
-				{
-					Name:  "search",
-					Usage: "Search for food online",
-					Action: func(c *cli.Context) error {
-						o := NewOptions()
-						if err := o.Load(c); err != nil {
-							return err
-						}
-						return NewHranoprovod(o).Search(c.Args().First())
-					},
-				},
-			},
-		},
-		{
 			Name:  "lint",
 			Usage: "Lints file",
 			Action: func(c *cli.Context) error {
