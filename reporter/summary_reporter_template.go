@@ -17,7 +17,7 @@ const summaryTemplate = `{{printDate .Time}} :
 {{- end}}
 {{- end}}
 {{- if .Totals }}
-----------------------------------------------------
+------------
 {{- range $total := .Totals }}
 {{ cNum $total.Positive }} : {{ $total.Name }}
 {{- end}}
