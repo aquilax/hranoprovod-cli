@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/urfave/cli/v2"
 )
@@ -257,13 +258,51 @@ func main() {
 		},
 		{
 			Name:  "stats",
-			Usage: "Provide summary information",
+			Usage: "Provide stats information",
 			Action: func(c *cli.Context) error {
 				o := NewOptions()
 				if err := o.Load(c); err != nil {
 					return err
 				}
 				return NewHranoprovod(o).Stats()
+			},
+		},
+		{
+			Name:  "summary",
+			Usage: "Show summary",
+			Subcommands: []*cli.Command{
+				{
+					Name:  "today",
+					Usage: "Show summary for today",
+					Action: func(c *cli.Context) error {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							return err
+						}
+						t := time.Now().Local()
+						o.Reporter.HasBeginning = true
+						o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+						o.Reporter.HasEnd = true
+						o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+						return NewHranoprovod(o).Summary()
+					},
+				},
+				{
+					Name:  "yesterday",
+					Usage: "Show summary for yesterday",
+					Action: func(c *cli.Context) error {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							return err
+						}
+						t := time.Now().Local().AddDate(0, 0, -1)
+						o.Reporter.HasBeginning = true
+						o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+						o.Reporter.HasEnd = true
+						o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+						return NewHranoprovod(o).Summary()
+					},
+				},
 			},
 		},
 	}

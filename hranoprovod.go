@@ -135,6 +135,18 @@ func (hr Hranoprovod) Stats() error {
 	return nil
 }
 
+// Summary generates summary
+func (hr Hranoprovod) Summary() error {
+	parser := parser.NewParser(&hr.options.Parser)
+	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	if err != nil {
+		return err
+	}
+	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	r := reporter.NewSummaryReporterTemplate(&hr.options.Reporter, nl, os.Stdout)
+	return hr.walkNodes(parser, r)
+}
+
 func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
 	go p.ParseFile(fileName)
