@@ -11,12 +11,14 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-const dayTemplate = `{{printDate .Time}}:
+const dayTemplate = `{{printDate .Time}}
+{{- if .Elements }}
 {{- range $el := .Elements}}
-  {{ printf "\t%-27s :%s" (shorten $el.Name 27) (cNum $el.Val) }}
-  {{- range $ing := $el.Ingredients}}
-  {{ printf "\t\t%20s %s" (shorten $ing.Name 20) (cNum $ing.Val) }}
-  {{- end}}
+{{ printf "\t%-27s :%s" (shorten $el.Name 27) (cNum $el.Val) }}
+{{- range $ing := $el.Ingredients}}
+{{ printf "\t\t%20s %s" (shorten $ing.Name 20) (cNum $ing.Val) }}
+{{- end}}
+{{- end}}
 {{- end}}
 {{- if .Totals }}
 	-- TOTAL  ----------------------------------------------------
@@ -40,7 +42,7 @@ type Total struct {
 
 type ReportItem struct {
 	Time     time.Time
-	Elements []ReportElement
+	Elements *[]ReportElement
 	Totals   *[]Total
 }
 
@@ -52,6 +54,10 @@ type regReporterTemplate struct {
 }
 
 func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
+	var shorter = shorten
+	if !options.ShortenStrings {
+		shorter = func(s string, n int) string { return s }
+	}
 	return &regReporterTemplate{
 		options,
 		db,
@@ -71,7 +77,7 @@ func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Wr
 				}
 				return fmt.Sprintf("%10.2f", num)
 			},
-			"shorten": shorten,
+			"shorten": shorter,
 			"add": func(num1, num2 float64) float64 {
 				return num1 + num2
 			},
@@ -80,7 +86,7 @@ func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Wr
 }
 
 func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
-	return r.template.Execute(r.output, getReportItem(ln, r.db))
+	return r.template.Execute(r.output, r.getReportItem(ln, r.db))
 }
 
 func (r *regReporterTemplate) Flush() error {
@@ -102,8 +108,11 @@ func newTotalFromAccumulator(acc accumulator.Accumulator) *[]Total {
 	return &result
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeList) ReportItem {
-	acc := accumulator.NewAccumulator()
+func (r *regReporterTemplate) getReportItem(ln *shared.LogNode, db shared.DBNodeList) ReportItem {
+	var acc accumulator.Accumulator
+	if r.options.Totals {
+		acc = accumulator.NewAccumulator()
+	}
 	re := make([]ReportElement, len(ln.Elements))
 	for i := range ln.Elements {
 		re[i].Name = ln.Elements[i].Name
@@ -112,12 +121,23 @@ func getReportItem(ln *shared.LogNode, db shared.DBNodeList) ReportItem {
 			for _, repl := range repl.Elements {
 				res := repl.Val * re[i].Val
 				re[i].Ingredients.Add(repl.Name, res)
-				acc.Add(repl.Name, res)
+				if r.options.Totals {
+					acc.Add(repl.Name, res)
+				}
 			}
 		} else {
 			re[i].Ingredients.Add(re[i].Name, re[i].Val)
-			acc.Add(ln.Elements[i].Name, ln.Elements[i].Val)
+			if r.options.Totals {
+				acc.Add(ln.Elements[i].Name, ln.Elements[i].Val)
+			}
 		}
 	}
-	return ReportItem{time.Now(), re, newTotalFromAccumulator(acc)}
+	var totals *[]Total
+	if r.options.TotalsOnly {
+		re = nil
+	}
+	if r.options.Totals {
+		totals = newTotalFromAccumulator(acc)
+	}
+	return ReportItem{ln.Time, &re, totals}
 }

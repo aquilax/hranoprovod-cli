@@ -155,8 +155,8 @@ func (o *Options) populateReporter(c *cli.Context) {
 			o.Reporter.ShortenStrings = true
 		}
 
-		if c.Lineage()[i].IsSet("new-reg-reporter") {
-			o.Reporter.UseNewRegReporter = true
+		if c.Lineage()[i].IsSet("use-old-reg-reporter") {
+			o.Reporter.UseOldRegReporter = true
 		}
 
 		if c.Lineage()[i].IsSet("begin") {

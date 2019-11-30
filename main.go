@@ -96,15 +96,15 @@ func main() {
 					Aliases: []string{"f"},
 					Usage:   "Show only single food",
 				},
-				&cli.BoolFlag{
-					Name:    "group-food",
-					Aliases: []string{"g"},
-					Usage:   "Single element grouped by food",
-				},
 				&cli.StringFlag{
 					Name:    "single-element",
 					Aliases: []string{"s"},
 					Usage:   "Show only single element",
+				},
+				&cli.BoolFlag{
+					Name:    "group-food",
+					Aliases: []string{"g"},
+					Usage:   "Single element grouped by food",
 				},
 				&cli.BoolFlag{
 					Name:  "csv",
@@ -127,8 +127,8 @@ func main() {
 					Usage: "Shorten longer strings",
 				},
 				&cli.BoolFlag{
-					Name:  "new-reg-reporter",
-					Usage: "Use the new reg reporter",
+					Name:  "use-old-reg-reporter",
+					Usage: "Use the old reg reporter",
 				},
 				&cli.BoolFlag{
 					Name:  "unresolved",
