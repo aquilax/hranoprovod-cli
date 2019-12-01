@@ -1,5 +1,7 @@
 package reporter
 
+import "github.com/aquilax/truncate"
+
 const (
 	reset       = "\x1B[0m"
 	bold        = "\x1B[1m"
@@ -29,11 +31,5 @@ const (
 )
 
 func shorten(t string, max int) string {
-	r := []rune(t)
-	l := len(r)
-	if l <= max {
-		return t
-	}
-	cut := max / 2
-	return string(append(append(r[:max-cut-1], '…'), r[l-cut:]...))
+	return truncate.Truncate(t, max, truncate.DEFAULT_OMISSION, truncate.PositionMiddle)
 }

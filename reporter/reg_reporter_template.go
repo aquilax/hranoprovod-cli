@@ -28,24 +28,6 @@ const dayTemplate = `{{printDate .Time}}
 {{- end}}
 `
 
-type ReportElement struct {
-	shared.Element
-	Ingredients shared.Elements
-}
-
-type Total struct {
-	Name     string
-	Positive float64
-	Negative float64
-	Sum      float64
-}
-
-type ReportItem struct {
-	Time     time.Time
-	Elements *[]ReportElement
-	Totals   *[]Total
-}
-
 type regReporterTemplate struct {
 	options  *Options
 	db       shared.DBNodeList
@@ -86,15 +68,15 @@ func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Wr
 }
 
 func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
-	return r.template.Execute(r.output, r.getReportItem(ln, r.db))
+	return r.template.Execute(r.output, getReportItem(ln, r.db, r.options))
 }
 
 func (r *regReporterTemplate) Flush() error {
 	return nil
 }
 
-func newTotalFromAccumulator(acc accumulator.Accumulator) *[]Total {
-	var result = make([]Total, len(acc))
+func newTotalFromAccumulator(acc accumulator.Accumulator) *[]total {
+	var result = make([]total, len(acc))
 	var ss = make(sort.StringSlice, len(acc))
 	i := 0
 	for name := range acc {
@@ -103,41 +85,7 @@ func newTotalFromAccumulator(acc accumulator.Accumulator) *[]Total {
 	}
 	sort.Sort(ss)
 	for i, name := range ss {
-		result[i] = Total{name, acc[name][accumulator.Positive], acc[name][accumulator.Negative], acc[name][accumulator.Positive] + acc[name][accumulator.Negative]}
+		result[i] = total{name, acc[name][accumulator.Positive], acc[name][accumulator.Negative], acc[name][accumulator.Positive] + acc[name][accumulator.Negative]}
 	}
 	return &result
-}
-
-func (r *regReporterTemplate) getReportItem(ln *shared.LogNode, db shared.DBNodeList) ReportItem {
-	var acc accumulator.Accumulator
-	if r.options.Totals {
-		acc = accumulator.NewAccumulator()
-	}
-	re := make([]ReportElement, len(ln.Elements))
-	for i := range ln.Elements {
-		re[i].Name = ln.Elements[i].Name
-		re[i].Val = ln.Elements[i].Val
-		if repl, found := db[re[i].Name]; found {
-			for _, repl := range repl.Elements {
-				res := repl.Val * re[i].Val
-				re[i].Ingredients.Add(repl.Name, res)
-				if r.options.Totals {
-					acc.Add(repl.Name, res)
-				}
-			}
-		} else {
-			re[i].Ingredients.Add(re[i].Name, re[i].Val)
-			if r.options.Totals {
-				acc.Add(ln.Elements[i].Name, ln.Elements[i].Val)
-			}
-		}
-	}
-	var totals *[]Total
-	if r.options.TotalsOnly {
-		re = nil
-	}
-	if r.options.Totals {
-		totals = newTotalFromAccumulator(acc)
-	}
-	return ReportItem{ln.Time, &re, totals}
 }
