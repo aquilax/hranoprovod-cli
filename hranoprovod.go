@@ -116,22 +116,47 @@ func (hr Hranoprovod) CSV() error {
 
 // Stats generates statistics report
 func (hr Hranoprovod) Stats() error {
-	f, err := os.Open(hr.options.Global.LogFileName)
+	var err error
+	fLog, err := os.Open(hr.options.Global.LogFileName)
 	if err != nil {
 		return parser.NewErrorIO(err, hr.options.Global.LogFileName)
 	}
-	defer f.Close()
+	defer fLog.Close()
 
-	count := 0
-	parser.ParseStreamCallback(f, '#', func(n *shared.ParserNode, err error) (stop bool) {
-		count++
+	fDb, err := os.Open(hr.options.Global.DbFileName)
+	if err != nil {
+		return parser.NewErrorIO(err, hr.options.Global.LogFileName)
+	}
+	defer fDb.Close()
+
+	countLog := 0
+	var firstLogDate time.Time
+	var lastLogDate time.Time
+	parser.ParseStreamCallback(fLog, '#', func(n *shared.ParserNode, err error) (stop bool) {
+		lastLogDate, err = shared.ParseTime(n.Header, hr.options.Global.DateFormat)
+		if err == nil {
+			if firstLogDate.IsZero() {
+				firstLogDate = lastLogDate
+			}
+		}
+
+		countLog++
 		return false
 	})
 
-	fmt.Printf("Food database: %s\n", hr.options.Global.DbFileName)
-	fmt.Printf("Log database: %s\n", hr.options.Global.LogFileName)
+	countDb := 0
+	parser.ParseStreamCallback(fDb, '#', func(n *shared.ParserNode, err error) (stop bool) {
+		countDb++
+		return false
+	})
+
+	fmt.Printf("  Database file:      %s\n", hr.options.Global.DbFileName)
+	fmt.Printf("  Database records:   %d\n", countDb)
 	fmt.Println("")
-	fmt.Printf("Log records: %d\n", count)
+	fmt.Printf("  Log file:           %s\n", hr.options.Global.LogFileName)
+	fmt.Printf("  Log records:        %d\n", countLog)
+	fmt.Printf("  First record:       %s (%d days ago)\n", firstLogDate.Format(hr.options.Reporter.DateFormat), int(time.Now().Sub(firstLogDate).Hours()/24))
+	fmt.Printf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(hr.options.Reporter.DateFormat), int(time.Now().Sub(lastLogDate).Hours()/24))
 	return nil
 }
 
