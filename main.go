@@ -75,6 +75,10 @@ func main() {
 			Usage:   "Resolve depth `DEPTH`",
 			EnvVars: []string{"HR_MAXDEPTH"},
 		},
+		&cli.BoolFlag{
+			Name:  "no-color",
+			Usage: "Disable color output",
+		},
 	}
 	app.Commands = []*cli.Command{
 		{

@@ -37,6 +37,10 @@ func Test_shorten(t *testing.T) {
 			"sweets/pa…bonus/100g",
 		},
 	}
+	shorten := getShorten(&Options{
+		ShortenStrings: true,
+	})
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := shorten(tt.args.t, tt.args.max)

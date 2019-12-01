@@ -1,24 +1,22 @@
 package reporter
 
 import (
-	"fmt"
 	"io"
 	"text/template"
-	"time"
 
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-const summaryTemplate = `{{printDate .Time}} :
+const summaryTemplate = `{{formatDate .Time}} :
 {{- if .Totals }}
 {{- range $total := .Totals }}
-{{ cNum $total.Positive }} : {{ $total.Name }}
+{{ formatValue $total.Positive }} : {{ $total.Name }}
 {{- end}}
 {{- end}}
 ------------
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ cNum $el.Val }} : {{ $el.Name }}
+{{ formatValue $el.Val }} : {{ $el.Name }}
 {{- end}}
 {{- end}}
 `
@@ -37,14 +35,7 @@ func NewSummaryReporterTemplate(options *Options, db shared.DBNodeList, writer i
 		options,
 		db,
 		writer,
-		template.Must(template.New("summary").Funcs(template.FuncMap{
-			"printDate": func(ts time.Time) string {
-				return ts.Format(options.DateFormat)
-			},
-			"cNum": func(num float64) string {
-				return fmt.Sprintf("%10.2f", num)
-			},
-		}).Parse(summaryTemplate)),
+		template.Must(template.New("summary").Funcs(getTemplateFunctions(options)).Parse(summaryTemplate)),
 	}
 }
 

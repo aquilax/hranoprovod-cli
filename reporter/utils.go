@@ -1,7 +1,5 @@
 package reporter
 
-import "github.com/aquilax/truncate"
-
 const (
 	reset       = "\x1B[0m"
 	bold        = "\x1B[1m"
@@ -29,7 +27,3 @@ const (
 	bwhite      = "\x1B[47m"
 	newline     = "\r\n\x1B[0m"
 )
-
-func shorten(t string, max int) string {
-	return truncate.Truncate(t, max, truncate.DEFAULT_OMISSION, truncate.PositionMiddle)
-}

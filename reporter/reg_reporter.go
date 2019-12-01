@@ -85,11 +85,11 @@ func (r *regReporter) printDate(ts time.Time) {
 }
 
 func (r *regReporter) printElement(element shared.Element) {
-	fmt.Fprintf(r.output, "\t%-27s :%s\n", r.shorten(element.Name, 27), r.cNum(element.Val))
+	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Val))
 }
 
 func (r *regReporter) printIngredient(name string, value float64) {
-	fmt.Fprintf(r.output, "\t\t%20s %s\n", r.shorten(name, 20), r.cNum(value))
+	fmt.Fprintf(r.output, "\t\t%20s %s\n", name, r.cNum(value))
 }
 
 func (r *regReporter) printTotalHeader() {
@@ -97,16 +97,9 @@ func (r *regReporter) printTotalHeader() {
 }
 
 func (r *regReporter) printTotalRow(name string, pos float64, neg float64) {
-	fmt.Fprintf(r.output, "\t\t%20s %s %s =%s\n", r.shorten(name, 20), r.cNum(pos), r.cNum(neg), r.cNum(pos+neg))
+	fmt.Fprintf(r.output, "\t\t%20s %s %s =%s\n", name, r.cNum(pos), r.cNum(neg), r.cNum(pos+neg))
 }
 
 func (r *regReporter) printUnresolvedRow(name string) {
 	fmt.Fprintln(r.output, name)
-}
-
-func (r *regReporter) shorten(t string, max int) string {
-	if r.options.ShortenStrings {
-		return shorten(t, max)
-	}
-	return t
 }

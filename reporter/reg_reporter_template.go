@@ -1,29 +1,27 @@
 package reporter
 
 import (
-	"fmt"
 	"io"
 	"sort"
 	"text/template"
-	"time"
 
 	"github.com/aquilax/hranoprovod-cli/accumulator"
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-const dayTemplate = `{{printDate .Time}}
+const dayTemplate = `{{formatDate .Time}}
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ printf "\t%-27s :%s" (shorten $el.Name 27) (cNum $el.Val) }}
+{{ printf "\t%-27s :%s" (shorten $el.Name 27) (formatValue $el.Val) }}
 {{- range $ing := $el.Ingredients}}
-{{ printf "\t\t%20s %s" (shorten $ing.Name 20) (cNum $ing.Val) }}
+{{ printf "\t\t%20s %s" (shorten $ing.Name 20) (formatValue $ing.Val) }}
 {{- end}}
 {{- end}}
 {{- end}}
 {{- if .Totals }}
 	-- TOTAL  ----------------------------------------------------
 {{- range $total := .Totals }}
-{{ printf "\t\t%20s %s %s =%s" (shorten $total.Name 20) (cNum $total.Positive) (cNum $total.Negative) (cNum $total.Sum) }}
+{{ printf "\t\t%20s %s %s =%s" (shorten $total.Name 20) (formatValue $total.Positive) (formatValue $total.Negative) (formatValue $total.Sum) }}
 {{- end}}
 {{- end}}
 `
@@ -36,34 +34,11 @@ type regReporterTemplate struct {
 }
 
 func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
-	var shorter = shorten
-	if !options.ShortenStrings {
-		shorter = func(s string, n int) string { return s }
-	}
 	return &regReporterTemplate{
 		options,
 		db,
 		writer,
-		template.Must(template.New("dayTemplate").Funcs(template.FuncMap{
-			"printDate": func(ts time.Time) string {
-				return ts.Format(options.DateFormat)
-			},
-			"cNum": func(num float64) string {
-				if options.Color {
-					if num > 0 {
-						return red + fmt.Sprintf("%10.2f", num) + reset
-					}
-					if num < 0 {
-						return green + fmt.Sprintf("%10.2f", num) + reset
-					}
-				}
-				return fmt.Sprintf("%10.2f", num)
-			},
-			"shorten": shorter,
-			"add": func(num1, num2 float64) float64 {
-				return num1 + num2
-			},
-		}).Parse(dayTemplate)),
+		template.Must(template.New("dayTemplate").Funcs(getTemplateFunctions(options)).Parse(dayTemplate)),
 	}
 }
 
