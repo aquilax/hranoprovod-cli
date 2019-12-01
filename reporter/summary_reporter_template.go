@@ -11,15 +11,15 @@ import (
 )
 
 const summaryTemplate = `{{printDate .Time}} :
+{{- if .Totals }}
+{{- range $total := .Totals }}
+{{ cNum $total.Positive }} : {{ $total.Name }}
+{{- end}}
+{{- end}}
+------------
 {{- if .Elements }}
 {{- range $el := .Elements}}
 {{ cNum $el.Val }} : {{ $el.Name }}
-{{- end}}
-{{- end}}
-{{- if .Totals }}
-------------
-{{- range $total := .Totals }}
-{{ cNum $total.Positive }} : {{ $total.Name }}
 {{- end}}
 {{- end}}
 `
