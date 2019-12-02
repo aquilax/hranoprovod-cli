@@ -27,13 +27,3 @@ const (
 	bwhite      = "\x1B[47m"
 	newline     = "\r\n\x1B[0m"
 )
-
-func shorten(t string, max int) string {
-	r := []rune(t)
-	l := len(r)
-	if l <= max {
-		return t
-	}
-	cut := max / 2
-	return string(append(append(r[:max-cut-1], '…'), r[l-cut:]...))
-}

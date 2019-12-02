@@ -14,11 +14,11 @@ func TestRegReporterTemplate(t *testing.T) {
 	Convey("Given template reg reporter", t, func() {
 		var b bytes.Buffer
 		db := shared.NewDBNodeList()
-		dbel := shared.NewElements()
-		dbel.Add("el1", 1.1)
-		dbel.Add("el2", 1.2)
-		dbel.Add("el3", 1.3)
-		dbNode := shared.DBNode{"test2", dbel}
+		dbElements := shared.NewElements()
+		dbElements.Add("el1", 1.1)
+		dbElements.Add("el2", 1.2)
+		dbElements.Add("el3", 1.3)
+		dbNode := shared.DBNode{Header: "test2", Elements: dbElements}
 		db.Push(&dbNode)
 
 		o := NewDefaultOptions()
