@@ -8,6 +8,9 @@ import (
 	"github.com/aquilax/truncate"
 )
 
+const negativeFormat = red + "%10.2f" + reset
+const positiveFormat = green + "%10.2f" + reset
+
 func getTemplateFunctions(options *Options) template.FuncMap {
 	return template.FuncMap{
 		"formatDate": func(ts time.Time) string {
@@ -33,10 +36,10 @@ func getFormatValue(options *Options) func(float64) string {
 	if options.Color {
 		return func(num float64) string {
 			if num > 0 {
-				return fmt.Sprintf("%s%10.2f%s", red, num, reset)
+				return fmt.Sprintf(negativeFormat, num)
 			}
 			if num < 0 {
-				return fmt.Sprintf("%s%10.2f%s", green, num, reset)
+				return fmt.Sprintf(positiveFormat, num)
 			}
 			return fmt.Sprintf("%10.2f", num)
 		}

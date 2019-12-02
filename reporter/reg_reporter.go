@@ -99,7 +99,3 @@ func (r *regReporter) printTotalHeader() {
 func (r *regReporter) printTotalRow(name string, pos float64, neg float64) {
 	fmt.Fprintf(r.output, "\t\t%20s %s %s =%s\n", name, r.cNum(pos), r.cNum(neg), r.cNum(pos+neg))
 }
-
-func (r *regReporter) printUnresolvedRow(name string) {
-	fmt.Fprintln(r.output, name)
-}
