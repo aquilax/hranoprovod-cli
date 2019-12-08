@@ -202,8 +202,9 @@ func main() {
 			Usage: "Generates various reports",
 			Subcommands: []*cli.Command{
 				{
-					Name:  "element-total",
-					Usage: "Generates total sum for element grouped by food",
+					Name:      "element-total",
+					Usage:     "Generates total sum for element grouped by food",
+					ArgsUsage: "[element name]",
 					Flags: []cli.Flag{
 						&cli.BoolFlag{
 							Name:  "desc",
