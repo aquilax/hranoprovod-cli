@@ -9,6 +9,7 @@ import (
 	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
+	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"
 )
@@ -119,11 +120,17 @@ func mustGetTime(format string, date string) time.Time {
 	if date == "last30" {
 		return time.Now().AddDate(0, 0, -30)
 	}
-	customTime, err := time.Parse(format, date)
-	if err != nil {
-		panic(err)
+	var err error
+	var customTime time.Time
+	customTime, err = time.Parse(format, date)
+	if err == nil {
+		return customTime
 	}
-	return customTime
+	customTime, err = naturaldate.Parse(date, time.Now())
+	if err == nil {
+		return customTime
+	}
+	panic(err)
 }
 
 func (o *Options) populateReporter(c *cli.Context) {
