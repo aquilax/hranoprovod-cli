@@ -7,7 +7,7 @@ require (
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/tj/go-naturaldate v1.2.0
-	github.com/urfave/cli/v2 v2.0.0
+	github.com/urfave/cli/v2 v2.1.1
 	gopkg.in/gcfg.v1 v1.2.3
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
