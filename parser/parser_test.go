@@ -141,9 +141,9 @@ func TestParseWg(t *testing.T) {
 	go func() {
 		for {
 			select {
-			case _ = <-parser.Nodes:
+			case <-parser.Nodes:
 				continue
-			case _ = <-parser.Errors:
+			case <-parser.Errors:
 				continue
 			case <-parser.Done:
 				wg.Done()
@@ -165,9 +165,9 @@ func BenchmarkParse(b *testing.B) {
 		go func() {
 			for {
 				select {
-				case _ = <-parser.Nodes:
+				case <-parser.Nodes:
 					continue
-				case _ = <-parser.Errors:
+				case <-parser.Errors:
 					continue
 				case <-parser.Done:
 					wg.Done()

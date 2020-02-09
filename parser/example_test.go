@@ -26,7 +26,7 @@ func ExampleParser_ParseStream() {
 			select {
 			case node := <-p.Nodes:
 				fmt.Println(node.Header)
-			case _ = <-p.Errors:
+			case <-p.Errors:
 				return
 			case <-p.Done:
 				return

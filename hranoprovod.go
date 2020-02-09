@@ -53,7 +53,7 @@ func (hr Hranoprovod) Lint(fileName string) error {
 	return func() error {
 		for {
 			select {
-			case _ = <-p.Nodes:
+			case <-p.Nodes:
 			case err := <-p.Errors:
 				return err
 			case <-p.Done:
@@ -132,7 +132,7 @@ func (hr Hranoprovod) Stats() error {
 	countLog := 0
 	var firstLogDate time.Time
 	var lastLogDate time.Time
-	parser.ParseStreamCallback(fLog, '#', func(n *shared.ParserNode, err error) (stop bool) {
+	parser.ParseStreamCallback(fLog, '#', func(n *shared.ParserNode, _ error) (stop bool) {
 		lastLogDate, err = shared.ParseTime(n.Header, hr.options.Global.DateFormat)
 		if err == nil {
 			if firstLogDate.IsZero() {
