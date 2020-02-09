@@ -22,7 +22,7 @@ func NewTreeNode(name string, sum float64) *TreeNode {
 	return &TreeNode{
 		Name:     name,
 		Sum:      sum,
-		Children: make(map[string]*TreeNode, 0),
+		Children: make(map[string]*TreeNode),
 	}
 }
 
