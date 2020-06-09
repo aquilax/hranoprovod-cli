@@ -6,7 +6,7 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20191106031601-ce3c9ade29de // indirect
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4
-	github.com/tj/go-naturaldate v1.2.0
+	github.com/tj/go-naturaldate v1.3.0
 	github.com/urfave/cli/v2 v2.2.0
 	gopkg.in/gcfg.v1 v1.2.3
 	gopkg.in/warnings.v0 v0.1.2 // indirect
