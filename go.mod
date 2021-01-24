@@ -4,6 +4,7 @@ require (
 	github.com/aquilax/truncate v0.0.0-20191108181654-bc059b62ec56
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20191106031601-ce3c9ade29de // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/tj/go-naturaldate v1.3.0
