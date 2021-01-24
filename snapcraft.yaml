@@ -4,7 +4,7 @@ summary: Life metrics plaintext tracker
 description: |
   Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
 
-grade: stable
+grade: devel
 confinement: strict
 base: core18
 
@@ -19,10 +19,3 @@ apps:
   hranoprovod-cli:
     command: hranoprovod-cli
     plugs: ["personal-files"]
-
-plugs:
-  personal-files:
-    read:
-      - $HOME/.hranoprovod/food.yaml
-      - $HOME/.hranoprovod/log.yaml
-      - $HOME/.hranoprovod/config
