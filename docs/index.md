@@ -117,6 +117,10 @@ And this is the daily summary:
       1.00 : candy/snickers/bar
 ```
 
+## How does it work
+
+When you run a report `hranoprovod-cli` will look up each entry in the journal in the recipe book file. Each ingredient in the recipe book will also try to lookup itself up until no further reference is found. In the examples above `calories`, `carbohydrate`, `couffee/cup`, `fat` and `protein` are returned as aggregate numbers in the totals since they were never defined. This allows for a great tracking flexibility and also making the tool metric agnostic.
+
 ## Keeping a journal
 
 TODO
