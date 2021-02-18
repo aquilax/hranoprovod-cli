@@ -1,7 +1,7 @@
 module github.com/aquilax/hranoprovod-cli
 
 require (
-	github.com/aquilax/truncate v0.0.0-20191108181654-bc059b62ec56
+	github.com/aquilax/truncate v1.0.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20191106031601-ce3c9ade29de // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
