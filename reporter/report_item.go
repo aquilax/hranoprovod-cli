@@ -31,6 +31,7 @@ func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options *Options) r
 		acc = accumulator.NewAccumulator()
 	}
 	re := make([]reportElement, len(ln.Elements))
+	//sort.Sort(ln.Elements)
 	for i := range ln.Elements {
 		re[i].Name = ln.Elements[i].Name
 		re[i].Val = ln.Elements[i].Val

@@ -9,47 +9,49 @@ import (
 
 // Options contains the options for the reporter
 type Options struct {
-	CSV                bool
-	Color              bool
-	TotalsOnly         bool
-	Totals             bool
-	DateFormat         string
-	CaloriesLabel      string
-	FatLabel           string
-	CarbohydrateLabel  string
-	ProteinLabel       string
-	HasBeginning       bool
-	HasEnd             bool
-	BeginningTime      time.Time
-	EndTime            time.Time
-	Unresolved         bool
-	SingleElement      string
-	SingleFood         string
-	CollapseLast       bool
-	Collapse           bool
-	ElementGroupByFood bool
-	ShortenStrings     bool
-	UseOldRegReporter  bool
+	CSV                  bool
+	Color                bool
+	TotalsOnly           bool
+	Totals               bool
+	DateFormat           string
+	CaloriesLabel        string
+	FatLabel             string
+	CarbohydrateLabel    string
+	ProteinLabel         string
+	HasBeginning         bool
+	HasEnd               bool
+	BeginningTime        time.Time
+	EndTime              time.Time
+	Unresolved           bool
+	SingleElement        string
+	SingleFood           string
+	CollapseLast         bool
+	Collapse             bool
+	ElementGroupByFood   bool
+	ShortenStrings       bool
+	UseOldRegReporter    bool
+	InternalTemplateName string
 }
 
 // NewDefaultOptions returns the default reporter options
 func NewDefaultOptions() *Options {
 	return &Options{
-		CSV:                false,
-		Color:              false,
-		DateFormat:         "2006/01/02",
-		CaloriesLabel:      "calories",
-		FatLabel:           "fat",
-		CarbohydrateLabel:  "carbohydrate",
-		ProteinLabel:       "protein",
-		Totals:             true,
-		BeginningTime:      time.Now(),
-		EndTime:            time.Now(),
-		CollapseLast:       false,
-		Collapse:           false,
-		ElementGroupByFood: false,
-		ShortenStrings:     false,
-		UseOldRegReporter:  false,
+		CSV:                  false,
+		Color:                false,
+		DateFormat:           "2006/01/02",
+		CaloriesLabel:        "calories",
+		FatLabel:             "fat",
+		CarbohydrateLabel:    "carbohydrate",
+		ProteinLabel:         "protein",
+		Totals:               true,
+		BeginningTime:        time.Now(),
+		EndTime:              time.Now(),
+		CollapseLast:         false,
+		Collapse:             false,
+		ElementGroupByFood:   false,
+		ShortenStrings:       false,
+		UseOldRegReporter:    false,
+		InternalTemplateName: "default",
 	}
 }
 

@@ -166,6 +166,10 @@ func (o *Options) populateReporter(c *cli.Context) {
 			o.Reporter.UseOldRegReporter = true
 		}
 
+		if c.Lineage()[i].IsSet("internal-template-name") {
+			o.Reporter.InternalTemplateName = c.Lineage()[i].String("internal-template-name")
+		}
+
 		if c.Lineage()[i].IsSet("begin") {
 			o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
 			o.Reporter.HasBeginning = true

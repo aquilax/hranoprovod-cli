@@ -11,7 +11,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.2.3"
+	appVersion = "2.2.4"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
@@ -134,6 +134,11 @@ func main() {
 				&cli.BoolFlag{
 					Name:  "use-old-reg-reporter",
 					Usage: "Use the old reg reporter",
+				},
+				&cli.StringFlag{
+					Name:  "internal-template-name",
+					Usage: "Name of the internal demplate to use: [default, left-aligned]",
+					Value: "default",
 				},
 				&cli.BoolFlag{
 					Name:  "unresolved",
