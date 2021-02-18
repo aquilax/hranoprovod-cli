@@ -9,7 +9,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/shared"
 )
 
-const dayTemplate = `{{formatDate .Time}}
+const defaultTemplate = `{{formatDate .Time}}
 {{- if .Elements }}
 {{- range $el := .Elements}}
 {{ printf "\t%-27s :%s" (shorten $el.Name 27) (formatValue $el.Val) }}
@@ -25,6 +25,22 @@ const dayTemplate = `{{formatDate .Time}}
 {{- end}}
 {{- end}}
 `
+const leftAlignedTemplate = `{{formatDate .Time}}
+{{- if .Elements }}
+{{- range $el := .Elements}}
+{{ printf "  %s : %s" (formatValue $el.Val) $el.Name}}
+{{- range $ing := $el.Ingredients}}
+{{ printf "  %s :   %s" (formatValue $ing.Val) $ing.Name }}
+{{- end}}
+{{- end}}
+{{- end}}
+{{- if .Totals }}
+------------------------------------------------------- TOTAL --
+{{- range $total := .Totals }}
+{{ printf "  %s %s = %s : %s" (formatValue $total.Positive) (formatValue $total.Negative) (formatValue $total.Sum) $total.Name }}
+{{- end}}
+{{- end}}
+`
 
 type regReporterTemplate struct {
 	options  *Options
@@ -33,12 +49,19 @@ type regReporterTemplate struct {
 	template *template.Template
 }
 
+func getInternalTemplate(internalTemplateName string) string {
+	if internalTemplateName == "left-aligned" {
+		return leftAlignedTemplate
+	}
+	return defaultTemplate
+}
+
 func newRegReporterTemplate(options *Options, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
 	return &regReporterTemplate{
 		options,
 		db,
 		writer,
-		template.Must(template.New("dayTemplate").Funcs(getTemplateFunctions(options)).Parse(dayTemplate)),
+		template.Must(template.New("template").Funcs(getTemplateFunctions(options)).Parse(getInternalTemplate(options.InternalTemplateName))),
 	}
 }
 

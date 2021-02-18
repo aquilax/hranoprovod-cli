@@ -135,6 +135,11 @@ func main() {
 					Name:  "use-old-reg-reporter",
 					Usage: "Use the old reg reporter",
 				},
+				&cli.StringFlag{
+					Name:  "internal-template-name",
+					Usage: "Name of the internal demplate to use: [default, left-aligned]",
+					Value: "default",
+				},
 				&cli.BoolFlag{
 					Name:  "unresolved",
 					Usage: "Deprecated: Show unresolved elements only (moved to 'report unresolved')",
