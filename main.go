@@ -315,6 +315,36 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:  "gen",
+			Usage: "Generate documentation",
+			Subcommands: []*cli.Command{
+				{
+					Name:  "man",
+					Usage: "Generate man page",
+					Action: func(c *cli.Context) error {
+						man, err := app.ToMan()
+						if err != nil {
+							return err
+						}
+						fmt.Fprintf(os.Stdout, man)
+						return nil
+					},
+				},
+				{
+					Name:  "markdown",
+					Usage: "Generate markdown page",
+					Action: func(c *cli.Context) error {
+						markdown, err := app.ToMarkdown()
+						if err != nil {
+							return err
+						}
+						fmt.Fprintf(os.Stdout, markdown)
+						return nil
+					},
+				},
+			},
+		},
 	}
 	app.Run(os.Args)
 }
