@@ -28,16 +28,16 @@ const defaultTemplate = `{{formatDate .Time}}
 const leftAlignedTemplate = `{{formatDate .Time}}
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ printf "  %s : %s" (formatValue $el.Val) $el.Name}}
+{{ printf "  %s  %s" (formatValue $el.Val) $el.Name}}
 {{- range $ing := $el.Ingredients}}
-{{ printf "  %s :   %s" (formatValue $ing.Val) $ing.Name }}
+{{ printf "  %s    %s" (formatValue $ing.Val) $ing.Name }}
 {{- end}}
 {{- end}}
 {{- end}}
 {{- if .Totals }}
 ------------------------------------------------------- TOTAL --
 {{- range $total := .Totals }}
-{{ printf "  %s %s = %s : %s" (formatValue $total.Positive) (formatValue $total.Negative) (formatValue $total.Sum) $total.Name }}
+{{ printf "  %s %s = %s  %s" (formatValue $total.Positive) (formatValue $total.Negative) (formatValue $total.Sum) $total.Name }}
 {{- end}}
 {{- end}}
 `
