@@ -21,6 +21,21 @@ Clone the repository and build/install the tool:
     cd hranoprovod-cli
     go install
 
+## Docker
+
+You can run hranoprovod-cli from Docker too
+
+### Building the image
+
+```
+docker build --pull --rm -f "Dockerfile" -t hranoprovodcli:latest .
+```
+
+### Running a balance report
+```
+docker run --rm -it -v /path/to/yaml/files/:/data hranoprovodcli:latest -d /data/food.yaml -l /data/log.yaml bal
+```
+
 ## Help
 
 Running the `hranoprovod-cli` command will show you the command line options

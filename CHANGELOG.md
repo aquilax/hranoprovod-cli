@@ -1,11 +1,20 @@
-2.2.2
+v2.2.5
+
+* Added second custom template
+* Added Docker container runner
+
+v2.2.2
+
 * Feature: Adds string shortening option to the reg report
 
-2.2.1
+v2.2.1
+
 * Bugfix: fixes maxdepth config
 
-2.2.0
+v2.2.0
+
 * Re-organized the command line commands/parameters
 
-2.1.2
+v2.1.2
+
 * Added `group-food` option. Usage: `hranoprovod-cli reg -b yesterday -s calories -g` prints the calories for each food sort the food for today
