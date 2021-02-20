@@ -1,4 +1,4 @@
-v2.2.5
+v2.4.5
 
 * Added second custom template
 * Added Docker container runner

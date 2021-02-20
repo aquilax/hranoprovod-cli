@@ -11,7 +11,7 @@ import (
 const (
 	appName    = "hranoprovod-cli"
 	appUsage   = "Lifestyle tracker"
-	appVersion = "2.2.5"
+	appVersion = "2.4.5"
 	appAuthor  = "aquilax"
 	appEmail   = "aquilax@gmail.com"
 
