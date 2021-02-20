@@ -64,6 +64,8 @@ Shows the log register report
 
 **--group-food, -g**: Single element grouped by food
 
+**--internal-template-name**="": Name of the internal demplate to use: [default, left-aligned] (default: default)
+
 **--no-color**: Disable color output
 
 **--no-totals**: Disable totals

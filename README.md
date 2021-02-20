@@ -28,12 +28,13 @@ You can run hranoprovod-cli from Docker too
 ### Building the image
 
 ```
-docker build --pull --rm -f "Dockerfile" -t hranoprovodcli:latest .
+docker build --pull --rm -f "Dockerfile" -t aquilax/hranoprovod-cli:latest .
 ```
 
 ### Running a balance report
+
 ```
-docker run --rm -it -v /path/to/yaml/files/:/data hranoprovodcli:latest -d /data/food.yaml -l /data/log.yaml bal
+docker run --rm -it -v /path/to/data/files/:/data aquilax/hranoprovod-cli:latest -d /data/food.yaml -l /data/log.yaml bal
 ```
 
 ## Help
@@ -57,7 +58,9 @@ COMMANDS:
    lint           Lints file
    report         Generates various reports
    csv            Generates csv exports
-   stats          Provide summary information
+   stats          Provide stats information
+   summary        Show summary
+   gen            Generate documentation
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
@@ -68,6 +71,7 @@ GLOBAL OPTIONS:
    --config FILE, -c FILE     Configuration file FILE (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
    --date-format DATE_FORMAT  Date format for parsing and printing dates DATE_FORMAT (default: "2006/01/02") [$HR_DATE_FORMAT]
    --maxdepth DEPTH           Resolve depth DEPTH (default: 10) [$HR_MAXDEPTH]
+   --no-color                 Disable color output (default: false)
    --help, -h                 show help (default: false)
    --version, -v              print the version (default: false)
 ```
@@ -80,7 +84,7 @@ Hranoprovod uses two files with similar format to operate.
 
 Contains all the "recipes" in the following format:
 
-```
+```yaml
 fish/tuna/canned/100g:
   calories: 184
   fat: 6
@@ -96,7 +100,7 @@ bread/white/100g:
 
 Let's say you love tuna sandwiches then you can combine these two ingredients into one:
 
-```
+```yaml
 sandwich/tuna/100g:
   fish/tuna/canned/100g: .6
   bread/white/100g: .4
@@ -113,7 +117,7 @@ Hranoprovod is measure agnostic and it's up to the user to use or state the meas
 
 The log file contains dated usage of the recipes, defined in the database file.
 
-```
+```yaml
 2014/12/17:
   tea/cup: 1
   sandwich/tuna/pc: 2

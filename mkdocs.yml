@@ -2,5 +2,6 @@ site_name: Hranoprovod
 nav:
     - Home: index.md
     - Installation: install.md
+    - Usage: usage.md
     - Command Line: command-line.md
 theme: readthedocs
