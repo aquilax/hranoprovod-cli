@@ -179,7 +179,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --
 
 ## Balance
 
-## Default balance report
+### Default balance report
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
@@ -197,7 +197,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
 
 ```
 
-## Default balance report (collapse)
+### Default balance report (collapse)
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c
@@ -208,7 +208,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c
 
 ```
 
-## Default balance report (collapse last)
+### Default balance report (collapse last)
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --collapse-last
@@ -222,7 +222,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --
 
 ```
 
-## Default balance report (single element)
+### Default balance report (single element)
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s fat
@@ -240,7 +240,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s
 
 ```
 
-## Reports
+## Other reports
 
 ### Element-total
 

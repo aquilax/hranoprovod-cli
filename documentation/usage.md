@@ -24,23 +24,23 @@ and the following recipe book file:
 
 ## Balance
 
-## Default balance report
+### Default balance report
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal`
 
-## Default balance report (collapse)
+### Default balance report (collapse)
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c`
 
-## Default balance report (collapse last)
+### Default balance report (collapse last)
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --collapse-last`
 
-## Default balance report (single element)
+### Default balance report (single element)
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s fat`
 
-## Reports
+## Other reports
 
 ### Element-total
 
