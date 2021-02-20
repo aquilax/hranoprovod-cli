@@ -29,3 +29,9 @@ jobs:
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@3.02
+        with:
+          name: aquilax/hranoprovod-cli
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}

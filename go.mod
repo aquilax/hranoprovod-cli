@@ -11,6 +11,7 @@ require (
 	github.com/urfave/cli/v2 v2.3.0
 	gopkg.in/gcfg.v1 v1.2.3
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
 
 go 1.13
