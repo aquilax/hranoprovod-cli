@@ -6,7 +6,6 @@ import (
 	"os/user"
 	"time"
 
-	client "github.com/aquilax/hranoprovod-cli/api-client"
 	"github.com/aquilax/hranoprovod-cli/parser"
 	"github.com/aquilax/hranoprovod-cli/reporter"
 	"github.com/tj/go-naturaldate"
@@ -30,7 +29,6 @@ type Options struct {
 	}
 	Parser   parser.Options
 	Reporter reporter.Options
-	API      client.Options
 }
 
 // NewOptions returns new options structure.
@@ -39,7 +37,6 @@ func NewOptions() *Options {
 	o.Reporter = *reporter.NewDefaultOptions()
 	o.Reporter.Color = true
 	o.Parser = *parser.NewDefaultOptions()
-	o.API = *client.NewDefaultOptions()
 	return o
 }
 
