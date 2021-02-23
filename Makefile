@@ -3,14 +3,14 @@
 SHELL=/bin/bash
 BINARY=hranoprovod-cli
 MDEXEC=mdexec
-TARGETS=${BINARY} docs/command-line.md docs/usage.md
+TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md
 
 all: hranoprovod-cli documentation
 
 $(BINARY):
 	go build -o $(BINARY)
 
-documentation: docs/command-line.md docs/usage.md
+documentation: docs/command-line.md docs/usage.md README.md
 
 docs/command-line.md:
 	./$(BINARY) gen markdown > docs/command-line.md
@@ -18,5 +18,7 @@ docs/command-line.md:
 docs/usage.md:
 	$(MDEXEC) documentation/usage.md > docs/usage.md
 
+README.md:
+	$(MDEXEC) documentation/README.md > README.md
 clean:
 	rm $(TARGETS)

@@ -1,6 +1,5 @@
 ## hranoprovod-cli [![Build Status](https://travis-ci.org/aquilax/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/aquilax/hranoprovod-cli) [![GoDoc](https://godoc.org/github.com/aquilax/hranoprovod-cli?status.svg)](https://godoc.org/github.com/aquilax/hranoprovod-cli) [![Go Report Card](https://goreportcard.com/badge/github.com/aquilax/hranoprovod-cli)](https://goreportcard.com/report/github.com/aquilax/hranoprovod-cli) [![Documentation Status](https://readthedocs.org/projects/hranoprovod/badge/?version=latest)](https://hranoprovod.readthedocs.io/en/latest/?badge=latest) [![hranoprovod-cli](https://snapcraft.io/hranoprovod-cli/badge.svg)](https://snapcraft.io/hranoprovod-cli)
 
-
 ## Description
 
 Hranoprovod is command line tracking tool. It supports nested recipies and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
@@ -27,13 +26,13 @@ You can run hranoprovod-cli from Docker too
 
 ### Building the image
 
-```
+```sh
 docker build --pull --rm -f "Dockerfile" -t aquilax/hranoprovod-cli:latest .
 ```
 
 ### Running a balance report
 
-```
+```sh
 docker run --rm -it -v /path/to/data/files/:/data aquilax/hranoprovod-cli:latest -d /data/food.yaml -l /data/log.yaml bal
 ```
 
@@ -41,8 +40,8 @@ docker run --rm -it -v /path/to/data/files/:/data aquilax/hranoprovod-cli:latest
 
 Running the `hranoprovod-cli` command will show you the command line options
 
-```
-$ hranoprovod-cli
+```sh
+$ ./hranoprovod-cli --help
 NAME:
    hranoprovod-cli - Lifestyle tracker
 
@@ -66,7 +65,7 @@ COMMANDS:
 GLOBAL OPTIONS:
    --begin DATE, -b DATE      Beginning of period DATE
    --end DATE, -e DATE        End of period DATE
-   --database FILE, -d FILE   database file name FILE (default: "/home/aquilax/ledger/food.yaml") [$HR_DATABASE]
+   --database FILE, -d FILE   optional database file name FILE (default: "food.yaml") [$HR_DATABASE]
    --logfile FILE, -l FILE    log file name FILE (default: "/home/aquilax/ledger/log.yaml") [$HR_LOGFILE]
    --config FILE, -c FILE     Configuration file FILE (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]
    --date-format DATE_FORMAT  Date format for parsing and printing dates DATE_FORMAT (default: "2006/01/02") [$HR_DATE_FORMAT]
@@ -74,6 +73,7 @@ GLOBAL OPTIONS:
    --no-color                 Disable color output (default: false)
    --help, -h                 show help (default: false)
    --version, -v              print the version (default: false)
+
 ```
 
 ## Usage
@@ -84,32 +84,51 @@ Hranoprovod uses two files with similar format to operate.
 
 Contains all the "recipes" in the following format:
 
-```yaml
-fish/tuna/canned/100g:
-  calories: 184
-  fat: 6
-  carbohydrate: 0
-  protein: 0
+```sh
+$ cat examples/food.yaml
+# daily nutrition budget
+day/nonworking:
+  calories: -1200
+  fat: -124
+  carbohydrate: -50
+  protein: -104
 
-bread/white/100g:
-  calories: 265
-  fat: 3.2
-  carbohydrate: 49
+bread/rye/100g:
+  calories: 259
+  fat: 3.3
+  carbohydrate: 48
   protein: 9
+
+egg/boiled/100g:
+  calories: 155
+  fat: 11
+  carbohydrate: 1.1
+  protein: 13
+
+vegetables/lettuce/romaine/100g:
+  calories: 15
+  fat: 0.5
+  carbohydrate: 1.7
+  protein: 0.9
+
+sauce/mayonnaise/100g:
+  calories: 680
+  fat: 7.5
+  carbohydrate: 0.6
+  protein: 1
+
+sandwich/egg/lettuce/100g:
+  bread/rye/100g: 0.40
+  egg/boiled/100g: 0.20
+  vegetables/lettuce/romaine/100g: 0.20
+  sauce/mayonnaise/100g: 0.20
+
+candy/snickers/bar:
+  calories: 280
+  fat: 13.6
+  carbohydrate: 35.1
+  protein: 4.29
 ```
-
-Let's say you love tuna sandwiches then you can combine these two ingredients into one:
-
-```yaml
-sandwich/tuna/100g:
-  fish/tuna/canned/100g: .6
-  bread/white/100g: .4
-
-sandwich/tuna/pc:
-  sandwich/tuna/100g: 1.5
-```
-
-This means that the sandwich is composed of 60% tuna and 40% bread and a sandwich weights arount 150g.
 
 Hranoprovod is measure agnostic and it's up to the user to use or state the measurements.
 
@@ -117,12 +136,20 @@ Hranoprovod is measure agnostic and it's up to the user to use or state the meas
 
 The log file contains dated usage of the recipes, defined in the database file.
 
-```yaml
-2014/12/17:
-  tea/cup: 1
-  sandwich/tuna/pc: 2
-  calories: 300
-  biking/km: 10
+```sh
+$ cat examples/log.yaml
+2021/01/24:
+  day/nonworking: 1
+  coffee/cup: 1
+  sandwich/egg/lettuce/100g: 1.20
+  candy/snickers/bar: 1
+
+2021/01/25:
+  day/nonworking: 1
+  coffee/cup: 1
+  sandwich/egg/lettuce/100g: 1.50
+  coffee/cup: 1
+
 ```
 
 Note: it's not mandatory to have the elements in the database file. Elements which are not found will be represented as they are. They can always be added later to the database.
@@ -131,88 +158,82 @@ Note: it's not mandatory to have the elements in the database file. Elements whi
 
 Given this example, the result will look like:
 
-```
-$hranoprovod-cli -d food.yaml -l log.yaml reg
-2014/12/17
-	tea/cup                     :      1.00
-		             tea/cup       1.00
-	sandwich/tuna/pc            :      2.00
-		            calories     649.20
-		        carbohydrate      58.80
-		                 fat      14.64
-		             protein      10.80
-	calories                    :    300.00
-		            calories     300.00
-	biking/km                   :     10.00
-		           biking/km      10.00
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg
+2021/01/24
+	day/nonworking              :      1.00
+		            calories   -1200.00
+		        carbohydrate     -50.00
+		                 fat    -124.00
+		             protein    -104.00
+	coffee/cup                  :      1.00
+		          coffee/cup       1.00
+	sandwich/egg/lettuce/100g   :      1.20
+		            calories     328.32
+		        carbohydrate      23.86
+		                 fat       6.14
+		             protein       7.90
+	candy/snickers/bar          :      1.00
+		            calories     280.00
+		        carbohydrate      35.10
+		                 fat      13.60
+		             protein       4.29
 	-- TOTAL  ----------------------------------------------------
-		           biking/km      10.00       0.00 =     10.00
-		            calories     949.20       0.00 =    949.20
-		        carbohydrate      58.80       0.00 =     58.80
-		                 fat      14.64       0.00 =     14.64
-		             protein      10.80       0.00 =     10.80
-		             tea/cup       1.00       0.00 =      1.00
+		            calories     608.32   -1200.00 =   -591.68
+		        carbohydrate      58.96     -50.00 =      8.96
+		          coffee/cup       1.00       0.00 =      1.00
+		                 fat      19.74    -124.00 =   -104.26
+		             protein      12.19    -104.00 =    -91.81
+2021/01/25
+	day/nonworking              :      1.00
+		            calories   -1200.00
+		        carbohydrate     -50.00
+		                 fat    -124.00
+		             protein    -104.00
+	coffee/cup                  :      2.00
+		          coffee/cup       2.00
+	sandwich/egg/lettuce/100g   :      1.50
+		            calories     410.40
+		        carbohydrate      29.82
+		                 fat       7.68
+		             protein       9.87
+	-- TOTAL  ----------------------------------------------------
+		            calories     410.40   -1200.00 =   -789.60
+		        carbohydrate      29.82     -50.00 =    -20.18
+		          coffee/cup       2.00       0.00 =      2.00
+		                 fat       7.68    -124.00 =   -116.32
+		             protein       9.87    -104.00 =    -94.13
+
 ```
 
 #### Balance tree
 
 You can also generate balance tree for single nutrition value:
 
-```
-$ hranoprovod-cli bal -b yesterday -s calories
-    329.82 | butter
-    329.82 |   cow milk
-    329.82 |     100g
-     44.20 | cream
-     44.20 |   heavy
-     44.20 |     36%
-     44.20 |       100g
-  -1632.00 | day
-  -1632.00 |   nonworking
-      2.40 | drinks
-      2.40 |   coffee
-      2.40 |     cup
-    305.61 | eggs
-    305.61 |   fried
-    305.61 |     pc
-      8.94 | garlic
-      8.94 |   100g
-    100.80 | olives
-    100.80 |   brown
-    100.80 |     100g
-      7.20 | rucola
-      7.20 |   100g
-     54.90 | vegetables
-     54.90 |   spinach
-     54.90 |     frozen
-     54.90 |       100g
-    148.40 | vegokorv
-    148.40 |   pc
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s calories
+    280.00 | candy
+    280.00 |   snickers
+    280.00 |     bar
+  -2400.00 | day
+  -2400.00 |   nonworking
+    738.72 | sandwich
+    738.72 |   egg
+    738.72 |     lettuce
+    738.72 |       100g
 -----------|
-   -629.73 | calories
+  -1381.28 | calories
+
 ```
 
 Same result in slightly more compact format:
-```
-$ hranoprovod-cli bal -b yesterday -s calories -c
-    329.82 | butter
-    329.82 |   cow milk/100g
-     44.20 | cream
-     44.20 |   heavy
-     44.20 |     36%/100g
-  -1632.00 | day/nonworking
-      2.40 | drinks
-      2.40 |   coffee/cup
-    305.61 | eggs
-    305.61 |   fried/pc
-      8.94 | garlic/100g
-    100.80 | olives
-    100.80 |   brown/100g
-      7.20 | rucola/100g
-     54.90 | vegetables
-     54.90 |   spinach
-     54.90 |     frozen/100g
-    148.40 | vegokorv/pc
+
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s calories -c
+    280.00 | candy/snickers/bar
+  -2400.00 | day/nonworking
+    738.72 | sandwich/egg/lettuce/100g
 -----------|
-   -629.73 | calories
+  -1381.28 | calories
+
 ```
