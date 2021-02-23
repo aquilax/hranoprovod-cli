@@ -123,48 +123,48 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --internal-template-name=left-aligned
 2021/01/24
-        1.00 : day/nonworking
-    -1200.00 :   calories
-      -50.00 :   carbohydrate
-     -124.00 :   fat
-     -104.00 :   protein
-        1.00 : coffee/cup
-        1.00 :   coffee/cup
-        1.20 : sandwich/egg/lettuce/100g
-      328.32 :   calories
-       23.86 :   carbohydrate
-        6.14 :   fat
-        7.90 :   protein
-        1.00 : candy/snickers/bar
-      280.00 :   calories
-       35.10 :   carbohydrate
-       13.60 :   fat
-        4.29 :   protein
+        1.00  day/nonworking
+    -1200.00    calories
+      -50.00    carbohydrate
+     -124.00    fat
+     -104.00    protein
+        1.00  coffee/cup
+        1.00    coffee/cup
+        1.20  sandwich/egg/lettuce/100g
+      328.32    calories
+       23.86    carbohydrate
+        6.14    fat
+        7.90    protein
+        1.00  candy/snickers/bar
+      280.00    calories
+       35.10    carbohydrate
+       13.60    fat
+        4.29    protein
 ------------------------------------------------------- TOTAL --
-      608.32   -1200.00 =    -591.68 : calories
-       58.96     -50.00 =       8.96 : carbohydrate
-        1.00       0.00 =       1.00 : coffee/cup
-       19.74    -124.00 =    -104.26 : fat
-       12.19    -104.00 =     -91.81 : protein
+      608.32   -1200.00 =    -591.68  calories
+       58.96     -50.00 =       8.96  carbohydrate
+        1.00       0.00 =       1.00  coffee/cup
+       19.74    -124.00 =    -104.26  fat
+       12.19    -104.00 =     -91.81  protein
 2021/01/25
-        1.00 : day/nonworking
-    -1200.00 :   calories
-      -50.00 :   carbohydrate
-     -124.00 :   fat
-     -104.00 :   protein
-        2.00 : coffee/cup
-        2.00 :   coffee/cup
-        1.50 : sandwich/egg/lettuce/100g
-      410.40 :   calories
-       29.82 :   carbohydrate
-        7.68 :   fat
-        9.87 :   protein
+        1.00  day/nonworking
+    -1200.00    calories
+      -50.00    carbohydrate
+     -124.00    fat
+     -104.00    protein
+        2.00  coffee/cup
+        2.00    coffee/cup
+        1.50  sandwich/egg/lettuce/100g
+      410.40    calories
+       29.82    carbohydrate
+        7.68    fat
+        9.87    protein
 ------------------------------------------------------- TOTAL --
-      410.40   -1200.00 =    -789.60 : calories
-       29.82     -50.00 =     -20.18 : carbohydrate
-        2.00       0.00 =       2.00 : coffee/cup
-        7.68    -124.00 =    -116.32 : fat
-        9.87    -104.00 =     -94.13 : protein
+      410.40   -1200.00 =    -789.60  calories
+       29.82     -50.00 =     -20.18  carbohydrate
+        2.00       0.00 =       2.00  coffee/cup
+        7.68    -124.00 =    -116.32  fat
+        9.87    -104.00 =     -94.13  protein
 
 ```
 
@@ -291,7 +291,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (27 days ago)
-  Last record:        2021/01/25 (26 days ago)
+  First record:       2021/01/24 (30 days ago)
+  Last record:        2021/01/25 (29 days ago)
 
 ```
