@@ -14,7 +14,6 @@ func TestOptions(t *testing.T) {
 			So(o.Reporter, ShouldNotBeNil)
 			So(o.Reporter.Color, ShouldBeTrue)
 			So(o.Parser, ShouldNotBeNil)
-			So(o.API, ShouldNotBeNil)
 		})
 	})
 	Convey("Given fileExists", t, func() {

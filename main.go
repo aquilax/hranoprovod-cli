@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -46,7 +47,7 @@ func main() {
 			Name:    "database",
 			Aliases: []string{"d"},
 			Value:   defaultDbFilename,
-			Usage:   "database file name `FILE`",
+			Usage:   "optional database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
@@ -346,5 +347,8 @@ func main() {
 			},
 		},
 	}
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
