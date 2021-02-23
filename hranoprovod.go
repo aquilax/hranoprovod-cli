@@ -25,7 +25,7 @@ func NewHranoprovod(options *Options) Hranoprovod {
 // Register generates report
 func (hr Hranoprovod) Register() error {
 	parser := parser.NewParser(&hr.options.Parser)
-	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (hr Hranoprovod) Register() error {
 // Balance generates balance report
 func (hr Hranoprovod) Balance() error {
 	parser := parser.NewParser(&hr.options.Parser)
-	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (hr Hranoprovod) Lint(fileName string) error {
 // ReportElement generates report for single element
 func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	p := parser.NewParser(&hr.options.Parser)
-	nl, err := hr.loadDatabase(p, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(p, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 // ReportUnresolved generates report for unresolved elements
 func (hr Hranoprovod) ReportUnresolved() error {
 	parser := parser.NewParser(&hr.options.Parser)
-	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func (hr Hranoprovod) Stats() error {
 // Summary generates summary
 func (hr Hranoprovod) Summary() error {
 	parser := parser.NewParser(&hr.options.Parser)
-	nl, err := hr.loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
@@ -172,8 +172,15 @@ func (hr Hranoprovod) Summary() error {
 	return hr.walkNodes(parser, r)
 }
 
-func (hr Hranoprovod) loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
+func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
+	// Database must be optional. If the default file name is used and the file is not found,
+	// return empty node list
+	if fileName == defaultDbFilename {
+		if exists, _ := fileExists(fileName); !exists {
+			return nodeList, nil
+		}
+	}
 	go p.ParseFile(fileName)
 	return func() (shared.DBNodeList, error) {
 		for {
