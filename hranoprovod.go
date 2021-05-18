@@ -94,6 +94,12 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	return nil
 }
 
+func (hr Hranoprovod) ReportQuantity(ascending bool) error {
+	parser := parser.NewParser(&hr.options.Parser)
+	r := reporter.NewQuantityReporter(ascending, os.Stdout)
+	return hr.walkNodes(parser, r)
+}
+
 // ReportUnresolved generates report for unresolved elements
 func (hr Hranoprovod) ReportUnresolved() error {
 	parser := parser.NewParser(&hr.options.Parser)

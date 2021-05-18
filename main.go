@@ -236,6 +236,23 @@ func main() {
 						return NewHranoprovod(o).ReportUnresolved()
 					},
 				},
+				{
+					Name:  "quantity",
+					Usage: "Total quantities per food",
+					Flags: []cli.Flag{
+						&cli.BoolFlag{
+							Name:  "desc",
+							Usage: "Descending order",
+						},
+					},
+					Action: func(c *cli.Context) error {
+						o := NewOptions()
+						if err := o.Load(c); err != nil {
+							return err
+						}
+						return NewHranoprovod(o).ReportQuantity(c.IsSet("desc"))
+					},
+				},
 			},
 		},
 		{
