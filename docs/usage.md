@@ -240,6 +240,7 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s
 
 ```
 
+
 ## Other reports
 
 ### Element-total
@@ -291,7 +292,18 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (30 days ago)
-  Last record:        2021/01/25 (29 days ago)
+  First record:       2021/01/24 (114 days ago)
+  Last record:        2021/01/25 (113 days ago)
+
+```
+
+### Total quantities per food
+
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color report quantity --desc
+3.00	coffee/cup
+2.70	sandwich/egg/lettuce/100g
+2.00	day/nonworking
+1.00	candy/snickers/bar
 
 ```

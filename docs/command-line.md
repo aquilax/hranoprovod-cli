@@ -33,7 +33,7 @@ hranoprovod-cli [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]
 
 **--config, -c**="": Configuration file `FILE` (default: /home/aquilax/.hranoprovod/config)
 
-**--database, -d**="": optional database file name `FILE` (default: food.yaml)
+**--database, -d**="": optional database file name `FILE` (default: /home/aquilax/ledger/food.yaml)
 
 **--date-format**="": Date format for parsing and printing dates `DATE_FORMAT` (default: 2006/01/02)
 
@@ -113,6 +113,12 @@ Generates total sum for element grouped by food
 ### unresolved
 
 Print list of unresolved elements
+
+### quantity
+
+Total quantities per food
+
+**--desc**: Descending order
 
 ## csv
 
