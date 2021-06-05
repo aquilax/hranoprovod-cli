@@ -1,45 +1,46 @@
 package shared
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	"github.com/tj/assert"
 )
 
 func TestDBNodeList(t *testing.T) {
-	Convey("Given NodeList", t, func() {
+	t.Run("Given NodeList", func(t *testing.T) {
 		nl := NewDBNodeList()
-		Convey("Creates new DBNodeList", func() {
-			So(nl != nil, ShouldBeTrue)
+		t.Run("Creates new DBNodeList", func(t *testing.T) {
+			assert.NotNil(t, nl)
 		})
-		Convey("Adding new node", func() {
+		t.Run("Adding new node", func(t *testing.T) {
 			node := NewDBNodeFromNode(NewParserNode("test"))
 			nl.Push(node)
-			Convey("Increases the number of nodes in the list", func() {
-				So(len(nl), ShouldEqual, 1)
+			t.Run("Increases the number of nodes in the list", func(t *testing.T) {
+				assert.Equal(t, 1, len(nl))
 			})
 		})
 	})
 }
 
 func TestNewLogNode(t *testing.T) {
-	Convey("Given NewLogNode", t, func() {
+	t.Run("Given NewLogNode", func(t *testing.T) {
 		now := time.Now()
 		elements := NewElements()
 		elements.Add("test", 1.22)
 		logNode := NewLogNode(now, elements)
-		Convey("Creates new log node with the proper fields", func() {
-			So(logNode.Time.Equal(now), ShouldBeTrue)
-			So((logNode.Elements)[0].Name, ShouldEqual, "test")
-			So((logNode.Elements)[0].Val, ShouldEqual, 1.22)
+		t.Run("Creates new log node with the proper fields", func(t *testing.T) {
+			assert.True(t, logNode.Time.Equal(now))
+			assert.Equal(t, "test", (logNode.Elements)[0].Name)
+			assert.Equal(t, 1.22, (logNode.Elements)[0].Val)
 		})
 	})
-	Convey("Given Parser Node", t, func() {
-		Convey("Creates new node on valid date", func() {
+	t.Run("Given Parser Node", func(t *testing.T) {
+		t.Run("Creates new node on valid date", func(t *testing.T) {
 			node := NewParserNode("2006/01/02")
 			logNode, err := NewLogNodeFromElements(time.Now(), node.Elements)
-			So(logNode, ShouldNotBeNil)
-			So(err, ShouldBeNil)
+			assert.NotNil(t, logNode)
+			assert.Nil(t, err)
 		})
 	})
 }

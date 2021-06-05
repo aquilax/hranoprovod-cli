@@ -1,18 +1,19 @@
 package shared
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	"github.com/tj/assert"
 )
 
 func TestAccumulator(t *testing.T) {
-	Convey("Given APIError", t, func() {
+	t.Run("Given APIError", func(t *testing.T) {
 		err := APIError{
 			IsError: true,
 			Code:    100,
 			Status:  "status",
 			Message: "message",
 		}
-		So(err.Error(), ShouldEqual, "status: message")
+		assert.Equal(t, "status: message", err.Error())
 	})
 }

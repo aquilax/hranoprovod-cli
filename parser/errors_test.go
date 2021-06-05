@@ -2,29 +2,30 @@ package parser
 
 import (
 	"errors"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	"github.com/tj/assert"
 )
 
 func TestBreakingError(t *testing.T) {
-	Convey("Given errors", t, func() {
-		Convey("IO Error works", func() {
+	t.Run("Given errors", func(t *testing.T) {
+		t.Run("IO Error works", func(t *testing.T) {
 			err := NewErrorIO(errors.New("test"), "file_name")
-			So(err.FileName, ShouldEqual, "file_name")
-			So(err.Error(), ShouldEqual, "test")
+			assert.Equal(t, "file_name", err.FileName)
+			assert.Equal(t, "test", err.Error())
 		})
-		Convey("Bad Syntax error works", func() {
+		t.Run("Bad Syntax error works", func(t *testing.T) {
 			err := NewErrorBadSyntax(3, "test line")
-			So(err.Error(), ShouldEqual, "Bad syntax on line 3, \"test line\".")
-			So(err.LineNumber, ShouldEqual, 3)
-			So(err.Line, ShouldEqual, "test line")
+			assert.Equal(t, "Bad syntax on line 3, \"test line\".", err.Error())
+			assert.Equal(t, 3, err.LineNumber)
+			assert.Equal(t, "test line", err.Line)
 		})
-		Convey("Conversion error works", func() {
+		t.Run("Conversion error works", func(t *testing.T) {
 			err := NewErrorConversion("bibip", 5, "line string")
-			So(err.Error(), ShouldEqual, "Error converting \"bibip\" to float on line 5 \"line string\".")
-			So(err.Text, ShouldEqual, "bibip")
-			So(err.LineNumber, ShouldEqual, 5)
-			So(err.Line, ShouldEqual, "line string")
+			assert.Equal(t, "Error converting \"bibip\" to float on line 5 \"line string\".", err.Error())
+			assert.Equal(t, "bibip", err.Text)
+			assert.Equal(t, 5, err.LineNumber)
+			assert.Equal(t, "line string", err.Line)
 		})
 	})
 }

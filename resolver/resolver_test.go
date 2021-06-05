@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	"github.com/aquilax/hranoprovod-cli/shared"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/tj/assert"
 )
 
 func TestResolver(t *testing.T) {
-	Convey("Given nodes database and reslover", t, func() {
+	t.Run("Given nodes database and reslover", func(t *testing.T) {
 		nl := shared.NewDBNodeList()
 		node1 := shared.NewParserNode("node1")
 		node1.Elements.Add("element1", 100)
@@ -18,19 +18,19 @@ func TestResolver(t *testing.T) {
 		node2.Elements.Add("node1", 2)
 		nl.Push(shared.NewDBNodeFromNode(node2))
 		resolver := NewResolver(nl, 1)
-		Convey("Resolve resolves the database", func() {
+		t.Run("Resolve resolves the database", func(t *testing.T) {
 			resolver.Resolve()
-			Convey("Elements are resolved", func() {
+			t.Run("Elements are resolved", func(t *testing.T) {
 				n1 := nl["node1"]
-				So(n1.Elements[0].Name, ShouldEqual, "element1")
-				So(n1.Elements[0].Val, ShouldEqual, 100)
-				So(n1.Elements[1].Name, ShouldEqual, "element2")
-				So(n1.Elements[1].Val, ShouldEqual, 200)
+				assert.Equal(t, "element1", n1.Elements[0].Name)
+				assert.Equal(t, 100., n1.Elements[0].Val)
+				assert.Equal(t, "element2", n1.Elements[1].Name)
+				assert.Equal(t, 200., n1.Elements[1].Val)
 				n2 := nl["node2"]
-				So(n2.Elements[0].Name, ShouldEqual, "element1")
-				So(n2.Elements[0].Val, ShouldEqual, 200)
-				So(n2.Elements[1].Name, ShouldEqual, "element2")
-				So(n2.Elements[1].Val, ShouldEqual, 400)
+				assert.Equal(t, "element1", n2.Elements[0].Name)
+				assert.Equal(t, 200., n2.Elements[0].Val)
+				assert.Equal(t, "element2", n2.Elements[1].Name)
+				assert.Equal(t, 400., n2.Elements[1].Val)
 			})
 		})
 	})
