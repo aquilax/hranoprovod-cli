@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/shared"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/tj/assert"
 )
 
 func TestReporter(t *testing.T) {
-	Convey("Given reporter", t, func() {
+	t.Run("Given reporter", func(t *testing.T) {
 		var b bytes.Buffer
 		nl := shared.NewDBNodeList()
 		o := NewDefaultOptions()
 		o.Unresolved = true
 		rp := NewRegReporter(o, nl, &b)
-		Convey("Prints list of unresolved items", func() {
+		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test", 3.55)
 			ln := shared.NewLogNode(time.Now(), el)
@@ -24,8 +24,8 @@ func TestReporter(t *testing.T) {
 `
 			err := rp.Process(ln)
 			rp.Flush()
-			So(err, ShouldBeNil)
-			So(b.String(), ShouldEqual, expected)
+			assert.Nil(t, err)
+			assert.Equal(t, expected, b.String())
 		})
 	})
 }
