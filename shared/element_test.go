@@ -3,73 +3,73 @@ package shared
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/tj/assert"
 )
 
 func TestElement(t *testing.T) {
-	Convey("NewElement", t, func() {
+	t.Run("NewElement", func(t *testing.T) {
 		el := NewElement("test", 10)
-		Convey("Creates new element", func() {
-			So(el.Name, ShouldEqual, "test")
-			So(el.Val, ShouldEqual, 10)
+		t.Run("Creates new element", func(t *testing.T) {
+			assert.Equal(t, "test", el.Name)
+			assert.Equal(t, 10., el.Val)
 		})
 	})
 }
 
 func TestElements(t *testing.T) {
-	Convey("Given Elements", t, func() {
+	t.Run("Given Elements", func(t *testing.T) {
 		el := NewElements()
-		Convey("Calling Add", func() {
+		t.Run("Calling Add", func(t *testing.T) {
 			el.Add("test", 10)
-			Convey("Adds the element to the list", func() {
-				So(el.Len(), ShouldEqual, 1)
+			t.Run("Adds the element to the list", func(t *testing.T) {
+				assert.Equal(t, 1, el.Len())
 			})
-			Convey("After adding more elements", func() {
+			t.Run("After adding more elements", func(t *testing.T) {
 				el.Add("test3", 13)
 				el.Add("test2", 12)
 				el.Add("test1", 11)
-				Convey("Calling Index on present element", func() {
+				t.Run("Calling Index on present element", func(t *testing.T) {
 					index, found := el.Index("test2")
-					Convey("Returns the correct index", func() {
-						So(index, ShouldEqual, 2)
+					t.Run("Returns the correct index", func(t *testing.T) {
+						assert.Equal(t, 2, index)
 					})
-					Convey("Returns positive found", func() {
-						So(found, ShouldBeTrue)
+					t.Run("Returns positive found", func(t *testing.T) {
+						assert.True(t, found)
 					})
 				})
-				Convey("Calling Index on missing element", func() {
+				t.Run("Calling Index on missing element", func(t *testing.T) {
 					_, found := el.Index("test111")
-					Convey("Returns not found", func() {
-						So(found, ShouldBeFalse)
+					t.Run("Returns not found", func(t *testing.T) {
+						assert.False(t, found)
 					})
 				})
-				Convey("After Sort", func() {
+				t.Run("After Sort", func(t *testing.T) {
 					el.Sort()
-					Convey("Elements are sorted", func() {
+					t.Run("Elements are sorted", func(t *testing.T) {
 						index, _ := el.Index("test3")
-						So(index, ShouldEqual, 3)
+						assert.Equal(t, 3, index)
 						index2, _ := el.Index("test1")
-						So(index2, ShouldEqual, 1)
+						assert.Equal(t, 1, index2)
 					})
 				})
-				Convey("Having second set of elements", func() {
+				t.Run("Having second set of elements", func(t *testing.T) {
 					el2 := NewElements()
 					el2.Add("test3", 113)
 					el2.Add("test2", 112)
 					el2.Add("test1", 111)
 					el2.Add("test4", 444)
-					Convey("SumMerge with coef 2", func() {
+					t.Run("SumMerge with coef 2", func(t *testing.T) {
 						el.SumMerge(el2, 2)
-						Convey("Returns correct elements", func() {
+						t.Run("Returns correct elements", func(t *testing.T) {
 							index, found := el.Index("test1")
-							So(found, ShouldBeTrue)
-							So(index, ShouldEqual, 3)
-							So(el[index].Val, ShouldEqual, 233)
+							assert.True(t, found)
+							assert.Equal(t, 1, index)
+							assert.Equal(t, 233., el[index].Val)
 						})
-						Convey("New elements are added", func() {
+						t.Run("New elements are added", func(t *testing.T) {
 							index, found := el.Index("test4")
-							So(found, ShouldBeTrue)
-							So(el[index].Val, ShouldEqual, 888)
+							assert.True(t, found)
+							assert.Equal(t, 888., el[index].Val)
 						})
 					})
 				})
