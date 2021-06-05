@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/shared"
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/tj/assert"
 )
 
 func TestRegReporterTemplate(t *testing.T) {
-	Convey("Given template reg reporter", t, func() {
+	t.Run("Given template reg reporter", func(t *testing.T) {
 		var b bytes.Buffer
 		db := shared.NewDBNodeList()
 		dbElements := shared.NewElements()
@@ -24,7 +24,7 @@ func TestRegReporterTemplate(t *testing.T) {
 		o := NewDefaultOptions()
 		o.ShortenStrings = true
 		rp := NewRegReporter(o, db, &b)
-		Convey("Prints list of unresolved items", func() {
+		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test1", 3.1)
 			el.Add("test1", 3.1)
@@ -34,8 +34,8 @@ func TestRegReporterTemplate(t *testing.T) {
 			expected, _ := ioutil.ReadFile("testdata/TestRegReporterTemplate.txt")
 			err := rp.Process(ln)
 			rp.Flush()
-			So(err, ShouldBeNil)
-			So(b.String(), ShouldEqual, string(expected))
+			assert.Nil(t, err)
+			assert.Equal(t, string(expected), b.String())
 		})
 	})
 }
