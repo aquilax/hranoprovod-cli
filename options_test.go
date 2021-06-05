@@ -18,7 +18,7 @@ func TestOptions(t *testing.T) {
 	})
 	t.Run("Given fileExists", func(t *testing.T) {
 		t.Run("Returns false if file does not exit", func(t *testing.T) {
-			ex, err := fileExists("ASDDD!@!@!@")
+			ex, err := fileExists("file_does_not_exist")
 			assert.False(t, ex)
 			assert.Nil(t, err)
 		})
