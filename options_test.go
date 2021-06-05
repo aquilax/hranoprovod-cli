@@ -3,24 +3,24 @@ package main
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/tj/assert"
 )
 
 func TestOptions(t *testing.T) {
-	Convey("Given options", t, func() {
+	t.Run("Given options", func(t *testing.T) {
 		o := NewOptions()
-		Convey("New options is created", func() {
-			So(o, ShouldNotBeNil)
-			So(o.Reporter, ShouldNotBeNil)
-			So(o.Reporter.Color, ShouldBeTrue)
-			So(o.Parser, ShouldNotBeNil)
+		t.Run("New options is created", func(t *testing.T) {
+			assert.NotNil(t, o)
+			assert.NotNil(t, o.Reporter)
+			assert.True(t, o.Reporter.Color)
+			assert.NotNil(t, o.Parser)
 		})
 	})
-	Convey("Given fileExists", t, func() {
-		Convey("Returns false if file does not exit", func() {
+	t.Run("Given fileExists", func(t *testing.T) {
+		t.Run("Returns false if file does not exit", func(t *testing.T) {
 			ex, err := fileExists("ASDDD!@!@!@")
-			So(ex, ShouldBeFalse)
-			So(err, ShouldBeNil)
+			assert.False(t, ex)
+			assert.Nil(t, err)
 		})
 	})
 }
