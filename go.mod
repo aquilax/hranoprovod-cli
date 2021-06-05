@@ -7,11 +7,12 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/smartystreets/assertions v1.0.1 // indirect
 	github.com/smartystreets/goconvey v1.6.4
+	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/tj/assert v0.0.0-20190920132354-ee03d75cd160
 	github.com/tj/go-naturaldate v1.3.0
 	github.com/urfave/cli/v2 v2.3.0
 	gopkg.in/gcfg.v1 v1.2.3
 	gopkg.in/warnings.v0 v0.1.2 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
 
 go 1.13
