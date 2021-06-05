@@ -1,3 +1,12 @@
+# Changelog
+
+v2.4.6
+
+* Added new quantity report
+* Removed the API client
+* Added auto generated docs
+* The food database file is optional
+
 v2.4.5
 
 * Added second custom template

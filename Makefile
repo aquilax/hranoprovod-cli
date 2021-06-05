@@ -1,4 +1,9 @@
-.PHONY: clean
+.PHONY: clean test
+
+unexport HR_DATABASE
+unexport HR_LOGFILE
+unexport HR_CONFIG
+unexport HR_DATE_FORMAT
 
 SHELL=/bin/bash
 BINARY=hranoprovod-cli
@@ -20,5 +25,12 @@ docs/usage.md:
 
 README.md:
 	$(MDEXEC) documentation/README.md > README.md
+
+test:
+	go test -v ./...
+
+test-release:
+	goreleaser --snapshot --skip-publish --rm-dist
+
 clean:
 	rm $(TARGETS)

@@ -292,8 +292,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (114 days ago)
-  Last record:        2021/01/25 (113 days ago)
+  First record:       2021/01/24 (132 days ago)
+  Last record:        2021/01/25 (131 days ago)
 
 ```
 
