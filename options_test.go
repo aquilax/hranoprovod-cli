@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/tj/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestOptions(t *testing.T) {

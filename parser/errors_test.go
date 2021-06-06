@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/tj/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBreakingError(t *testing.T) {

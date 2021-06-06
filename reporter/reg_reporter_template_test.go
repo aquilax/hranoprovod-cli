@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
-	"github.com/tj/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRegReporterTemplate(t *testing.T) {
