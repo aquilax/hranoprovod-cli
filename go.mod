@@ -1,4 +1,4 @@
-module github.com/aquilax/hranoprovod-cli
+module github.com/aquilax/hranoprovod-cli/v2
 
 require (
 	github.com/aquilax/truncate v1.0.0

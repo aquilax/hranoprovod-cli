@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // APIReporter outputs api search results

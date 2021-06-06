@@ -1,5 +1,9 @@
 # Changelog
 
+v2.4.7
+
+* Fixes the module release version
+
 v2.4.6
 
 * Added new quantity report

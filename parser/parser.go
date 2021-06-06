@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 const (

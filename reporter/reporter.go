@@ -4,7 +4,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // Options contains the options for the reporter

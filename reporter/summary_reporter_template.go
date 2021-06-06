@@ -4,7 +4,7 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 const summaryTemplate = `{{formatDate .Time}} :

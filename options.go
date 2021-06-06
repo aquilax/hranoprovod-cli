@@ -6,8 +6,8 @@ import (
 	"os/user"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/parser"
-	"github.com/aquilax/hranoprovod-cli/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/parser"
+	"github.com/aquilax/hranoprovod-cli/v2/reporter"
 	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"

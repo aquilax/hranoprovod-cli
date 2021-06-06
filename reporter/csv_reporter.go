@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // CSVReporter outputs report for single food

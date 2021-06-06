@@ -5,7 +5,7 @@ import (
 	"io"
 	"regexp"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 type singleFoodReporter struct {

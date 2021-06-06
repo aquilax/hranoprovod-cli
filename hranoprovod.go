@@ -6,10 +6,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/parser"
-	"github.com/aquilax/hranoprovod-cli/reporter"
-	"github.com/aquilax/hranoprovod-cli/resolver"
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/parser"
+	"github.com/aquilax/hranoprovod-cli/v2/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/resolver"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // Hranoprovod is the main app type

@@ -5,8 +5,8 @@ import (
 	"io"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/accumulator"
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 func getSimpleTree() *accumulator.TreeNode {

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // Separator is used to separate the categories

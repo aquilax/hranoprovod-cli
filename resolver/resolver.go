@@ -1,7 +1,7 @@
 package resolver
 
 import (
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // Resolver contains the resolver data

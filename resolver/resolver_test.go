@@ -3,7 +3,7 @@ package resolver
 import (
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/shared"
+	"github.com/aquilax/hranoprovod-cli/v2/shared"
 	"github.com/tj/assert"
 )
 
