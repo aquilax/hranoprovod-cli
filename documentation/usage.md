@@ -22,6 +22,10 @@ and the following recipe book file:
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --single-food coffee/cup`
 
+### Register report for total of ingredients for a day grouped by food
+
+`$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 2021/01/24 --no-color reg -g -s calories`
+
 ## Balance
 
 ### Default balance report
