@@ -1,8 +1,8 @@
-## hranoprovod-cli [![Build Status](https://travis-ci.org/aquilax/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/aquilax/hranoprovod-cli) [![GoDoc](https://godoc.org/github.com/aquilax/hranoprovod-cli?status.svg)](https://godoc.org/github.com/aquilax/hranoprovod-cli) [![Go Report Card](https://goreportcard.com/badge/github.com/aquilax/hranoprovod-cli)](https://goreportcard.com/report/github.com/aquilax/hranoprovod-cli) [![Documentation Status](https://readthedocs.org/projects/hranoprovod/badge/?version=latest)](https://hranoprovod.readthedocs.io/en/latest/?badge=latest) [![hranoprovod-cli](https://snapcraft.io/hranoprovod-cli/badge.svg)](https://snapcraft.io/hranoprovod-cli)
+# hranoprovod-cli [![Build Status](https://travis-ci.org/aquilax/hranoprovod-cli.svg?branch=master)](https://travis-ci.org/aquilax/hranoprovod-cli) [![GoDoc](https://godoc.org/github.com/aquilax/hranoprovod-cli?status.svg)](https://godoc.org/github.com/aquilax/hranoprovod-cli) [![Go Report Card](https://goreportcard.com/badge/github.com/aquilax/hranoprovod-cli)](https://goreportcard.com/report/github.com/aquilax/hranoprovod-cli) [![Documentation Status](https://readthedocs.org/projects/hranoprovod/badge/?version=latest)](https://hranoprovod.readthedocs.io/en/latest/?badge=latest) [![hranoprovod-cli](https://snapcraft.io/hranoprovod-cli/badge.svg)](https://snapcraft.io/hranoprovod-cli)
 
 ## Description
 
-Hranoprovod is command line tracking tool. It supports nested recipies and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
+Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
 
 [![asciicast](https://asciinema.org/a/257200.svg)](https://asciinema.org/a/257200)
 

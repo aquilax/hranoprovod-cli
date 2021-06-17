@@ -161,8 +161,8 @@ func (hr Hranoprovod) Stats() error {
 	fmt.Println("")
 	fmt.Printf("  Log file:           %s\n", hr.options.Global.LogFileName)
 	fmt.Printf("  Log records:        %d\n", countLog)
-	fmt.Printf("  First record:       %s (%d days ago)\n", firstLogDate.Format(hr.options.Reporter.DateFormat), int(time.Now().Sub(firstLogDate).Hours()/24))
-	fmt.Printf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(hr.options.Reporter.DateFormat), int(time.Now().Sub(lastLogDate).Hours()/24))
+	fmt.Printf("  First record:       %s (%d days ago)\n", firstLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(firstLogDate).Hours()/24))
+	fmt.Printf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(lastLogDate).Hours()/24))
 	return nil
 }
 

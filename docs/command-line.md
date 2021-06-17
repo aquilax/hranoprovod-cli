@@ -1,4 +1,4 @@
-%!h(MISSING)ranoprovod-cli 8
+% hranoprovod-cli 8
 
 # NAME
 

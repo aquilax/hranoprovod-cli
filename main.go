@@ -1,3 +1,7 @@
+// Hranoprovod is command line tracking tool. It supports nested recipes and
+// custom defined tracking elements, which makes it perfect for tracking calories,
+// nutrition data, exercises and other accumulative data.
+
 package main
 
 import (
@@ -345,8 +349,8 @@ func main() {
 						if err != nil {
 							return err
 						}
-						fmt.Fprintf(os.Stdout, man)
-						return nil
+						_, err = fmt.Fprint(os.Stdout, man)
+						return err
 					},
 				},
 				{
@@ -357,8 +361,8 @@ func main() {
 						if err != nil {
 							return err
 						}
-						fmt.Fprintf(os.Stdout, markdown)
-						return nil
+						_, err = fmt.Fprint(os.Stdout, markdown)
+						return err
 					},
 				},
 			},
