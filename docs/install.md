@@ -16,6 +16,15 @@ Clone the repository and build/install the tool:
 
 You can download `.deb` and `.rpm` packages from [GitHub releases](https://github.com/aquilax/hranoprovod-cli/releases)
 
+### asdf
+
+[asdf](https://github.com/asdf-vm/asdf) is an extendable version manager for linux and macOS.
+
+hranoprovod can be installed using a plugin as follows:
+
+    asdf plugin add hranoprovod https://github.com/aquilax/asdf-hranoprovod.git
+    asdf install hranoprovod latest
+
 ## Snapcraft
 
 You can find the latest Snapcraft releases [here](https://snapcraft.io/hranoprovod-cli)
