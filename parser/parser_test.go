@@ -70,6 +70,35 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, 3.0, elements[2].Val)
 		})
 
+		t.Run("It processes valid node with valid yaml syntax", func(t *testing.T) {
+			file := `2011/07/17:
+- el1: 1.22
+- "ел 2":  4
+- el/3:  3
+
+2011/07/18:
+- el1: 1.33
+- ел 5:  5
+- el/7:  4
+- el1: 1.35
+`
+			go parser.ParseStream(strings.NewReader(file))
+			nodeList, err := readChannels(parser)
+			assert.Equal(t, 2, len(nodeList))
+			assert.Nil(t, err)
+			node := (nodeList)["2011/07/17"]
+			assert.Equal(t, "2011/07/17", node.Header)
+			elements := node.Elements
+			assert.NotNil(t, elements)
+			assert.Equal(t, 3, len(elements))
+			assert.Equal(t, "el1", elements[0].Name)
+			assert.Equal(t, 1.22, elements[0].Val)
+			assert.Equal(t, "ел 2", elements[1].Name)
+			assert.Equal(t, 4.0, elements[1].Val)
+			assert.Equal(t, "el/3", elements[2].Name)
+			assert.Equal(t, 3.0, elements[2].Val)
+		})
+
 		t.Run("Groups elements", func(t *testing.T) {
 			file := `2011/07/17:
   el1: 1.22
