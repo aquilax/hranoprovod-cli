@@ -12,12 +12,13 @@ import (
 )
 
 const (
-	runeTab   = '\t'
-	runeSpace = ' '
+	runeTab       = '\t'
+	runeSpace     = ' '
+	runeArrayItem = '-'
 )
 
 func trim(s string) string {
-	return strings.Trim(s, "\t \n:\"")
+	return strings.Trim(s, "\t \n:\"-")
 }
 
 // Options contains the parser related options
@@ -87,7 +88,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 		}
 
 		//new nodes start at the beginning of the line
-		if line[0] != runeSpace && line[0] != runeTab {
+		if line[0] != runeSpace && line[0] != runeTab && line[0] != runeArrayItem {
 			if node != nil {
 				// flush complete node
 				callback(node, nil)
