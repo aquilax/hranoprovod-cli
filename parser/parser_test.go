@@ -44,7 +44,7 @@ func TestParser(t *testing.T) {
 		t.Run("It processes valid node", func(t *testing.T) {
 			file := `2011/07/17:
   el1: 1.22
-  "ел 2":  4
+  "ел 2":  -4
   el/3:  3
 
 2011/07/18:
@@ -65,7 +65,7 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, "el1", elements[0].Name)
 			assert.Equal(t, 1.22, elements[0].Val)
 			assert.Equal(t, "ел 2", elements[1].Name)
-			assert.Equal(t, 4.0, elements[1].Val)
+			assert.Equal(t, -4.0, elements[1].Val)
 			assert.Equal(t, "el/3", elements[2].Name)
 			assert.Equal(t, 3.0, elements[2].Val)
 		})
@@ -73,7 +73,7 @@ func TestParser(t *testing.T) {
 		t.Run("It processes valid node with valid yaml syntax", func(t *testing.T) {
 			file := `2011/07/17:
 - el1: 1.22
-- "ел 2":  4
+- "ел 2":  -4
 - el/3:  3
 
 2011/07/18:
@@ -94,7 +94,7 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, "el1", elements[0].Name)
 			assert.Equal(t, 1.22, elements[0].Val)
 			assert.Equal(t, "ел 2", elements[1].Name)
-			assert.Equal(t, 4.0, elements[1].Val)
+			assert.Equal(t, -4.0, elements[1].Val)
 			assert.Equal(t, "el/3", elements[2].Name)
 			assert.Equal(t, 3.0, elements[2].Val)
 		})

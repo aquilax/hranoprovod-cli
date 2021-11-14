@@ -17,9 +17,10 @@ const (
 	runeArrayItem = '-'
 )
 
-func trim(s string) string {
-	return strings.Trim(s, "\t \n:\"-")
-}
+const (
+	trimText = "\t \n:\"-"
+	trimQty  = "\t \n:\""
+)
 
 // Options contains the parser related options
 type Options struct {
@@ -70,17 +71,17 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 	var line string
 	var trimmedLine string
 	var title string
-	var sValue string
+	var sQty string
 	var separatorPos int
 	var err error
-	var fValue float64
+	var fQty float64
 
 	lineNumber := 0
 	lineScanner := bufio.NewScanner(reader)
 	for lineScanner.Scan() {
 		lineNumber++
 		line = lineScanner.Text()
-		trimmedLine = trim(line)
+		trimmedLine = strings.Trim(line, trimText)
 
 		//skip empty lines and lines starting with #
 		if trimmedLine == "" || line[0] == commentChar {
@@ -105,17 +106,17 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 				callback(nil, NewErrorBadSyntax(lineNumber, line))
 				return
 			}
-			title = trim(trimmedLine[0:separatorPos])
+			title = strings.Trim(trimmedLine[0:separatorPos], trimText)
 
 			//get element value
-			sValue = trim(trimmedLine[separatorPos:])
-			fValue, err = strconv.ParseFloat(sValue, 64)
+			sQty = strings.Trim(trimmedLine[separatorPos:], trimQty)
+			fQty, err = strconv.ParseFloat(sQty, 64)
 			if err != nil {
-				callback(nil, NewErrorConversion(sValue, lineNumber, line))
+				callback(nil, NewErrorConversion(sQty, lineNumber, line))
 				return
 			}
 
-			node.Elements.Add(title, fValue)
+			node.Elements.Add(title, fQty)
 		}
 	}
 	// push last node
