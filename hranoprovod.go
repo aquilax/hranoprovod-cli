@@ -217,7 +217,7 @@ func (hr Hranoprovod) walkNodes(p parser.Parser, r reporter.Reporter) error {
 				return err
 			}
 			if hr.inInterval(t) {
-				ln, err = shared.NewLogNodeFromElements(t, node.Elements)
+				ln, err = shared.NewLogNodeFromElements(t, node.Elements, node.Metadata)
 				if err != nil {
 					return err
 				}

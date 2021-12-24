@@ -30,7 +30,7 @@ func TestRegReporterTemplate(t *testing.T) {
 			el.Add("test1", 3.1)
 			el.Add("test2", 3.2)
 			el.Add("test3/test3/test3/test3/test3/test3/test3/test3/test3", 3.3)
-			ln := shared.NewLogNode(time.Date(2019, 10, 10, 0, 0, 0, 0, time.UTC), el)
+			ln := shared.NewLogNode(time.Date(2019, 10, 10, 0, 0, 0, 0, time.UTC), el, nil)
 			expected, _ := ioutil.ReadFile("testdata/TestRegReporterTemplate.txt")
 			err := rp.Process(ln)
 			rp.Flush()

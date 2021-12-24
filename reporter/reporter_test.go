@@ -19,7 +19,7 @@ func TestReporter(t *testing.T) {
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test", 3.55)
-			ln := shared.NewLogNode(time.Now(), el)
+			ln := shared.NewLogNode(time.Now(), el, nil)
 			expected := `test
 `
 			err := rp.Process(ln)

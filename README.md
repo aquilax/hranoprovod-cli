@@ -33,7 +33,6 @@ Clone the repository and build/install the tool:
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/hranoprovod-cli)
 
-
 ## Docker
 
 You can run hranoprovod-cli from Docker too
@@ -108,12 +107,14 @@ day/nonworking:
   protein: -104
 
 bread/rye/100g:
+  # barcode: 0000000000000
   calories: 259
   fat: 3.3
   carbohydrate: 48
   protein: 9
 
 egg/boiled/100g:
+  # boiling time: 12 min
   calories: 155
   fat: 11
   carbohydrate: 1.1

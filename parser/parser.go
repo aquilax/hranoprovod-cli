@@ -75,6 +75,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 	var separatorPos int
 	var err error
 	var fQty float64
+	var mp *shared.MetadataPair
 
 	lineNumber := 0
 	lineScanner := bufio.NewScanner(reader)
@@ -100,6 +101,18 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 		}
 
 		if node != nil {
+			if trimmedLine[0] == commentChar {
+				// Metadata
+				mp, _ = getMetadataPair(trimmedLine)
+				if mp != nil {
+					if node.Metadata == nil {
+						node.Metadata = &shared.Metadata{*mp}
+					} else {
+						*node.Metadata = append(*node.Metadata, *mp)
+					}
+				}
+				continue
+			}
 			separatorPos = strings.LastIndexAny(trimmedLine, "\t ")
 
 			if separatorPos == -1 {
@@ -136,4 +149,19 @@ func (p Parser) ParseStream(reader io.Reader) {
 		return false
 	})
 	p.Done <- true
+}
+
+func getMetadataPair(line string) (*shared.MetadataPair, error) {
+	trimmedLine := strings.TrimSpace(strings.Trim(line, "#"))
+	separatorPos := strings.Index(trimmedLine, ":")
+	if separatorPos > -1 {
+		return &shared.MetadataPair{
+			Name:  strings.Trim(trimmedLine[:separatorPos], "# \t"),
+			Value: strings.TrimSpace(trimmedLine[separatorPos+1:]),
+		}, nil
+	}
+	return &shared.MetadataPair{
+		Name:  "",
+		Value: trimmedLine,
+	}, nil
 }
