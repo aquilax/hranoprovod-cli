@@ -42,7 +42,11 @@ func TestParser(t *testing.T) {
 		})
 
 		t.Run("It processes valid node", func(t *testing.T) {
-			file := `2011/07/17:
+			file := `
+2011/07/17:
+  # meta: value1
+  # meta: value2
+  # metadata-no-name
   el1: 1.22
   "ел 2":  -4
   el/3:  3
@@ -52,7 +56,7 @@ func TestParser(t *testing.T) {
   ел 5:  5
   el/7:  4
   el1: 1.35
-  `
+`
 			go parser.ParseStream(strings.NewReader(file))
 			nodeList, err := readChannels(parser)
 			assert.Equal(t, 2, len(nodeList))
@@ -68,6 +72,11 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, -4.0, elements[1].Val)
 			assert.Equal(t, "el/3", elements[2].Name)
 			assert.Equal(t, 3.0, elements[2].Val)
+			assert.Equal(t, shared.Metadata{
+				shared.MetadataPair{Name: "meta", Value: "value1"},
+				shared.MetadataPair{Name: "meta", Value: "value2"},
+				shared.MetadataPair{Name: "", Value: "metadata-no-name"},
+			}, *node.Metadata)
 		})
 
 		t.Run("It processes valid node with valid yaml syntax", func(t *testing.T) {

@@ -8,7 +8,16 @@ Hranoprovod is command line tracking tool. It supports nested recipes and custom
 
 ## Installation
 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/hranoprovod-cli)
+### asdf
+
+[asdf](https://github.com/asdf-vm/asdf) is an extendable version manager for linux and macOS.
+
+hranoprovod can be installed using a plugin as follows:
+
+    asdf plugin add hranoprovod https://github.com/aquilax/asdf-hranoprovod.git
+    asdf install hranoprovod latest
+
+### from code
 
 First make sure you have go (golang) installed.
 
@@ -19,6 +28,10 @@ Clone the repository and build/install the tool:
     git clone https://github.com/aquilax/hranoprovod-cli.git
     cd hranoprovod-cli
     go install
+
+### snap
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/hranoprovod-cli)
 
 ## Docker
 

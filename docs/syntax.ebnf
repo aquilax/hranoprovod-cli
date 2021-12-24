@@ -1,0 +1,20 @@
+CommentPrefix = "#" .
+DecimalSeparator = "." .
+ValueSeparator = ":" .
+Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" .
+Letter = "A" … "z" .
+NewLine = [ "\n" | "\r" ] .
+Space = " " .
+Tab = "\t" .
+Indentation = [ Tab | Space ] .
+WhiteSpace = Indentation .
+Quantity = Digit [ [ DecimalSeparator ] Digit ] .
+Text = { Digit | Letter } .
+
+Heading = { Digit | Letter } ValueSeparator [ WhiteSpace ] NewLine .
+Item = Indentation { Digit | Letter } ValueSeparator [ WhiteSpace ] Quantity NewLine .
+Comment = CommentPrefix Text NewLine .
+MetaDataName = { Digit | Letter | WhiteSpace } .
+MetaDataValue = { Digit | Letter | WhiteSpace } .
+MetaData = Indentation CommentPrefix [WhiteSpace] { MetaDataValue } | { MetaDataName ValueSeparator MetaDataValue } [ WhiteSpace ] .
+Start = { Comment | NewLine | Heading [ { MetaData | Item | NewLine} ] } .

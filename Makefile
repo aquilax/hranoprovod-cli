@@ -1,4 +1,4 @@
-.PHONY: clean test
+.PHONY: clean test test-release
 
 unexport HR_DATABASE
 unexport HR_LOGFILE
@@ -10,21 +10,21 @@ BINARY=hranoprovod-cli
 MDEXEC=mdexec
 TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md
 
-all: hranoprovod-cli documentation
+all: $(WASM) $(BINARY) documentation
 
 $(BINARY):
 	go build -o $(BINARY)
 
-documentation: docs/command-line.md docs/usage.md README.md
+documentation: $(BINARY) docs/command-line.md docs/usage.md README.md
 
 docs/command-line.md:
-	./$(BINARY) gen markdown > docs/command-line.md
+	./$(BINARY) gen markdown > $@
 
 docs/usage.md:
-	$(MDEXEC) documentation/usage.md > docs/usage.md
+	$(MDEXEC) documentation/usage.md > $@
 
 README.md:
-	$(MDEXEC) documentation/README.md > README.md
+	$(MDEXEC) documentation/README.md > $@
 
 test:
 	go test -v ./...

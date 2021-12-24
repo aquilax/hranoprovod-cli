@@ -4,10 +4,18 @@ import (
 	"time"
 )
 
+type MetadataPair struct {
+	Name  string
+	Value string
+}
+
+type Metadata []MetadataPair
+
 // ParserNode contains general node data
 type ParserNode struct {
 	Header   string
 	Elements Elements
+	Metadata *Metadata
 }
 
 // NewParserNode creates new geneal node
@@ -15,6 +23,7 @@ func NewParserNode(header string) *ParserNode {
 	return &ParserNode{
 		header,
 		NewElements(),
+		nil,
 	}
 }
 
@@ -22,6 +31,7 @@ func NewParserNode(header string) *ParserNode {
 type DBNode struct {
 	Header   string
 	Elements Elements
+	Metadata *Metadata
 }
 
 // NewDBNodeFromNode creates DB Node from Parser node
@@ -47,11 +57,12 @@ func (db *DBNodeList) Push(node *DBNode) {
 type LogNode struct {
 	Time     time.Time
 	Elements Elements
+	Metadata *Metadata
 }
 
 // NewLogNode creates new log node
-func NewLogNode(time time.Time, elements Elements) *LogNode {
-	return &LogNode{time, elements}
+func NewLogNode(time time.Time, elements Elements, metadata *Metadata) *LogNode {
+	return &LogNode{time, elements, metadata}
 }
 
 // GetHeaderTimeFromNode tries to parse node's time from the header and returns it as time.Time
@@ -60,7 +71,7 @@ func ParseTime(header string, dateFormat string) (time.Time, error) {
 }
 
 // NewLogNodeFromElements creates new LogNode from ParserNode elements and time
-func NewLogNodeFromElements(time time.Time, elements Elements) (*LogNode, error) {
+func NewLogNodeFromElements(time time.Time, elements Elements, metadata *Metadata) (*LogNode, error) {
 	elList := NewElements()
 
 	for _, el := range elements {
@@ -71,5 +82,5 @@ func NewLogNodeFromElements(time time.Time, elements Elements) (*LogNode, error)
 		}
 	}
 
-	return NewLogNode(time, elList), nil
+	return NewLogNode(time, elList, metadata), nil
 }

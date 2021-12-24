@@ -30,12 +30,14 @@ day/nonworking:
   protein: -104
 
 bread/rye/100g:
+  # barcode: 0000000000000
   calories: 259
   fat: 3.3
   carbohydrate: 48
   protein: 9
 
 egg/boiled/100g:
+  # boiling time: 12 min
   calories: 155
   fat: 11
   carbohydrate: 1.1
@@ -302,8 +304,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (144 days ago)
-  Last record:        2021/01/25 (143 days ago)
+  First record:       2021/01/24 (334 days ago)
+  Last record:        2021/01/25 (333 days ago)
 
 ```
 

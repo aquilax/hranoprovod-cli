@@ -6,12 +6,14 @@ day/nonworking:
   protein: -104
 
 bread/rye/100g:
+  # barcode: 0000000000000
   calories: 259
   fat: 3.3
   carbohydrate: 48
   protein: 9
 
 egg/boiled/100g:
+  # boiling time: 12 min
   calories: 155
   fat: 11
   carbohydrate: 1.1

@@ -28,7 +28,7 @@ func TestNewLogNode(t *testing.T) {
 		now := time.Now()
 		elements := NewElements()
 		elements.Add("test", 1.22)
-		logNode := NewLogNode(now, elements)
+		logNode := NewLogNode(now, elements, nil)
 		t.Run("Creates new log node with the proper fields", func(t *testing.T) {
 			assert.True(t, logNode.Time.Equal(now))
 			assert.Equal(t, "test", (logNode.Elements)[0].Name)
@@ -38,7 +38,7 @@ func TestNewLogNode(t *testing.T) {
 	t.Run("Given Parser Node", func(t *testing.T) {
 		t.Run("Creates new node on valid date", func(t *testing.T) {
 			node := NewParserNode("2006/01/02")
-			logNode, err := NewLogNodeFromElements(time.Now(), node.Elements)
+			logNode, err := NewLogNodeFromElements(time.Now(), node.Elements, nil)
 			assert.NotNil(t, logNode)
 			assert.Nil(t, err)
 		})
