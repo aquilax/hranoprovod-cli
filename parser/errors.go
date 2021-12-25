@@ -33,7 +33,7 @@ func NewErrorBadSyntax(lineNumber int, line string) *ErrorBadSyntax {
 
 // Error returns the error message
 func (e *ErrorBadSyntax) Error() string {
-	return fmt.Sprintf("Bad syntax on line %d, \"%s\".", e.LineNumber, e.Line)
+	return fmt.Sprintf("bad syntax on line %d, \"%s\".", e.LineNumber, e.Line)
 }
 
 // ErrorConversion raised when the element value cannot be parsed as float
@@ -50,6 +50,5 @@ func NewErrorConversion(text string, lineNumber int, line string) *ErrorConversi
 
 // Error returns the error message
 func (e *ErrorConversion) Error() string {
-	return fmt.Sprintf("Error converting \"%s\" to float on line %d \"%s\".", e.Text, e.LineNumber, e.Line)
-
+	return fmt.Sprintf("error converting \"%s\" to float on line %d \"%s\".", e.Text, e.LineNumber, e.Line)
 }

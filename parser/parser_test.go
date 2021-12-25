@@ -133,7 +133,7 @@ func TestParser(t *testing.T) {
 			assert.NotNil(t, err)
 			bsError, ok := err.(*ErrorBadSyntax)
 			assert.True(t, ok)
-			assert.Equal(t, "Bad syntax on line 2, \"  asdasd2\".", err.Error())
+			assert.Equal(t, `bad syntax on line 2, "  asdasd2".`, err.Error())
 			assert.Equal(t, 2, bsError.LineNumber)
 			assert.Equal(t, "  asdasd2", bsError.Line)
 		})

@@ -9,14 +9,21 @@ import (
 
 func TestResolver(t *testing.T) {
 	t.Run("Given nodes database and reslover", func(t *testing.T) {
-		nl := shared.NewDBNodeList()
-		node1 := shared.NewParserNode("node1")
-		node1.Elements.Add("element1", 100)
-		node1.Elements.Add("element2", 200)
-		nl.Push(shared.NewDBNodeFromNode(node1))
-		node2 := shared.NewParserNode("node2")
-		node2.Elements.Add("node1", 2)
-		nl.Push(shared.NewDBNodeFromNode(node2))
+		nl := shared.DBNodeList{
+			"node1": &shared.DBNode{
+				Header: "node1",
+				Elements: shared.Elements{
+					shared.Element{Name: "element1", Val: 100},
+					shared.Element{Name: "element2", Val: 200},
+				},
+			},
+			"node2": &shared.DBNode{
+				Header: "node2",
+				Elements: shared.Elements{
+					shared.Element{Name: "node1", Val: 2},
+				},
+			},
+		}
 		resolver := NewResolver(nl, 1)
 		t.Run("Resolve resolves the database", func(t *testing.T) {
 			resolver.Resolve()

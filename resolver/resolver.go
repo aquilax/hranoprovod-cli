@@ -36,9 +36,9 @@ func (r Resolver) resolveNode(name string, level int) {
 
 	for _, e := range node.Elements {
 		r.resolveNode(e.Name, level+1)
-		snode, exists := r.db[e.Name]
+		foundNode, exists := r.db[e.Name]
 		if exists {
-			nel.SumMerge(snode.Elements, e.Val)
+			nel.SumMerge(foundNode.Elements, e.Val)
 		} else {
 			var tm shared.Elements
 			tm.Add(e.Name, e.Val)

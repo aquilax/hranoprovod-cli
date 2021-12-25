@@ -94,6 +94,7 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	return nil
 }
 
+// ReportQuantity Generates a quantity report
 func (hr Hranoprovod) ReportQuantity(ascending bool) error {
 	parser := parser.NewParser(&hr.options.Parser)
 	r := reporter.NewQuantityReporter(ascending, os.Stdout)
