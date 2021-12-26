@@ -41,7 +41,7 @@ func (tn *TreeNode) AddDeep(el shared.Element) {
 	parent := tn
 	names := strings.Split(el.Name, Separator)
 	for _, name := range names {
-		trn := NewTreeNode(name, el.Val)
+		trn := NewTreeNode(name, el.Value)
 		parent = parent.Add(trn)
 	}
 }

@@ -6,8 +6,8 @@ import (
 
 // Element contains single element data
 type Element struct {
-	Name string
-	Val  float64
+	Name  string
+	Value float64
 }
 
 // Elements contains array of elements
@@ -43,9 +43,9 @@ func (el *Elements) Index(name string) (int, bool) {
 func (el *Elements) SumMerge(left Elements, mult float64) {
 	for _, v := range left {
 		if ndx, exists := (*el).Index(v.Name); exists {
-			(*el)[ndx].Val += v.Val * mult
+			(*el)[ndx].Value += v.Value * mult
 		} else {
-			(*el).Add(v.Name, v.Val*mult)
+			(*el).Add(v.Name, v.Value*mult)
 		}
 	}
 }

@@ -31,7 +31,7 @@ func (r CSVReporter) Process(ln *shared.LogNode) error {
 		if err = r.output.Write([]string{
 			ln.Time.Format("2006-01-02"),
 			e.Name,
-			fmt.Sprintf("%0.2f", e.Val),
+			fmt.Sprintf("%0.2f", e.Value),
 		}); err != nil {
 			return err
 		}

@@ -34,19 +34,19 @@ func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options *Options) r
 	//sort.Sort(ln.Elements)
 	for i := range ln.Elements {
 		re[i].Name = ln.Elements[i].Name
-		re[i].Val = ln.Elements[i].Val
+		re[i].Value = ln.Elements[i].Value
 		if repl, found := db[re[i].Name]; found {
 			for _, repl := range repl.Elements {
-				res := repl.Val * re[i].Val
+				res := repl.Value * re[i].Value
 				re[i].Ingredients.Add(repl.Name, res)
 				if options.Totals {
 					acc.Add(repl.Name, res)
 				}
 			}
 		} else {
-			re[i].Ingredients.Add(re[i].Name, re[i].Val)
+			re[i].Ingredients.Add(re[i].Name, re[i].Value)
 			if options.Totals {
-				acc.Add(ln.Elements[i].Name, ln.Elements[i].Val)
+				acc.Add(ln.Elements[i].Name, ln.Elements[i].Value)
 			}
 		}
 	}

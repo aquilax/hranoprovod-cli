@@ -11,7 +11,7 @@ func TestElement(t *testing.T) {
 		el := NewElement("test", 10)
 		t.Run("Creates new element", func(t *testing.T) {
 			assert.Equal(t, "test", el.Name)
-			assert.Equal(t, 10., el.Val)
+			assert.Equal(t, 10., el.Value)
 		})
 	})
 }
@@ -64,12 +64,12 @@ func TestElements(t *testing.T) {
 							index, found := el.Index("test1")
 							assert.True(t, found)
 							assert.Equal(t, 1, index)
-							assert.Equal(t, 233., el[index].Val)
+							assert.Equal(t, 233., el[index].Value)
 						})
 						t.Run("New elements are added", func(t *testing.T) {
 							index, found := el.Index("test4")
 							assert.True(t, found)
-							assert.Equal(t, 888., el[index].Val)
+							assert.Equal(t, 888., el[index].Value)
 						})
 					})
 				})

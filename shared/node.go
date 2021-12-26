@@ -76,9 +76,9 @@ func NewLogNodeFromElements(time time.Time, elements Elements, metadata *Metadat
 
 	for _, el := range elements {
 		if ndx, exists := elList.Index(el.Name); exists {
-			elList[ndx].Val += el.Val
+			elList[ndx].Value += el.Value
 		} else {
-			elList.Add(el.Name, el.Val)
+			elList.Add(el.Name, el.Value)
 		}
 	}
 

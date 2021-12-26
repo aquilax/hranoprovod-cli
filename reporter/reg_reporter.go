@@ -34,7 +34,7 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 		}
 		if repl, found := r.db[element.Name]; found {
 			for _, repl := range repl.Elements {
-				res := repl.Val * element.Val
+				res := repl.Value * element.Value
 				if !r.options.TotalsOnly {
 					r.printIngredient(repl.Name, res)
 				}
@@ -42,9 +42,9 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 			}
 		} else {
 			if !r.options.TotalsOnly {
-				r.printIngredient(element.Name, element.Val)
+				r.printIngredient(element.Name, element.Value)
 			}
-			acc.Add(element.Name, element.Val)
+			acc.Add(element.Name, element.Value)
 		}
 	}
 	if r.options.Totals {
@@ -85,7 +85,7 @@ func (r *regReporter) printDate(ts time.Time) {
 }
 
 func (r *regReporter) printElement(element shared.Element) {
-	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Val))
+	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Value))
 }
 
 func (r *regReporter) printIngredient(name string, value float64) {

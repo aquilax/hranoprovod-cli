@@ -28,7 +28,7 @@ func (r QuantityReporter) Process(ln *shared.LogNode) error {
 		if _, ok := r.accumulator[e.Name]; !ok {
 			r.accumulator[e.Name] = 0
 		}
-		r.accumulator[e.Name] += e.Val
+		r.accumulator[e.Name] += e.Value
 	}
 	return nil
 }

@@ -32,12 +32,12 @@ func (r *singleReporter) Process(ln *shared.LogNode) error {
 		if found {
 			for _, repl := range repl.Elements {
 				if repl.Name == singleElement {
-					acc.Add(repl.Name, repl.Val*e.Val)
+					acc.Add(repl.Name, repl.Value*e.Value)
 				}
 			}
 		} else {
 			if e.Name == singleElement {
-				acc.Add(e.Name, e.Val)
+				acc.Add(e.Name, e.Value)
 			}
 		}
 	}

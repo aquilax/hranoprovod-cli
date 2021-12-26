@@ -12,9 +12,9 @@ import (
 const defaultTemplate = `{{formatDate .Time}}
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ printf "\t%-27s :%s" (shorten $el.Name 27) (formatValue $el.Val) }}
+{{ printf "\t%-27s :%s" (shorten $el.Name 27) (formatValue $el.Value) }}
 {{- range $ing := $el.Ingredients}}
-{{ printf "\t\t%20s %s" (shorten $ing.Name 20) (formatValue $ing.Val) }}
+{{ printf "\t\t%20s %s" (shorten $ing.Name 20) (formatValue $ing.Value) }}
 {{- end}}
 {{- end}}
 {{- end}}
@@ -28,9 +28,9 @@ const defaultTemplate = `{{formatDate .Time}}
 const leftAlignedTemplate = `{{formatDate .Time}}
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ printf "  %s  %s" (formatValue $el.Val) $el.Name}}
+{{ printf "  %s  %s" (formatValue $el.Value) $el.Name}}
 {{- range $ing := $el.Ingredients}}
-{{ printf "  %s    %s" (formatValue $ing.Val) $ing.Name }}
+{{ printf "  %s    %s" (formatValue $ing.Value) $ing.Name }}
 {{- end}}
 {{- end}}
 {{- end}}

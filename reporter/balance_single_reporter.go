@@ -33,9 +33,9 @@ func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 		if found {
 			for _, repl := range repl.Elements {
 				if repl.Name == r.options.SingleElement {
-					r.root.AddDeep(shared.NewElement(el.Name, repl.Val*el.Val))
+					r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value))
 					// Add to grand total
-					r.total += repl.Val * el.Val
+					r.total += repl.Value * el.Value
 				}
 			}
 		} else {
