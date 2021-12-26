@@ -162,6 +162,14 @@ Generate markdown page
 
 **--help, -h**: show help
 
+## print
+
+Print log
+
+**--begin, -b**="": Beginning of period `DATE`
+
+**--end, -e**="": End of period `DATE`
+
 ## help, h
 
 Shows a list of commands or help for one command

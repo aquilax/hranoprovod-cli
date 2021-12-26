@@ -183,9 +183,9 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 2021/01/24 --no-color reg -g -s calories
+    280.00	candy/snickers/bar
   -1200.00	day/nonworking
     328.32	sandwich/egg/lettuce/100g
-    280.00	candy/snickers/bar
 
 ```
 
@@ -304,8 +304,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (334 days ago)
-  Last record:        2021/01/25 (333 days ago)
+  First record:       2021/01/24 (336 days ago)
+  Last record:        2021/01/25 (335 days ago)
 
 ```
 

@@ -67,11 +67,11 @@ func TestParser(t *testing.T) {
 			assert.NotNil(t, elements)
 			assert.Equal(t, 3, len(elements))
 			assert.Equal(t, "el1", elements[0].Name)
-			assert.Equal(t, 1.22, elements[0].Val)
+			assert.Equal(t, 1.22, elements[0].Value)
 			assert.Equal(t, "ел 2", elements[1].Name)
-			assert.Equal(t, -4.0, elements[1].Val)
+			assert.Equal(t, -4.0, elements[1].Value)
 			assert.Equal(t, "el/3", elements[2].Name)
-			assert.Equal(t, 3.0, elements[2].Val)
+			assert.Equal(t, 3.0, elements[2].Value)
 			assert.Equal(t, shared.Metadata{
 				shared.MetadataPair{Name: "meta", Value: "value1"},
 				shared.MetadataPair{Name: "meta", Value: "value2"},
@@ -101,11 +101,11 @@ func TestParser(t *testing.T) {
 			assert.NotNil(t, elements)
 			assert.Equal(t, 3, len(elements))
 			assert.Equal(t, "el1", elements[0].Name)
-			assert.Equal(t, 1.22, elements[0].Val)
+			assert.Equal(t, 1.22, elements[0].Value)
 			assert.Equal(t, "ел 2", elements[1].Name)
-			assert.Equal(t, -4.0, elements[1].Val)
+			assert.Equal(t, -4.0, elements[1].Value)
 			assert.Equal(t, "el/3", elements[2].Name)
-			assert.Equal(t, 3.0, elements[2].Val)
+			assert.Equal(t, 3.0, elements[2].Value)
 		})
 
 		t.Run("Groups elements", func(t *testing.T) {
@@ -122,7 +122,7 @@ func TestParser(t *testing.T) {
 			elements := node.Elements
 			assert.Equal(t, 2, len(elements))
 			assert.Equal(t, "el1", elements[0].Name)
-			assert.Equal(t, 1.22, elements[0].Val)
+			assert.Equal(t, 1.22, elements[0].Value)
 		})
 
 		t.Run("It raises bad syntax error", func(t *testing.T) {

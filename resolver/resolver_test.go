@@ -13,14 +13,14 @@ func TestResolver(t *testing.T) {
 			"node1": &shared.DBNode{
 				Header: "node1",
 				Elements: shared.Elements{
-					shared.Element{Name: "element1", Val: 100},
-					shared.Element{Name: "element2", Val: 200},
+					shared.Element{Name: "element1", Value: 100},
+					shared.Element{Name: "element2", Value: 200},
 				},
 			},
 			"node2": &shared.DBNode{
 				Header: "node2",
 				Elements: shared.Elements{
-					shared.Element{Name: "node1", Val: 2},
+					shared.Element{Name: "node1", Value: 2},
 				},
 			},
 		}
@@ -30,14 +30,14 @@ func TestResolver(t *testing.T) {
 			t.Run("Elements are resolved", func(t *testing.T) {
 				n1 := nl["node1"]
 				assert.Equal(t, "element1", n1.Elements[0].Name)
-				assert.Equal(t, 100., n1.Elements[0].Val)
+				assert.Equal(t, 100., n1.Elements[0].Value)
 				assert.Equal(t, "element2", n1.Elements[1].Name)
-				assert.Equal(t, 200., n1.Elements[1].Val)
+				assert.Equal(t, 200., n1.Elements[1].Value)
 				n2 := nl["node2"]
 				assert.Equal(t, "element1", n2.Elements[0].Name)
-				assert.Equal(t, 200., n2.Elements[0].Val)
+				assert.Equal(t, 200., n2.Elements[0].Value)
 				assert.Equal(t, "element2", n2.Elements[1].Name)
-				assert.Equal(t, 400., n2.Elements[1].Val)
+				assert.Equal(t, 400., n2.Elements[1].Value)
 			})
 		})
 	})

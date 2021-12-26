@@ -29,7 +29,7 @@ func (r *singleFoodReporter) Process(ln *shared.LogNode) error {
 			return err
 		}
 		if matched {
-			fmt.Fprintf(r.output, "%s\t%s\t%0.2f\n", ln.Time.Format(r.options.DateFormat), e.Name, e.Val)
+			fmt.Fprintf(r.output, "%s\t%s\t%0.2f\n", ln.Time.Format(r.options.DateFormat), e.Name, e.Value)
 		}
 	}
 	return nil

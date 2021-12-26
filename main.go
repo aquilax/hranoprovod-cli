@@ -367,6 +367,29 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:  "print",
+			Usage: "Print log",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:    "begin",
+					Aliases: []string{"b"},
+					Usage:   "Beginning of period `DATE`",
+				},
+				&cli.StringFlag{
+					Name:    "end",
+					Aliases: []string{"e"},
+					Usage:   "End of period `DATE`",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				o := NewOptions()
+				if err := o.Load(c); err != nil {
+					return err
+				}
+				return NewHranoprovod(o).Print()
+			},
+		},
 	}
 	err := app.Run(os.Args)
 	if err != nil {

@@ -38,10 +38,10 @@ func (r Resolver) resolveNode(name string, level int) {
 		r.resolveNode(e.Name, level+1)
 		foundNode, exists := r.db[e.Name]
 		if exists {
-			nel.SumMerge(foundNode.Elements, e.Val)
+			nel.SumMerge(foundNode.Elements, e.Value)
 		} else {
 			var tm shared.Elements
-			tm.Add(e.Name, e.Val)
+			tm.Add(e.Name, e.Value)
 			nel.SumMerge(tm, 1)
 		}
 	}

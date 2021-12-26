@@ -32,7 +32,7 @@ func (r *elementByFoodReporter) Process(ln *shared.LogNode) error {
 		if found {
 			for _, repl := range node.Elements {
 				if repl.Name == singleElement {
-					r.acc.Add(node.Header, repl.Val*e.Val)
+					r.acc.Add(node.Header, repl.Value*e.Value)
 				}
 			}
 		}

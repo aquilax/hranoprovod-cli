@@ -34,6 +34,13 @@ func (hr Hranoprovod) Register() error {
 	return hr.walkNodes(parser, r)
 }
 
+// Register generates report
+func (hr Hranoprovod) Print() error {
+	parser := parser.NewParser(&hr.options.Parser)
+	r := reporter.NewPrintReporter(&hr.options.Reporter, os.Stdout)
+	return hr.walkNodes(parser, r)
+}
+
 // Balance generates balance report
 func (hr Hranoprovod) Balance() error {
 	parser := parser.NewParser(&hr.options.Parser)
@@ -75,21 +82,21 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 	for name, node := range nl {
 		for _, el := range node.Elements {
 			if el.Name == elementName {
-				list = append(list, shared.NewElement(name, el.Val))
+				list = append(list, shared.NewElement(name, el.Value))
 			}
 		}
 	}
 	if ascending {
 		sort.SliceStable(list, func(i, j int) bool {
-			return list[i].Val > list[j].Val
+			return list[i].Value > list[j].Value
 		})
 	} else {
 		sort.SliceStable(list, func(i, j int) bool {
-			return list[i].Val < list[j].Val
+			return list[i].Value < list[j].Value
 		})
 	}
 	for _, el := range list {
-		fmt.Printf("%0.2f\t%s\n", el.Val, el.Name)
+		fmt.Printf("%0.2f\t%s\n", el.Value, el.Name)
 	}
 	return nil
 }

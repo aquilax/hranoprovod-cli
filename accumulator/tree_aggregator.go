@@ -8,12 +8,12 @@ import (
 )
 
 // Separator is used to separate the categories
-const Separator = "/"
+const DefaultCategorySeparator = "/"
 
 // TreeNode contains data for a single balance tree node
 type TreeNode struct {
 	Name     string
-	Sum      float64
+	Total    float64
 	Children map[string]*TreeNode
 }
 
@@ -21,7 +21,7 @@ type TreeNode struct {
 func NewTreeNode(name string, sum float64) *TreeNode {
 	return &TreeNode{
 		Name:     name,
-		Sum:      sum,
+		Total:    sum,
 		Children: make(map[string]*TreeNode),
 	}
 }
@@ -31,22 +31,22 @@ func (tn *TreeNode) Add(child *TreeNode) *TreeNode {
 	if _, ok := tn.Children[child.Name]; !ok {
 		tn.Children[child.Name] = child
 	} else {
-		tn.Children[child.Name].Sum += child.Sum
+		tn.Children[child.Name].Total += child.Total
 	}
 	return tn.Children[child.Name]
 }
 
 // AddDeep adds recursive child nodes to the current node given an element
-func (tn *TreeNode) AddDeep(el shared.Element) {
+func (tn *TreeNode) AddDeep(el shared.Element, separator string) {
 	parent := tn
-	names := strings.Split(el.Name, Separator)
+	names := strings.Split(el.Name, separator)
 	for _, name := range names {
-		trn := NewTreeNode(name, el.Val)
+		trn := NewTreeNode(name, el.Value)
 		parent = parent.Add(trn)
 	}
 }
 
-// Keys returns array of children keys
+// Keys returns sorted array of children keys
 func (tn *TreeNode) Keys() []string {
 	keys := make([]string, len(tn.Children))
 

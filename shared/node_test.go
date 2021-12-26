@@ -32,7 +32,7 @@ func TestNewLogNode(t *testing.T) {
 		t.Run("Creates new log node with the proper fields", func(t *testing.T) {
 			assert.True(t, logNode.Time.Equal(now))
 			assert.Equal(t, "test", (logNode.Elements)[0].Name)
-			assert.Equal(t, 1.22, (logNode.Elements)[0].Val)
+			assert.Equal(t, 1.22, (logNode.Elements)[0].Value)
 		})
 	})
 	t.Run("Given Parser Node", func(t *testing.T) {
