@@ -1,9 +1,8 @@
-package main
+package app
 
 import (
 	"errors"
 	"os"
-	"os/user"
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
@@ -11,10 +10,6 @@ import (
 	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"
-)
-
-const (
-	optionsFileName = "/.hranoprovod/config"
 )
 
 // Options contains the options structure
@@ -60,15 +55,6 @@ func (o *Options) Load(c *cli.Context) error {
 	o.populateGlobals(c)
 	o.populateLocals(c)
 	return nil
-}
-
-// GetDefaultFileName returns the default filename for the config file
-func GetDefaultFileName() string {
-	usr, err := user.Current()
-	if err != nil {
-		return ""
-	}
-	return usr.HomeDir + optionsFileName
 }
 
 func fileExists(name string) (bool, error) {

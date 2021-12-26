@@ -1,7 +1,8 @@
-package main
+package app
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"sort"
 	"time"
@@ -15,11 +16,12 @@ import (
 // Hranoprovod is the main app type
 type Hranoprovod struct {
 	options *Options
+	output  io.Writer
 }
 
 // NewHranoprovod creates new application
 func NewHranoprovod(options *Options) Hranoprovod {
-	return Hranoprovod{options}
+	return Hranoprovod{options, os.Stdout}
 }
 
 // Register generates report
@@ -96,7 +98,7 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 		})
 	}
 	for _, el := range list {
-		fmt.Printf("%0.2f\t%s\n", el.Value, el.Name)
+		fmt.Fprintf(hr.output, "%0.2f\t%s\n", el.Value, el.Name)
 	}
 	return nil
 }
@@ -164,13 +166,13 @@ func (hr Hranoprovod) Stats() error {
 		return false
 	})
 
-	fmt.Printf("  Database file:      %s\n", hr.options.Global.DbFileName)
-	fmt.Printf("  Database records:   %d\n", countDb)
-	fmt.Println("")
-	fmt.Printf("  Log file:           %s\n", hr.options.Global.LogFileName)
-	fmt.Printf("  Log records:        %d\n", countLog)
-	fmt.Printf("  First record:       %s (%d days ago)\n", firstLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(firstLogDate).Hours()/24))
-	fmt.Printf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(lastLogDate).Hours()/24))
+	fmt.Fprintf(hr.output, "  Database file:      %s\n", hr.options.Global.DbFileName)
+	fmt.Fprintf(hr.output, "  Database records:   %d\n", countDb)
+	fmt.Fprintln(hr.output, "")
+	fmt.Fprintf(hr.output, "  Log file:           %s\n", hr.options.Global.LogFileName)
+	fmt.Fprintf(hr.output, "  Log records:        %d\n", countLog)
+	fmt.Fprintf(hr.output, "  First record:       %s (%d days ago)\n", firstLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(firstLogDate).Hours()/24))
+	fmt.Fprintf(hr.output, "  Last record:        %s (%d days ago)\n", lastLogDate.Format(hr.options.Reporter.DateFormat), int(time.Since(lastLogDate).Hours()/24))
 	return nil
 }
 
@@ -190,7 +192,7 @@ func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
 	// Database must be optional. If the default file name is used and the file is not found,
 	// return empty node list
-	if fileName == defaultDbFilename {
+	if fileName == DefaultDbFilename {
 		if exists, _ := fileExists(fileName); !exists {
 			return nodeList, nil
 		}
