@@ -32,12 +32,12 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 			if found {
 				for _, repl := range repl.Elements {
 					if repl.Name == r.options.SingleElement {
-						r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value))
+						r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
 					}
 				}
 			} else {
 				if el.Name == r.options.SingleElement {
-					r.root.AddDeep(shared.NewElement(el.Name, 0))
+					r.root.AddDeep(shared.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
 				}
 			}
 		}
@@ -45,7 +45,7 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 	}
 
 	for _, el := range ln.Elements {
-		r.root.AddDeep(el)
+		r.root.AddDeep(el, accumulator.DefaultCategorySeparator)
 	}
 	return nil
 }
@@ -63,10 +63,10 @@ func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 		if len(child.Children) == 0 {
-			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
 		} else if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
 			// combine the last two levels
-			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
 			continue
 		} else {
 			fmt.Fprintf(r.output, "%10s | %s%s\n", " ", strings.Repeat("  ", level), child.Name)
@@ -91,10 +91,10 @@ func (r *balanceReporter) printNodeCollapsed(node *accumulator.TreeNode, level i
 
 		jump := getJump(child)
 		if len(jump) > 0 {
-			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), strings.Join(jump, "/"))
+			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), strings.Join(jump, "/"))
 			continue
 		}
-		fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Sum, strings.Repeat("  ", level), child.Name)
+		fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
 		r.printNodeCollapsed(child, level+1)
 	}
 }

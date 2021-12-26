@@ -8,10 +8,10 @@ const (
 )
 
 // AccValues contains accumulator values
-type AccValues [2]float64
+type AccValues []float64
 
 // Accumulator accumulates element values by name
-type Accumulator map[string]*AccValues
+type Accumulator map[string]AccValues
 
 // NewAccumulator returns new accumulator
 func NewAccumulator() Accumulator {
@@ -27,7 +27,7 @@ func (acc Accumulator) Add(name string, val float64) {
 	if _, exists := acc[name]; exists {
 		acc[name][sign] += val
 	} else {
-		newVal := &AccValues{0, 0}
+		newVal := make(AccValues, 2)
 		newVal[sign] = val
 		acc[name] = newVal
 	}
