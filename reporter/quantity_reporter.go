@@ -55,7 +55,7 @@ func (r QuantityReporter) Flush() error {
 		})
 	}
 	for _, el := range sortable {
-		fmt.Printf("%0.2f\t%s\n", el.value, el.name)
+		fmt.Fprintf(r.output, "%0.2f\t%s\n", el.value, el.name)
 	}
 	return nil
 }
