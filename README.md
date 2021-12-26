@@ -73,6 +73,7 @@ COMMANDS:
    stats          Provide stats information
    summary        Show summary
    gen            Generate documentation
+   print          Print log
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
