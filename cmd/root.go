@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/user"
 
+	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
 )
 
@@ -27,7 +28,15 @@ var (
 	date    = "unknown"
 )
 
+type optionLoader = func(*cli.Context) (*app.Options, error)
+
 func GetApp() *cli.App {
+	ol := func(c *cli.Context) (*app.Options, error) {
+		o := app.NewOptions()
+		err := o.Load(c)
+		return o, err
+	}
+
 	app := &cli.App{
 		Name:    appName,
 		Usage:   appUsage,
@@ -84,15 +93,15 @@ func GetApp() *cli.App {
 		},
 	}
 	app.Commands = []*cli.Command{
-		newRegisterCommand(),
-		newBalanceCommand(),
-		newLintCommand(),
-		newReportCommand(),
-		newCsvCommand(),
-		newStatsCommand(),
-		newSummaryCommand(),
+		newRegisterCommand(ol),
+		newBalanceCommand(ol),
+		newLintCommand(ol),
+		newReportCommand(ol),
+		newCsvCommand(ol),
+		newStatsCommand(ol),
+		newSummaryCommand(ol),
 		newGenCommand(app),
-		newPrintCommand(),
+		newPrintCommand(ol),
 	}
 	return app
 }

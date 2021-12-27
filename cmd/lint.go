@@ -5,13 +5,13 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newLintCommand() *cli.Command {
+func newLintCommand(ol optionLoader) *cli.Command {
 	return &cli.Command{
 		Name:  "lint",
 		Usage: "Lints file",
 		Action: func(c *cli.Context) error {
-			o := app.NewOptions()
-			if err := o.Load(c); err != nil {
+			o, err := ol(c)
+			if err != nil {
 				return err
 			}
 			return app.NewHranoprovod(o).Lint(c.Args().First(), o.ParserConfig)

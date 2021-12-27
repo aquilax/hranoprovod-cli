@@ -5,7 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newCsvCommand() *cli.Command {
+func newCsvCommand(ol optionLoader) *cli.Command {
 	return &cli.Command{
 		Name:  "csv",
 		Usage: "Generates csv exports",
@@ -26,8 +26,8 @@ func newCsvCommand() *cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					o := app.NewOptions()
-					if err := o.Load(c); err != nil {
+					o, err := ol(c)
+					if err != nil {
 						return err
 					}
 					return app.NewHranoprovod(o).CSV(o.ParserConfig)

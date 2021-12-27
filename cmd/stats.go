@@ -5,13 +5,13 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newStatsCommand() *cli.Command {
+func newStatsCommand(ol optionLoader) *cli.Command {
 	return &cli.Command{
 		Name:  "stats",
 		Usage: "Provide stats information",
 		Action: func(c *cli.Context) error {
-			o := app.NewOptions()
-			if err := o.Load(c); err != nil {
+			o, err := ol(c)
+			if err != nil {
 				return err
 			}
 			return app.NewHranoprovod(o).Stats()

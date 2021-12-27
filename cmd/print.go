@@ -5,7 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newPrintCommand() *cli.Command {
+func newPrintCommand(ol optionLoader) *cli.Command {
 	return &cli.Command{
 		Name:  "print",
 		Usage: "Print log",
@@ -22,8 +22,8 @@ func newPrintCommand() *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			o := app.NewOptions()
-			if err := o.Load(c); err != nil {
+			o, err := ol(c)
+			if err != nil {
 				return err
 			}
 			return app.NewHranoprovod(o).Print(o.ParserConfig)

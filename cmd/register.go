@@ -5,7 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newRegisterCommand() *cli.Command {
+func newRegisterCommand(ol optionLoader) *cli.Command {
 	return &cli.Command{
 		Name:    "register",
 		Aliases: []string{"reg"},
@@ -71,8 +71,8 @@ func newRegisterCommand() *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			o := app.NewOptions()
-			if err := o.Load(c); err != nil {
+			o, err := ol(c)
+			if err != nil {
 				return err
 			}
 			return app.NewHranoprovod(o).Register(o.ParserConfig)
