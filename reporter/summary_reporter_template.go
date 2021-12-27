@@ -16,32 +16,32 @@ const summaryTemplate = `{{formatDate .Time}} :
 ------------
 {{- if .Elements }}
 {{- range $el := .Elements}}
-{{ formatValue $el.Val }} : {{ $el.Name }}
+{{ formatValue $el.Value }} : {{ $el.Name }}
 {{- end}}
 {{- end}}
 `
 
 // SummaryReporterTemplate is a summary reporter
 type SummaryReporterTemplate struct {
-	options  Config
+	config   Config
 	db       shared.DBNodeList
 	output   io.Writer
 	template *template.Template
 }
 
 // NewSummaryReporterTemplate creates new summary reporter
-func NewSummaryReporterTemplate(options Config, db shared.DBNodeList, writer io.Writer) *SummaryReporterTemplate {
+func NewSummaryReporterTemplate(config Config, db shared.DBNodeList, writer io.Writer) *SummaryReporterTemplate {
 	return &SummaryReporterTemplate{
-		options,
+		config,
 		db,
 		writer,
-		template.Must(template.New("summary").Funcs(getTemplateFunctions(options)).Parse(summaryTemplate)),
+		template.Must(template.New("summary").Funcs(getTemplateFunctions(config)).Parse(summaryTemplate)),
 	}
 }
 
 // Process process shared node
 func (r *SummaryReporterTemplate) Process(ln *shared.LogNode) error {
-	return r.template.Execute(r.output, getReportItem(ln, r.db, r.options))
+	return r.template.Execute(r.output, getReportItem(ln, r.db, r.config))
 }
 
 // Flush does nothing
