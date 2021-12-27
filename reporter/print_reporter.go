@@ -9,11 +9,11 @@ import (
 
 // PrintReporter outputs log report
 type PrintReporter struct {
-	options *Options
+	options Options
 	output  io.Writer
 }
 
-func NewPrintReporter(options *Options, writer io.Writer) *PrintReporter {
+func NewPrintReporter(options Options, writer io.Writer) *PrintReporter {
 	return &PrintReporter{
 		options,
 		writer,

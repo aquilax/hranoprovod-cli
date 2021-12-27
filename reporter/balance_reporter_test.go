@@ -23,7 +23,7 @@ func Test_balanceReporter_printNode(t *testing.T) {
 	options.CollapseLast = true
 
 	type fields struct {
-		options *Options
+		options Options
 		db      shared.DBNodeList
 		output  io.Writer
 		root    *accumulator.TreeNode

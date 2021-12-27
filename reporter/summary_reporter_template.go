@@ -23,14 +23,14 @@ const summaryTemplate = `{{formatDate .Time}} :
 
 // SummaryReporterTemplate is a summary reporter
 type SummaryReporterTemplate struct {
-	options  *Options
+	options  Options
 	db       shared.DBNodeList
 	output   io.Writer
 	template *template.Template
 }
 
 // NewSummaryReporterTemplate creates new summary reporter
-func NewSummaryReporterTemplate(options *Options, db shared.DBNodeList, writer io.Writer) *SummaryReporterTemplate {
+func NewSummaryReporterTemplate(options Options, db shared.DBNodeList, writer io.Writer) *SummaryReporterTemplate {
 	return &SummaryReporterTemplate{
 		options,
 		db,

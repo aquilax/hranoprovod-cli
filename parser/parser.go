@@ -22,32 +22,32 @@ const (
 	trimQty  = "\t \n:\""
 )
 
-// Options contains the parser related options
-type Options struct {
+// Config contains the parser configuration
+type Config struct {
 	// CommentChar contains the character used to indicate that the line is a comment
 	CommentChar uint8
 }
 
-// NewDefaultOptions returns the default set of parser options
-func NewDefaultOptions() *Options {
-	return &Options{'#'}
+// NewDefaultConfig returns the default set of parser configuration
+func NewDefaultConfig() Config {
+	return Config{'#'}
 }
 
 // Parser is the parser data structure
 type Parser struct {
-	options *Options
-	Nodes   chan *shared.ParserNode
-	Errors  chan error
-	Done    chan bool
+	config Config
+	Nodes  chan *shared.ParserNode
+	Errors chan error
+	Done   chan bool
 }
 
 // NewParser returns new parser
-func NewParser(options *Options) Parser {
+func NewParser(c Config) Parser {
 	return Parser{
-		options,
-		make(chan *shared.ParserNode),
-		make(chan error),
-		make(chan bool),
+		config: c,
+		Nodes:  make(chan *shared.ParserNode),
+		Errors: make(chan error),
+		Done:   make(chan bool),
 	}
 }
 
@@ -140,7 +140,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 
 // ParseStream parses the contents of stream
 func (p Parser) ParseStream(reader io.Reader) {
-	ParseStreamCallback(reader, p.options.CommentChar, func(n *shared.ParserNode, err error) (stop bool) {
+	ParseStreamCallback(reader, p.config.CommentChar, func(n *shared.ParserNode, err error) (stop bool) {
 		if err != nil {
 			p.Errors <- err
 			return true

@@ -37,7 +37,7 @@ func Test_shorten(t *testing.T) {
 			"sweets/pa…bonus/100g",
 		},
 	}
-	shorten := getShorten(&Options{
+	shorten := getShorten(Options{
 		ShortenStrings: true,
 	})
 

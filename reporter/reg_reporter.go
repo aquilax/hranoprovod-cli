@@ -12,12 +12,12 @@ import (
 )
 
 type regReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) *regReporter {
+func newRegReporter(options Options, db shared.DBNodeList, writer io.Writer) *regReporter {
 	return &regReporter{
 		options,
 		db,

@@ -12,26 +12,28 @@ import (
 	gcfg "gopkg.in/gcfg.v1"
 )
 
+type GlobalOptions struct {
+	DbFileName  string
+	LogFileName string
+	DateFormat  string
+}
+
 // Options contains the options structure
 type Options struct {
-	Global struct {
-		DbFileName  string
-		LogFileName string
-		DateFormat  string
-	}
+	Global   GlobalOptions
 	Resolver struct {
 		ResolverMaxDepth int
 	}
-	Parser   parser.Options
-	Reporter reporter.Options
+	ParserConfig parser.Config `gcfg:"Parser"`
+	Reporter     reporter.Options
 }
 
 // NewOptions returns new options structure.
 func NewOptions() *Options {
 	o := &Options{}
-	o.Reporter = *reporter.NewDefaultOptions()
+	o.Reporter = reporter.NewDefaultOptions()
 	o.Reporter.Color = true
-	o.Parser = *parser.NewDefaultOptions()
+	o.ParserConfig = parser.NewDefaultConfig()
 	return o
 }
 

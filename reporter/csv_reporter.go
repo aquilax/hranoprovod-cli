@@ -10,12 +10,12 @@ import (
 
 // CSVReporter outputs report for single food
 type CSVReporter struct {
-	options *Options
+	options Options
 	output  *csv.Writer
 }
 
 // NewCSVReporter creates new CSV reporter
-func NewCSVReporter(options *Options, writer io.Writer) CSVReporter {
+func NewCSVReporter(options Options, writer io.Writer) CSVReporter {
 	w := csv.NewWriter(writer)
 	w.Comma = ';'
 	return CSVReporter{

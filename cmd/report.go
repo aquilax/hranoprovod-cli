@@ -25,7 +25,7 @@ func newReportCommand() *cli.Command {
 					if err := o.Load(c); err != nil {
 						return err
 					}
-					return app.NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"))
+					return app.NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"), o.ParserConfig)
 				},
 			},
 			{
@@ -36,7 +36,7 @@ func newReportCommand() *cli.Command {
 					if err := o.Load(c); err != nil {
 						return err
 					}
-					return app.NewHranoprovod(o).ReportUnresolved()
+					return app.NewHranoprovod(o).ReportUnresolved(o.ParserConfig)
 				},
 			},
 			{
@@ -53,7 +53,7 @@ func newReportCommand() *cli.Command {
 					if err := o.Load(c); err != nil {
 						return err
 					}
-					return app.NewHranoprovod(o).ReportQuantity(c.IsSet("desc"))
+					return app.NewHranoprovod(o).ReportQuantity(c.IsSet("desc"), o.ParserConfig)
 				},
 			},
 		},

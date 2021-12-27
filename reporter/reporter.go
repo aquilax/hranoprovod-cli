@@ -34,8 +34,8 @@ type Options struct {
 }
 
 // NewDefaultOptions returns the default reporter options
-func NewDefaultOptions() *Options {
-	return &Options{
+func NewDefaultOptions() Options {
+	return Options{
 		CSV:                  false,
 		Color:                false,
 		DateFormat:           "2006/01/02",
@@ -62,7 +62,7 @@ type Reporter interface {
 }
 
 // NewRegReporter creates new response handler
-func NewRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) Reporter {
+func NewRegReporter(options Options, db shared.DBNodeList, writer io.Writer) Reporter {
 	if options.Unresolved {
 		return NewUnsolvedReporter(options, db, writer)
 	}
@@ -82,7 +82,7 @@ func NewRegReporter(options *Options, db shared.DBNodeList, writer io.Writer) Re
 }
 
 // NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options *Options, db shared.DBNodeList, writer io.Writer) Reporter {
+func NewBalanceReporter(options Options, db shared.DBNodeList, writer io.Writer) Reporter {
 	if len(options.SingleElement) > 0 {
 		return newBalanceSingleReporter(options, db, writer)
 	}

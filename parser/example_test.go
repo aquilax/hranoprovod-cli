@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleParser_ParseStream() {
-	p := parser.NewParser(parser.NewDefaultOptions())
+	p := parser.NewParser(parser.NewDefaultConfig())
 	file := `2011/07/17:
   el1: 1.22
   ел 2:  4

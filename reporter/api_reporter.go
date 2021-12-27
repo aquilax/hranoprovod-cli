@@ -9,12 +9,12 @@ import (
 
 // APIReporter outputs api search results
 type APIReporter struct {
-	options *Options
+	options Options
 	output  io.Writer
 }
 
 // NewAPIReporter creates new API result reporter
-func NewAPIReporter(ro *Options, writer io.Writer) *APIReporter {
+func NewAPIReporter(ro Options, writer io.Writer) *APIReporter {
 	return &APIReporter{
 		ro,
 		writer,

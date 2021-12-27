@@ -25,39 +25,39 @@ func NewHranoprovod(options *Options) Hranoprovod {
 }
 
 // Register generates report
-func (hr Hranoprovod) Register() error {
-	parser := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) Register(pc parser.Config) error {
+	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
-	r := reporter.NewRegReporter(&hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewRegReporter(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 
 // Register generates report
-func (hr Hranoprovod) Print() error {
-	parser := parser.NewParser(&hr.options.Parser)
-	r := reporter.NewPrintReporter(&hr.options.Reporter, os.Stdout)
+func (hr Hranoprovod) Print(pc parser.Config) error {
+	parser := parser.NewParser(pc)
+	r := reporter.NewPrintReporter(hr.options.Reporter, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 
 // Balance generates balance report
-func (hr Hranoprovod) Balance() error {
-	parser := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) Balance(pc parser.Config) error {
+	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
-	r := reporter.NewBalanceReporter(&hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewBalanceReporter(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 
 // Lint lints file
-func (hr Hranoprovod) Lint(fileName string) error {
-	p := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) Lint(fileName string, pc parser.Config) error {
+	p := parser.NewParser(pc)
 	go p.ParseFile(fileName)
 	return func() error {
 		for {
@@ -73,8 +73,8 @@ func (hr Hranoprovod) Lint(fileName string) error {
 }
 
 // ReportElement generates report for single element
-func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
-	p := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) ReportElement(elementName string, ascending bool, pc parser.Config) error {
+	p := parser.NewParser(pc)
 	nl, err := loadDatabase(p, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
@@ -104,29 +104,29 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool) error {
 }
 
 // ReportQuantity Generates a quantity report
-func (hr Hranoprovod) ReportQuantity(ascending bool) error {
-	parser := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) ReportQuantity(ascending bool, pc parser.Config) error {
+	parser := parser.NewParser(pc)
 	r := reporter.NewQuantityReporter(ascending, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 
 // ReportUnresolved generates report for unresolved elements
-func (hr Hranoprovod) ReportUnresolved() error {
-	parser := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) ReportUnresolved(pc parser.Config) error {
+	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
-	r := reporter.NewUnsolvedReporter(&hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewUnsolvedReporter(hr.options.Reporter, nl, os.Stdout)
 
 	return hr.walkNodes(parser, r)
 }
 
 // CSV generates CSV export
-func (hr Hranoprovod) CSV() error {
-	parser := parser.NewParser(&hr.options.Parser)
-	r := reporter.NewCSVReporter(&hr.options.Reporter, os.Stdout)
+func (hr Hranoprovod) CSV(pc parser.Config) error {
+	parser := parser.NewParser(pc)
+	r := reporter.NewCSVReporter(hr.options.Reporter, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 
@@ -177,14 +177,14 @@ func (hr Hranoprovod) Stats() error {
 }
 
 // Summary generates summary
-func (hr Hranoprovod) Summary() error {
-	parser := parser.NewParser(&hr.options.Parser)
+func (hr Hranoprovod) Summary(pc parser.Config) error {
+	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
-	r := reporter.NewSummaryReporterTemplate(&hr.options.Reporter, nl, os.Stdout)
+	r := reporter.NewSummaryReporterTemplate(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
 

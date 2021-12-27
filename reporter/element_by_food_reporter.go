@@ -10,13 +10,13 @@ import (
 
 // elementByFoodReporter outputs report for single element groupped by food
 type elementByFoodReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 	acc     accumulator.Accumulator
 }
 
-func newElementByFoodReporter(options *Options, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
+func newElementByFoodReporter(options Options, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
 	return &elementByFoodReporter{
 		options,
 		db,

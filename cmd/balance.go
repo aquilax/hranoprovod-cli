@@ -41,7 +41,7 @@ func newBalanceCommand() *cli.Command {
 			if err := o.Load(c); err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Balance()
+			return app.NewHranoprovod(o).Balance(o.ParserConfig)
 		},
 	}
 }

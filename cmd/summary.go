@@ -25,7 +25,7 @@ func newSummaryCommand() *cli.Command {
 					o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 					o.Reporter.HasEnd = true
 					o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-					return app.NewHranoprovod(o).Summary()
+					return app.NewHranoprovod(o).Summary(o.ParserConfig)
 				},
 			},
 			{
@@ -41,7 +41,7 @@ func newSummaryCommand() *cli.Command {
 					o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 					o.Reporter.HasEnd = true
 					o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-					return app.NewHranoprovod(o).Summary()
+					return app.NewHranoprovod(o).Summary(o.ParserConfig)
 				},
 			},
 		},

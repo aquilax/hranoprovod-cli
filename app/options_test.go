@@ -13,7 +13,7 @@ func TestOptions(t *testing.T) {
 			assert.NotNil(t, o)
 			assert.NotNil(t, o.Reporter)
 			assert.True(t, o.Reporter.Color)
-			assert.NotNil(t, o.Parser)
+			assert.NotNil(t, o.ParserConfig)
 		})
 	})
 	t.Run("Given fileExists", func(t *testing.T) {

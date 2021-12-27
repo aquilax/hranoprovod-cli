@@ -11,12 +11,12 @@ import (
 
 // singleReporter outputs report for single food
 type singleReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newSingleReporter(options *Options, db shared.DBNodeList, writer io.Writer) *singleReporter {
+func newSingleReporter(options Options, db shared.DBNodeList, writer io.Writer) *singleReporter {
 	return &singleReporter{
 		options,
 		db,

@@ -26,7 +26,7 @@ func newPrintCommand() *cli.Command {
 			if err := o.Load(c); err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Print()
+			return app.NewHranoprovod(o).Print(o.ParserConfig)
 		},
 	}
 }

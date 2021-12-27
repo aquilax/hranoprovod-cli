@@ -25,7 +25,7 @@ type reportItem struct {
 	Totals   *[]total
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options *Options) reportItem {
+func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options Options) reportItem {
 	var acc accumulator.Accumulator
 	if options.Totals {
 		acc = accumulator.NewAccumulator()

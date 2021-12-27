@@ -10,13 +10,13 @@ import (
 )
 
 type balanceReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 	root    *accumulator.TreeNode
 }
 
-func newBalanceReporter(options *Options, db shared.DBNodeList, writer io.Writer) *balanceReporter {
+func newBalanceReporter(options Options, db shared.DBNodeList, writer io.Writer) *balanceReporter {
 	return &balanceReporter{
 		options,
 		db,

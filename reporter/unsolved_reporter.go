@@ -9,14 +9,14 @@ import (
 
 // UnsolvedReporter is unresolved reporter
 type UnsolvedReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 	list    map[string]bool
 }
 
 // NewUnsolvedReporter returns reporter for unresolved elements
-func NewUnsolvedReporter(options *Options, db shared.DBNodeList, writer io.Writer) *UnsolvedReporter {
+func NewUnsolvedReporter(options Options, db shared.DBNodeList, writer io.Writer) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		options,
 		db,

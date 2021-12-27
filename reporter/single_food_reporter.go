@@ -9,12 +9,12 @@ import (
 )
 
 type singleFoodReporter struct {
-	options *Options
+	options Options
 	db      shared.DBNodeList
 	output  io.Writer
 }
 
-func newSingleFoodReporter(options *Options, db shared.DBNodeList, writer io.Writer) *singleFoodReporter {
+func newSingleFoodReporter(options Options, db shared.DBNodeList, writer io.Writer) *singleFoodReporter {
 	return &singleFoodReporter{
 		options,
 		db,

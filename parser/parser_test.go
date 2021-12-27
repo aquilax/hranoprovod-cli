@@ -33,7 +33,7 @@ func readChannels(parser Parser) (nodeList, error) {
 
 func TestParser(t *testing.T) {
 	t.Run("Given new parser", func(t *testing.T) {
-		parser := NewParser(NewDefaultOptions())
+		parser := NewParser(NewDefaultConfig())
 		t.Run("It completes successfully on empty string", func(t *testing.T) {
 			go parser.ParseStream(strings.NewReader(""))
 			nodeList, error := readChannels(parser)
@@ -172,7 +172,7 @@ func createTestFile(n int) string {
 }
 
 func TestParseWg(t *testing.T) {
-	parser := NewParser(NewDefaultOptions())
+	parser := NewParser(NewDefaultConfig())
 	testBuffer := createTestFile(100)
 	var wg sync.WaitGroup
 	go parser.ParseStream(strings.NewReader(testBuffer))
@@ -195,7 +195,7 @@ func TestParseWg(t *testing.T) {
 
 func BenchmarkParse(b *testing.B) {
 	// run the Fib function b.N times
-	parser := NewParser(NewDefaultOptions())
+	parser := NewParser(NewDefaultConfig())
 	testBuffer := createTestFile(100000)
 	var wg sync.WaitGroup
 	for n := 0; n < b.N; n++ {
