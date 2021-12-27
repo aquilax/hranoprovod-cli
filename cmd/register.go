@@ -75,7 +75,7 @@ func newRegisterCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Register(o.ParserConfig)
+			return app.NewHranoprovod(o).Register(o.ParserConfig, o.ResolverConfig)
 		},
 	}
 }

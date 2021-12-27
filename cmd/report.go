@@ -33,7 +33,7 @@ func newReportElementTotalCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"), o.ParserConfig)
+			return app.NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"), o.ParserConfig, o.ResolverConfig)
 		},
 	}
 }
@@ -47,7 +47,7 @@ func newReportUnresolvedCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).ReportUnresolved(o.ParserConfig)
+			return app.NewHranoprovod(o).ReportUnresolved(o.ParserConfig, o.ResolverConfig)
 		},
 	}
 }

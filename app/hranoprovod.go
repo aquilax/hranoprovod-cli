@@ -25,13 +25,13 @@ func NewHranoprovod(options *Options) Hranoprovod {
 }
 
 // Register generates report
-func (hr Hranoprovod) Register(pc parser.Config) error {
+func (hr Hranoprovod) Register(pc parser.Config, rc resolver.Config) error {
 	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewRegReporter(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
@@ -44,13 +44,13 @@ func (hr Hranoprovod) Print(pc parser.Config) error {
 }
 
 // Balance generates balance report
-func (hr Hranoprovod) Balance(pc parser.Config) error {
+func (hr Hranoprovod) Balance(pc parser.Config, rc resolver.Config) error {
 	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewBalanceReporter(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }
@@ -73,13 +73,13 @@ func (hr Hranoprovod) Lint(fileName string, pc parser.Config) error {
 }
 
 // ReportElement generates report for single element
-func (hr Hranoprovod) ReportElement(elementName string, ascending bool, pc parser.Config) error {
+func (hr Hranoprovod) ReportElement(elementName string, ascending bool, pc parser.Config, rc resolver.Config) error {
 	p := parser.NewParser(pc)
 	nl, err := loadDatabase(p, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	resolver.NewResolver(nl, rc).Resolve()
 	var list []shared.Element
 	for name, node := range nl {
 		for _, el := range node.Elements {
@@ -111,13 +111,13 @@ func (hr Hranoprovod) ReportQuantity(ascending bool, pc parser.Config) error {
 }
 
 // ReportUnresolved generates report for unresolved elements
-func (hr Hranoprovod) ReportUnresolved(pc parser.Config) error {
+func (hr Hranoprovod) ReportUnresolved(pc parser.Config, rc resolver.Config) error {
 	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewUnsolvedReporter(hr.options.Reporter, nl, os.Stdout)
 
 	return hr.walkNodes(parser, r)
@@ -177,13 +177,13 @@ func (hr Hranoprovod) Stats() error {
 }
 
 // Summary generates summary
-func (hr Hranoprovod) Summary(pc parser.Config) error {
+func (hr Hranoprovod) Summary(pc parser.Config, rc resolver.Config) error {
 	parser := parser.NewParser(pc)
 	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, hr.options.Resolver.ResolverMaxDepth).Resolve()
+	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewSummaryReporterTemplate(hr.options.Reporter, nl, os.Stdout)
 	return hr.walkNodes(parser, r)
 }

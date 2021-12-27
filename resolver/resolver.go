@@ -4,15 +4,19 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
+type Config struct {
+	MaxDepth int
+}
+
 // Resolver contains the resolver data
 type Resolver struct {
-	db       shared.DBNodeList
-	maxDepth int
+	db     shared.DBNodeList
+	config Config
 }
 
 // NewResolver creates new resolver
-func NewResolver(db shared.DBNodeList, maxDepth int) Resolver {
-	return Resolver{db, maxDepth}
+func NewResolver(db shared.DBNodeList, c Config) Resolver {
+	return Resolver{db, c}
 }
 
 // Resolve resolves the current database
@@ -23,7 +27,7 @@ func (r Resolver) Resolve() {
 }
 
 func (r Resolver) resolveNode(name string, level int) {
-	if level >= r.maxDepth {
+	if level >= r.config.MaxDepth {
 		return
 	}
 

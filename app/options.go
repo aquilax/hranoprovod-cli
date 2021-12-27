@@ -7,6 +7,7 @@ import (
 
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/resolver"
 	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"
@@ -20,12 +21,10 @@ type GlobalOptions struct {
 
 // Options contains the options structure
 type Options struct {
-	Global   GlobalOptions
-	Resolver struct {
-		ResolverMaxDepth int
-	}
-	ParserConfig parser.Config `gcfg:"Parser"`
-	Reporter     reporter.Options
+	Global         GlobalOptions
+	ResolverConfig resolver.Config `gcfg:"Resolver"`
+	ParserConfig   parser.Config   `gcfg:"Parser"`
+	Reporter       reporter.Options
 }
 
 // NewOptions returns new options structure.
@@ -87,8 +86,8 @@ func (o *Options) populateLocals(c *cli.Context) {
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
-	if c.IsSet("maxdepth") || o.Resolver.ResolverMaxDepth == 0 {
-		o.Resolver.ResolverMaxDepth = c.Int("maxdepth")
+	if c.IsSet("maxdepth") || o.ResolverConfig.MaxDepth == 0 {
+		o.ResolverConfig.MaxDepth = c.Int("maxdepth")
 	}
 }
 

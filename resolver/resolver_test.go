@@ -24,7 +24,7 @@ func TestResolver(t *testing.T) {
 				},
 			},
 		}
-		resolver := NewResolver(nl, 1)
+		resolver := NewResolver(nl, Config{10})
 		t.Run("Resolve resolves the database", func(t *testing.T) {
 			resolver.Resolve()
 			t.Run("Elements are resolved", func(t *testing.T) {

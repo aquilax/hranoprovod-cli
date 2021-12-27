@@ -32,7 +32,7 @@ func newSummaryTodayCommand(ol optionLoader) *cli.Command {
 			o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 			o.Reporter.HasEnd = true
 			o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-			return app.NewHranoprovod(o).Summary(o.ParserConfig)
+			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig)
 		},
 	}
 }
@@ -51,7 +51,7 @@ func newSummaryYesterdayCommand(ol optionLoader) *cli.Command {
 			o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 			o.Reporter.HasEnd = true
 			o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-			return app.NewHranoprovod(o).Summary(o.ParserConfig)
+			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig)
 		},
 	}
 }
