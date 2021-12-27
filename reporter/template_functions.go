@@ -11,18 +11,18 @@ import (
 const negativeFormat = red + "%10.2f" + reset
 const positiveFormat = green + "%10.2f" + reset
 
-func getTemplateFunctions(options Options) template.FuncMap {
+func getTemplateFunctions(config Config) template.FuncMap {
 	return template.FuncMap{
 		"formatDate": func(ts time.Time) string {
-			return ts.Format(options.DateFormat)
+			return ts.Format(config.DateFormat)
 		},
-		"formatValue": getFormatValue(options),
-		"shorten":     getShorten(options),
+		"formatValue": getFormatValue(config.Color),
+		"shorten":     getShorten(config.ShortenStrings),
 	}
 }
 
-func getShorten(options Options) func(string, int) string {
-	if options.ShortenStrings {
+func getShorten(shortenStrings bool) func(string, int) string {
+	if shortenStrings {
 		return func(t string, max int) string {
 			return truncate.Truncate(t, max, truncate.DEFAULT_OMISSION, truncate.PositionMiddle)
 		}
@@ -32,8 +32,8 @@ func getShorten(options Options) func(string, int) string {
 	}
 }
 
-func getFormatValue(options Options) func(float64) string {
-	if options.Color {
+func getFormatValue(hasColor bool) func(float64) string {
+	if hasColor {
 		return func(num float64) string {
 			if num > 0 {
 				return fmt.Sprintf(negativeFormat, num)

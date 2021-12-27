@@ -10,15 +10,15 @@ import (
 
 // elementByFoodReporter outputs report for single element groupped by food
 type elementByFoodReporter struct {
-	options Options
-	db      shared.DBNodeList
-	output  io.Writer
-	acc     accumulator.Accumulator
+	config Config
+	db     shared.DBNodeList
+	output io.Writer
+	acc    accumulator.Accumulator
 }
 
-func newElementByFoodReporter(options Options, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
+func newElementByFoodReporter(config Config, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
 	return &elementByFoodReporter{
-		options,
+		config,
 		db,
 		writer,
 		accumulator.NewAccumulator(),
@@ -26,7 +26,7 @@ func newElementByFoodReporter(options Options, db shared.DBNodeList, writer io.W
 }
 
 func (r *elementByFoodReporter) Process(ln *shared.LogNode) error {
-	singleElement := r.options.SingleElement
+	singleElement := r.config.SingleElement
 	for _, e := range ln.Elements {
 		node, found := r.db[e.Name]
 		if found {

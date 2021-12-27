@@ -66,7 +66,7 @@ func (p Parser) ParseFile(fileName string) {
 type ParseCallback func(n *shared.ParserNode, err error) (stop bool)
 
 // ParseStreamCallback parses stream and calls callback on node or error
-func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCallback) {
+func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) {
 	var node *shared.ParserNode
 	var line string
 	var trimmedLine string
@@ -85,7 +85,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 		trimmedLine = strings.Trim(line, trimText)
 
 		//skip empty lines and lines starting with #
-		if trimmedLine == "" || line[0] == commentChar {
+		if trimmedLine == "" || line[0] == c.CommentChar {
 			continue
 		}
 
@@ -101,7 +101,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 		}
 
 		if node != nil {
-			if trimmedLine[0] == commentChar {
+			if trimmedLine[0] == c.CommentChar {
 				// Metadata
 				mp, _ = getMetadataPair(trimmedLine)
 				if mp != nil {
@@ -140,7 +140,7 @@ func ParseStreamCallback(reader io.Reader, commentChar uint8, callback ParseCall
 
 // ParseStream parses the contents of stream
 func (p Parser) ParseStream(reader io.Reader) {
-	ParseStreamCallback(reader, p.config.CommentChar, func(n *shared.ParserNode, err error) (stop bool) {
+	ParseStreamCallback(reader, p.config, func(n *shared.ParserNode, err error) (stop bool) {
 		if err != nil {
 			p.Errors <- err
 			return true

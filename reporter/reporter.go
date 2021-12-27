@@ -7,8 +7,8 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
-// Options contains the options for the reporter
-type Options struct {
+// Config contains the options for the reporter
+type Config struct {
 	CSV                  bool
 	Color                bool
 	TotalsOnly           bool
@@ -33,9 +33,9 @@ type Options struct {
 	InternalTemplateName string
 }
 
-// NewDefaultOptions returns the default reporter options
-func NewDefaultOptions() Options {
-	return Options{
+// NewDefaultConfig returns the default reporter config
+func NewDefaultConfig() Config {
+	return Config{
 		CSV:                  false,
 		Color:                false,
 		DateFormat:           "2006/01/02",
@@ -62,27 +62,27 @@ type Reporter interface {
 }
 
 // NewRegReporter creates new response handler
-func NewRegReporter(options Options, db shared.DBNodeList, writer io.Writer) Reporter {
-	if options.Unresolved {
-		return NewUnsolvedReporter(options, db, writer)
+func NewRegReporter(c Config, db shared.DBNodeList, writer io.Writer) Reporter {
+	if c.Unresolved {
+		return NewUnsolvedReporter(c, db, writer)
 	}
-	if len(options.SingleElement) > 0 {
-		if options.ElementGroupByFood {
-			return newElementByFoodReporter(options, db, writer)
+	if len(c.SingleElement) > 0 {
+		if c.ElementGroupByFood {
+			return newElementByFoodReporter(c, db, writer)
 		}
-		return newSingleReporter(options, db, writer)
+		return newSingleReporter(c, db, writer)
 	}
-	if len(options.SingleFood) > 0 {
-		return newSingleFoodReporter(options, db, writer)
+	if len(c.SingleFood) > 0 {
+		return newSingleFoodReporter(c, db, writer)
 	}
-	if options.UseOldRegReporter {
-		return newRegReporter(options, db, writer)
+	if c.UseOldRegReporter {
+		return newRegReporter(c, db, writer)
 	}
-	return newRegReporterTemplate(options, db, writer)
+	return newRegReporterTemplate(c, db, writer)
 }
 
 // NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options Options, db shared.DBNodeList, writer io.Writer) Reporter {
+func NewBalanceReporter(options Config, db shared.DBNodeList, writer io.Writer) Reporter {
 	if len(options.SingleElement) > 0 {
 		return newBalanceSingleReporter(options, db, writer)
 	}

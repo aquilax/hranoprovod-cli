@@ -10,16 +10,16 @@ import (
 )
 
 type balanceSingleReporter struct {
-	options Options
-	db      shared.DBNodeList
-	output  io.Writer
-	root    *accumulator.TreeNode
-	total   float64
+	config Config
+	db     shared.DBNodeList
+	output io.Writer
+	root   *accumulator.TreeNode
+	total  float64
 }
 
-func newBalanceSingleReporter(options Options, db shared.DBNodeList, writer io.Writer) *balanceSingleReporter {
+func newBalanceSingleReporter(config Config, db shared.DBNodeList, writer io.Writer) *balanceSingleReporter {
 	return &balanceSingleReporter{
-		options,
+		config,
 		db,
 		writer,
 		accumulator.NewTreeNode("", 0),
@@ -32,14 +32,14 @@ func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 		repl, found := r.db[el.Name]
 		if found {
 			for _, repl := range repl.Elements {
-				if repl.Name == r.options.SingleElement {
+				if repl.Name == r.config.SingleElement {
 					r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
 					// Add to grand total
 					r.total += repl.Value * el.Value
 				}
 			}
 		} else {
-			if el.Name == r.options.SingleElement {
+			if el.Name == r.config.SingleElement {
 				r.root.AddDeep(shared.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
 			}
 		}
@@ -48,21 +48,21 @@ func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceSingleReporter) Flush() error {
-	if r.options.Collapse {
+	if r.config.Collapse {
 		r.printNodeCollapsed(r.root, 0)
 	} else {
 		r.printNode(r.root, 0)
 	}
 
 	fmt.Fprintf(r.output, "%s|\n", strings.Repeat("-", 11))
-	fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.options.SingleElement)
+	fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.config.SingleElement)
 	return nil
 }
 
 func (r *balanceSingleReporter) printNode(node *accumulator.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
-		if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
+		if r.config.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
 			continue
 		} else {

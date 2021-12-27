@@ -11,8 +11,8 @@ func TestOptions(t *testing.T) {
 		o := NewOptions()
 		t.Run("New options is created", func(t *testing.T) {
 			assert.NotNil(t, o)
-			assert.NotNil(t, o.Reporter)
-			assert.True(t, o.Reporter.Color)
+			assert.NotNil(t, o.ReporterConfig)
+			assert.True(t, o.ReporterConfig.Color)
 			assert.NotNil(t, o.ParserConfig)
 		})
 	})

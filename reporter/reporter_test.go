@@ -13,9 +13,9 @@ func TestReporter(t *testing.T) {
 	t.Run("Given reporter", func(t *testing.T) {
 		var b bytes.Buffer
 		nl := shared.NewDBNodeList()
-		o := NewDefaultOptions()
-		o.Unresolved = true
-		rp := NewRegReporter(o, nl, &b)
+		c := NewDefaultConfig()
+		c.Unresolved = true
+		rp := NewRegReporter(c, nl, &b)
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test", 3.55)

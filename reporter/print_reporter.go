@@ -9,20 +9,20 @@ import (
 
 // PrintReporter outputs log report
 type PrintReporter struct {
-	options Options
-	output  io.Writer
+	config Config
+	output io.Writer
 }
 
-func NewPrintReporter(options Options, writer io.Writer) *PrintReporter {
+func NewPrintReporter(config Config, writer io.Writer) *PrintReporter {
 	return &PrintReporter{
-		options,
+		config,
 		writer,
 	}
 }
 
 func (pr PrintReporter) Process(ln *shared.LogNode) error {
 	var err error
-	if _, err = fmt.Fprintf(pr.output, "%s:\n", ln.Time.Format(pr.options.DateFormat)); err != nil {
+	if _, err = fmt.Fprintf(pr.output, "%s:\n", ln.Time.Format(pr.config.DateFormat)); err != nil {
 		return err
 	}
 	if ln.Metadata != nil {

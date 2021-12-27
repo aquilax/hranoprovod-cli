@@ -43,7 +43,7 @@ const leftAlignedTemplate = `{{formatDate .Time}}
 `
 
 type regReporterTemplate struct {
-	options  Options
+	config   Config
 	db       shared.DBNodeList
 	output   io.Writer
 	template *template.Template
@@ -56,17 +56,17 @@ func getInternalTemplate(internalTemplateName string) string {
 	return defaultTemplate
 }
 
-func newRegReporterTemplate(options Options, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
+func newRegReporterTemplate(config Config, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
 	return &regReporterTemplate{
-		options,
+		config,
 		db,
 		writer,
-		template.Must(template.New("template").Funcs(getTemplateFunctions(options)).Parse(getInternalTemplate(options.InternalTemplateName))),
+		template.Must(template.New("template").Funcs(getTemplateFunctions(config)).Parse(getInternalTemplate(config.InternalTemplateName))),
 	}
 }
 
 func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
-	return r.template.Execute(r.output, getReportItem(ln, r.db, r.options))
+	return r.template.Execute(r.output, getReportItem(ln, r.db, r.config))
 }
 
 func (r *regReporterTemplate) Flush() error {

@@ -21,9 +21,9 @@ func TestRegReporterTemplate(t *testing.T) {
 		dbNode := shared.DBNode{Header: "test2", Elements: dbElements}
 		db.Push(&dbNode)
 
-		o := NewDefaultOptions()
-		o.ShortenStrings = true
-		rp := NewRegReporter(o, db, &b)
+		c := NewDefaultConfig()
+		c.ShortenStrings = true
+		rp := NewRegReporter(c, db, &b)
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test1", 3.1)

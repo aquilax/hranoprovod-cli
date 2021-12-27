@@ -25,9 +25,9 @@ type reportItem struct {
 	Totals   *[]total
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options Options) reportItem {
+func getReportItem(ln *shared.LogNode, db shared.DBNodeList, config Config) reportItem {
 	var acc accumulator.Accumulator
-	if options.Totals {
+	if config.Totals {
 		acc = accumulator.NewAccumulator()
 	}
 	re := make([]reportElement, len(ln.Elements))
@@ -39,22 +39,22 @@ func getReportItem(ln *shared.LogNode, db shared.DBNodeList, options Options) re
 			for _, repl := range repl.Elements {
 				res := repl.Value * re[i].Value
 				re[i].Ingredients.Add(repl.Name, res)
-				if options.Totals {
+				if config.Totals {
 					acc.Add(repl.Name, res)
 				}
 			}
 		} else {
 			re[i].Ingredients.Add(re[i].Name, re[i].Value)
-			if options.Totals {
+			if config.Totals {
 				acc.Add(ln.Elements[i].Name, ln.Elements[i].Value)
 			}
 		}
 	}
 	var totals *[]total
-	if options.TotalsOnly {
+	if config.TotalsOnly {
 		re = nil
 	}
-	if options.Totals {
+	if config.Totals {
 		totals = newTotalFromAccumulator(acc)
 	}
 	return reportItem{ln.Time, &re, totals}

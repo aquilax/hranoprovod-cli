@@ -11,14 +11,14 @@ import (
 
 // singleReporter outputs report for single food
 type singleReporter struct {
-	options Options
-	db      shared.DBNodeList
-	output  io.Writer
+	config Config
+	db     shared.DBNodeList
+	output io.Writer
 }
 
-func newSingleReporter(options Options, db shared.DBNodeList, writer io.Writer) *singleReporter {
+func newSingleReporter(config Config, db shared.DBNodeList, writer io.Writer) *singleReporter {
 	return &singleReporter{
-		options,
+		config,
 		db,
 		writer,
 	}
@@ -26,7 +26,7 @@ func newSingleReporter(options Options, db shared.DBNodeList, writer io.Writer) 
 
 func (r *singleReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
-	singleElement := r.options.SingleElement
+	singleElement := r.config.SingleElement
 	for _, e := range ln.Elements {
 		repl, found := r.db[e.Name]
 		if found {
@@ -43,7 +43,7 @@ func (r *singleReporter) Process(ln *shared.LogNode) error {
 	}
 	if len(acc) > 0 {
 		arr := (acc)[singleElement]
-		r.printSingleElementRow(ln.Time, r.options.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
+		r.printSingleElementRow(ln.Time, r.config.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
 	}
 	return nil
 
@@ -55,8 +55,8 @@ func (r *singleReporter) Flush() error {
 
 func (r *singleReporter) printSingleElementRow(ts time.Time, name string, pos float64, neg float64) {
 	format := "%s %20s %10.2f %10.2f =%10.2f\n"
-	if r.options.CSV {
+	if r.config.CSV {
 		format = "%s;\"%s\";%0.2f;%0.2f;%0.2f\n"
 	}
-	fmt.Fprintf(r.output, format, ts.Format(r.options.DateFormat), name, pos, -1*neg, pos+neg)
+	fmt.Fprintf(r.output, format, ts.Format(r.config.DateFormat), name, pos, -1*neg, pos+neg)
 }

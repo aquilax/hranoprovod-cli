@@ -10,15 +10,15 @@ import (
 )
 
 type balanceReporter struct {
-	options Options
-	db      shared.DBNodeList
-	output  io.Writer
-	root    *accumulator.TreeNode
+	config Config
+	db     shared.DBNodeList
+	output io.Writer
+	root   *accumulator.TreeNode
 }
 
-func newBalanceReporter(options Options, db shared.DBNodeList, writer io.Writer) *balanceReporter {
+func newBalanceReporter(config Config, db shared.DBNodeList, writer io.Writer) *balanceReporter {
 	return &balanceReporter{
-		options,
+		config,
 		db,
 		writer,
 		accumulator.NewTreeNode("", 0),
@@ -26,17 +26,17 @@ func newBalanceReporter(options Options, db shared.DBNodeList, writer io.Writer)
 }
 
 func (r *balanceReporter) Process(ln *shared.LogNode) error {
-	if len(r.options.SingleElement) > 0 {
+	if len(r.config.SingleElement) > 0 {
 		for _, el := range ln.Elements {
 			repl, found := r.db[el.Name]
 			if found {
 				for _, repl := range repl.Elements {
-					if repl.Name == r.options.SingleElement {
+					if repl.Name == r.config.SingleElement {
 						r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
 					}
 				}
 			} else {
-				if el.Name == r.options.SingleElement {
+				if el.Name == r.config.SingleElement {
 					r.root.AddDeep(shared.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
 				}
 			}
@@ -51,7 +51,7 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceReporter) Flush() error {
-	if r.options.Collapse {
+	if r.config.Collapse {
 		r.printNodeCollapsed(r.root, 0)
 		return nil
 	}
@@ -64,7 +64,7 @@ func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
 		child := node.Children[key]
 		if len(child.Children) == 0 {
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
-		} else if r.options.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
+		} else if r.config.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
 			// combine the last two levels
 			fmt.Fprintf(r.output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
 			continue

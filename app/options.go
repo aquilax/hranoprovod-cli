@@ -24,14 +24,14 @@ type Options struct {
 	Global         GlobalOptions
 	ResolverConfig resolver.Config `gcfg:"Resolver"`
 	ParserConfig   parser.Config   `gcfg:"Parser"`
-	Reporter       reporter.Options
+	ReporterConfig reporter.Config `gcfg:"Reporter"`
 }
 
 // NewOptions returns new options structure.
 func NewOptions() *Options {
 	o := &Options{}
-	o.Reporter = reporter.NewDefaultOptions()
-	o.Reporter.Color = true
+	o.ReporterConfig = reporter.NewDefaultConfig()
+	o.ReporterConfig.Color = true
 	o.ParserConfig = parser.NewDefaultConfig()
 	return o
 }
@@ -120,51 +120,51 @@ func mustGetTime(format string, date string) time.Time {
 func (o *Options) populateReporter(c *cli.Context) {
 	for i := len(c.Lineage()) - 1; i >= 0; i-- {
 		if c.Lineage()[i].IsSet("csv") {
-			o.Reporter.CSV = true
+			o.ReporterConfig.CSV = true
 		}
 		if c.Lineage()[i].IsSet("no-color") {
-			o.Reporter.Color = false
+			o.ReporterConfig.Color = false
 		}
 
 		if c.Lineage()[i].IsSet("collapse-last") {
-			o.Reporter.CollapseLast = true
+			o.ReporterConfig.CollapseLast = true
 		}
 
 		if c.Lineage()[i].IsSet("collapse") {
-			o.Reporter.Collapse = true
+			o.ReporterConfig.Collapse = true
 		}
 
 		if c.Lineage()[i].IsSet("no-totals") {
-			o.Reporter.Totals = false
+			o.ReporterConfig.Totals = false
 		}
 
 		if c.Lineage()[i].IsSet("totals-only") {
-			o.Reporter.TotalsOnly = true
+			o.ReporterConfig.TotalsOnly = true
 		}
 
 		if c.Lineage()[i].IsSet("shorten") {
-			o.Reporter.ShortenStrings = true
+			o.ReporterConfig.ShortenStrings = true
 		}
 
 		if c.Lineage()[i].IsSet("use-old-reg-reporter") {
-			o.Reporter.UseOldRegReporter = true
+			o.ReporterConfig.UseOldRegReporter = true
 		}
 
 		if c.Lineage()[i].IsSet("internal-template-name") {
-			o.Reporter.InternalTemplateName = c.Lineage()[i].String("internal-template-name")
+			o.ReporterConfig.InternalTemplateName = c.Lineage()[i].String("internal-template-name")
 		}
 
 		if c.Lineage()[i].IsSet("begin") {
-			o.Reporter.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
-			o.Reporter.HasBeginning = true
+			o.ReporterConfig.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
+			o.ReporterConfig.HasBeginning = true
 		}
 		if c.Lineage()[i].IsSet("end") {
-			o.Reporter.EndTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("end"))
-			o.Reporter.HasEnd = true
+			o.ReporterConfig.EndTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("end"))
+			o.ReporterConfig.HasEnd = true
 		}
 	}
-	o.Reporter.Unresolved = c.Bool("unresolved")
-	o.Reporter.SingleFood = c.String("single-food")
-	o.Reporter.ElementGroupByFood = c.Bool("group-food")
-	o.Reporter.SingleElement = c.String("single-element")
+	o.ReporterConfig.Unresolved = c.Bool("unresolved")
+	o.ReporterConfig.SingleFood = c.String("single-food")
+	o.ReporterConfig.ElementGroupByFood = c.Bool("group-food")
+	o.ReporterConfig.SingleElement = c.String("single-element")
 }

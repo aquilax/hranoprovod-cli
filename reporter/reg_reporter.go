@@ -12,14 +12,14 @@ import (
 )
 
 type regReporter struct {
-	options Options
-	db      shared.DBNodeList
-	output  io.Writer
+	config Config
+	db     shared.DBNodeList
+	output io.Writer
 }
 
-func newRegReporter(options Options, db shared.DBNodeList, writer io.Writer) *regReporter {
+func newRegReporter(config Config, db shared.DBNodeList, writer io.Writer) *regReporter {
 	return &regReporter{
-		options,
+		config,
 		db,
 		writer,
 	}
@@ -29,25 +29,25 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	r.printDate(ln.Time)
 	for _, element := range ln.Elements {
-		if !r.options.TotalsOnly {
+		if !r.config.TotalsOnly {
 			r.printElement(element)
 		}
 		if repl, found := r.db[element.Name]; found {
 			for _, repl := range repl.Elements {
 				res := repl.Value * element.Value
-				if !r.options.TotalsOnly {
+				if !r.config.TotalsOnly {
 					r.printIngredient(repl.Name, res)
 				}
 				acc.Add(repl.Name, res)
 			}
 		} else {
-			if !r.options.TotalsOnly {
+			if !r.config.TotalsOnly {
 				r.printIngredient(element.Name, element.Value)
 			}
 			acc.Add(element.Name, element.Value)
 		}
 	}
-	if r.options.Totals {
+	if r.config.Totals {
 		var ss sort.StringSlice
 		if len(acc) > 0 {
 			r.printTotalHeader()
@@ -69,7 +69,7 @@ func (r *regReporter) Flush() error {
 }
 
 func (r *regReporter) cNum(num float64) string {
-	if r.options.Color {
+	if r.config.Color {
 		if num > 0 {
 			return red + fmt.Sprintf("%10.2f", num) + reset
 		}
@@ -81,7 +81,7 @@ func (r *regReporter) cNum(num float64) string {
 }
 
 func (r *regReporter) printDate(ts time.Time) {
-	fmt.Fprintf(r.output, "%s\n", ts.Format(r.options.DateFormat))
+	fmt.Fprintf(r.output, "%s\n", ts.Format(r.config.DateFormat))
 }
 
 func (r *regReporter) printElement(element shared.Element) {

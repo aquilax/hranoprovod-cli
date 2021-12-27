@@ -19,14 +19,14 @@ func getSimpleTree() *accumulator.TreeNode {
 
 func Test_balanceReporter_printNode(t *testing.T) {
 	buffer := bytes.NewBufferString("")
-	options := NewDefaultOptions()
-	options.CollapseLast = true
+	config := NewDefaultConfig()
+	config.CollapseLast = true
 
 	type fields struct {
-		options Options
-		db      shared.DBNodeList
-		output  io.Writer
-		root    *accumulator.TreeNode
+		config Config
+		db     shared.DBNodeList
+		output io.Writer
+		root   *accumulator.TreeNode
 	}
 	type args struct {
 		node  *accumulator.TreeNode
@@ -41,10 +41,10 @@ func Test_balanceReporter_printNode(t *testing.T) {
 		{
 			name: "Test simple tree",
 			fields: fields{
-				options: options,
-				db:      nil,
-				output:  buffer,
-				root:    nil,
+				config: config,
+				db:     nil,
+				output: buffer,
+				root:   nil,
 			},
 			args: args{
 				node:  getSimpleTree(),
@@ -58,10 +58,10 @@ func Test_balanceReporter_printNode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &balanceReporter{
-				options: tt.fields.options,
-				db:      tt.fields.db,
-				output:  tt.fields.output,
-				root:    tt.fields.root,
+				config: tt.fields.config,
+				db:     tt.fields.db,
+				output: tt.fields.output,
+				root:   tt.fields.root,
 			}
 			print(tt.args.node.Name)
 			r.printNodeCollapsed(tt.args.node, tt.args.level)

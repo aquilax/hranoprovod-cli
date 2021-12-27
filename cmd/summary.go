@@ -28,11 +28,11 @@ func newSummaryTodayCommand(ol optionLoader) *cli.Command {
 				return err
 			}
 			t := time.Now().Local()
-			o.Reporter.HasBeginning = true
-			o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-			o.Reporter.HasEnd = true
-			o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig)
+			o.ReporterConfig.HasBeginning = true
+			o.ReporterConfig.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+			o.ReporterConfig.HasEnd = true
+			o.ReporterConfig.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig, o.ReporterConfig)
 		},
 	}
 }
@@ -47,11 +47,11 @@ func newSummaryYesterdayCommand(ol optionLoader) *cli.Command {
 				return err
 			}
 			t := time.Now().Local().AddDate(0, 0, -1)
-			o.Reporter.HasBeginning = true
-			o.Reporter.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-			o.Reporter.HasEnd = true
-			o.Reporter.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig)
+			o.ReporterConfig.HasBeginning = true
+			o.ReporterConfig.BeginningTime = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+			o.ReporterConfig.HasEnd = true
+			o.ReporterConfig.EndTime = time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+			return app.NewHranoprovod(o).Summary(o.ParserConfig, o.ResolverConfig, o.ReporterConfig)
 		},
 	}
 }
