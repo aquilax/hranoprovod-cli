@@ -14,7 +14,7 @@ func newLintCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Lint(c.Args().First(), o.ParserConfig)
+			return app.Lint(c.Args().First(), o.ParserConfig)
 		},
 	}
 }

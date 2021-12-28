@@ -25,38 +25,41 @@ func NewHranoprovod(options *Options) Hranoprovod {
 }
 
 // Register generates report
-func (hr Hranoprovod) Register(pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) Register(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, gc.DbFileName)
 	if err != nil {
 		return err
 	}
-	resolver.NewResolver(nl, rc).Resolve()
+	err = resolver.NewResolver(nl, rc).Resolve()
+	if err != nil {
+		return err
+	}
 	r := reporter.NewRegReporter(rpc, nl, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // Register generates report
-func (hr Hranoprovod) Print(pc parser.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) Print(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewPrintReporter(rpc, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // Balance generates balance report
-func (hr Hranoprovod) Balance(pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) Balance(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, gc.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewBalanceReporter(rpc, nl, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // Lint lints file
-func (hr Hranoprovod) Lint(fileName string, pc parser.Config) error {
+func Lint(fileName string, pc parser.Config) error {
 	p := parser.NewParser(pc)
 	go p.ParseFile(fileName)
 	return func() error {
@@ -73,9 +76,9 @@ func (hr Hranoprovod) Lint(fileName string, pc parser.Config) error {
 }
 
 // ReportElement generates report for single element
-func (hr Hranoprovod) ReportElement(elementName string, ascending bool, pc parser.Config, rc resolver.Config) error {
+func ReportElement(dbFileName string, elementName string, ascending bool, pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
 	p := parser.NewParser(pc)
-	nl, err := loadDatabase(p, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(p, dbFileName)
 	if err != nil {
 		return err
 	}
@@ -97,51 +100,48 @@ func (hr Hranoprovod) ReportElement(elementName string, ascending bool, pc parse
 			return list[i].Value < list[j].Value
 		})
 	}
-	for _, el := range list {
-		fmt.Fprintf(hr.output, "%0.2f\t%s\n", el.Value, el.Name)
-	}
-	return nil
+	return reporter.NewElementReporter(rpc, list).Flush()
 }
 
 // ReportQuantity Generates a quantity report
-func (hr Hranoprovod) ReportQuantity(ascending bool, pc parser.Config) error {
+func (hr Hranoprovod) ReportQuantity(gc GlobalConfig, ascending bool, pc parser.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewQuantityReporter(ascending, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // ReportUnresolved generates report for unresolved elements
-func (hr Hranoprovod) ReportUnresolved(pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) ReportUnresolved(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, gc.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewUnsolvedReporter(rpc, nl, os.Stdout)
 
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // CSV generates CSV export
-func (hr Hranoprovod) CSV(pc parser.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) CSV(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewCSVReporter(rpc, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 // Stats generates statistics report
-func (hr Hranoprovod) Stats(pc parser.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 	var err error
-	fLog, err := os.Open(hr.options.Global.LogFileName)
+	fLog, err := os.Open(gc.LogFileName)
 	if err != nil {
-		return parser.NewErrorIO(err, hr.options.Global.LogFileName)
+		return parser.NewErrorIO(err, gc.LogFileName)
 	}
 	defer fLog.Close()
 
-	fDb, err := os.Open(hr.options.Global.DbFileName)
+	fDb, err := os.Open(gc.DbFileName)
 	if err != nil {
-		return parser.NewErrorIO(err, hr.options.Global.LogFileName)
+		return parser.NewErrorIO(err, gc.DbFileName)
 	}
 	defer fDb.Close()
 
@@ -149,13 +149,12 @@ func (hr Hranoprovod) Stats(pc parser.Config, rpc reporter.Config) error {
 	var firstLogDate time.Time
 	var lastLogDate time.Time
 	parser.ParseStreamCallback(fLog, pc, func(n *shared.ParserNode, _ error) (stop bool) {
-		lastLogDate, err = shared.ParseTime(n.Header, hr.options.Global.DateFormat)
+		lastLogDate, err = time.Parse(n.Header, gc.DateFormat)
 		if err == nil {
 			if firstLogDate.IsZero() {
 				firstLogDate = lastLogDate
 			}
 		}
-
 		countLog++
 		return false
 	})
@@ -165,27 +164,27 @@ func (hr Hranoprovod) Stats(pc parser.Config, rpc reporter.Config) error {
 		countDb++
 		return false
 	})
-
-	fmt.Fprintf(hr.output, "  Database file:      %s\n", hr.options.Global.DbFileName)
-	fmt.Fprintf(hr.output, "  Database records:   %d\n", countDb)
-	fmt.Fprintln(hr.output, "")
-	fmt.Fprintf(hr.output, "  Log file:           %s\n", hr.options.Global.LogFileName)
-	fmt.Fprintf(hr.output, "  Log records:        %d\n", countLog)
-	fmt.Fprintf(hr.output, "  First record:       %s (%d days ago)\n", firstLogDate.Format(rpc.DateFormat), int(time.Since(firstLogDate).Hours()/24))
-	fmt.Fprintf(hr.output, "  Last record:        %s (%d days ago)\n", lastLogDate.Format(rpc.DateFormat), int(time.Since(lastLogDate).Hours()/24))
-	return nil
+	return reporter.NewStatsReporter(rpc, []string{
+		fmt.Sprintf("  Database file:      %s\n", gc.DbFileName),
+		fmt.Sprintf("  Database records:   %d\n", countDb),
+		fmt.Sprintln(""),
+		fmt.Sprintf("  Log file:           %s\n", gc.LogFileName),
+		fmt.Sprintf("  Log records:        %d\n", countLog),
+		fmt.Sprintf("  First record:       %s (%d days ago)\n", firstLogDate.Format(rpc.DateFormat), int(time.Since(firstLogDate).Hours()/24)),
+		fmt.Sprintf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(rpc.DateFormat), int(time.Since(lastLogDate).Hours()/24)),
+	}).Flush()
 }
 
 // Summary generates summary
-func (hr Hranoprovod) Summary(pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
+func (hr Hranoprovod) Summary(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, hr.options.Global.DbFileName)
+	nl, err := loadDatabase(parser, gc.DbFileName)
 	if err != nil {
 		return err
 	}
 	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewSummaryReporterTemplate(rpc, nl, os.Stdout)
-	return hr.walkNodes(parser, r)
+	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
@@ -212,17 +211,17 @@ func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	}()
 }
 
-func (hr Hranoprovod) walkNodes(p parser.Parser, r reporter.Reporter) error {
+func (hr Hranoprovod) walkNodes(logFileName string, p parser.Parser, fc FilterConfig, r reporter.Reporter) error {
 	var node *shared.ParserNode
 	var ln *shared.LogNode
 	var err error
 	var t time.Time
 
-	go p.ParseFile(hr.options.Global.LogFileName)
+	go p.ParseFile(logFileName)
 	for {
 		select {
 		case node = <-p.Nodes:
-			t, err = shared.ParseTime(node.Header, hr.options.Global.DateFormat)
+			t, err = time.Parse(node.Header, hr.options.GlobalConfig.DateFormat)
 			if err != nil {
 				return err
 			}
@@ -243,10 +242,8 @@ func (hr Hranoprovod) walkNodes(p parser.Parser, r reporter.Reporter) error {
 }
 
 func (hr Hranoprovod) inInterval(t time.Time) bool {
-	if hr.options.ReporterConfig.HasBeginning && !isGoodDate(t, hr.options.ReporterConfig.BeginningTime, dateBeginning) {
-		return false
-	}
-	if hr.options.ReporterConfig.HasEnd && !isGoodDate(t, hr.options.ReporterConfig.EndTime, dateEnd) {
+	if (hr.options.FilterConfig.BeginningTime != nil && !isGoodDate(t, *hr.options.FilterConfig.BeginningTime, dateBeginning)) ||
+		(hr.options.FilterConfig.EndTime != nil) && !isGoodDate(t, *hr.options.FilterConfig.EndTime, dateEnd) {
 		return false
 	}
 	return true

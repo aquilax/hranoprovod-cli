@@ -26,7 +26,7 @@ func newPrintCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Print(o.ParserConfig, o.ReporterConfig)
+			return app.NewHranoprovod(o).Print(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }

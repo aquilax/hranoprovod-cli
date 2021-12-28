@@ -65,11 +65,6 @@ func NewLogNode(time time.Time, elements Elements, metadata *Metadata) *LogNode 
 	return &LogNode{time, elements, metadata}
 }
 
-// GetHeaderTimeFromNode tries to parse node's time from the header and returns it as time.Time
-func ParseTime(header string, dateFormat string) (time.Time, error) {
-	return time.Parse(dateFormat, header)
-}
-
 // NewLogNodeFromElements creates new LogNode from ParserNode elements and time
 func NewLogNodeFromElements(time time.Time, elements Elements, metadata *Metadata) (*LogNode, error) {
 	elList := NewElements()

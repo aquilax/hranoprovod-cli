@@ -2,7 +2,7 @@ package reporter
 
 import (
 	"io"
-	"time"
+	"os"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
@@ -18,10 +18,6 @@ type Config struct {
 	FatLabel             string
 	CarbohydrateLabel    string
 	ProteinLabel         string
-	HasBeginning         bool
-	HasEnd               bool
-	BeginningTime        time.Time
-	EndTime              time.Time
 	Unresolved           bool
 	SingleElement        string
 	SingleFood           string
@@ -31,6 +27,7 @@ type Config struct {
 	ShortenStrings       bool
 	UseOldRegReporter    bool
 	InternalTemplateName string
+	Output               io.Writer
 }
 
 // NewDefaultConfig returns the default reporter config
@@ -44,14 +41,13 @@ func NewDefaultConfig() Config {
 		CarbohydrateLabel:    "carbohydrate",
 		ProteinLabel:         "protein",
 		Totals:               true,
-		BeginningTime:        time.Now(),
-		EndTime:              time.Now(),
 		CollapseLast:         false,
 		Collapse:             false,
 		ElementGroupByFood:   false,
 		ShortenStrings:       false,
 		UseOldRegReporter:    false,
 		InternalTemplateName: "default",
+		Output:               os.Stdout,
 	}
 }
 

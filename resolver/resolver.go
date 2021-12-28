@@ -1,6 +1,8 @@
 package resolver
 
 import (
+	"fmt"
+
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
@@ -20,20 +22,24 @@ func NewResolver(db shared.DBNodeList, c Config) Resolver {
 }
 
 // Resolve resolves the current database
-func (r Resolver) Resolve() {
+func (r Resolver) Resolve() error {
+	var err error
 	for name := range r.db {
-		r.resolveNode(name, 0)
+		if err = r.resolveNode(name, 0); err != nil {
+			return nil
+		}
 	}
+	return nil
 }
 
-func (r Resolver) resolveNode(name string, level int) {
+func (r Resolver) resolveNode(name string, level int) error {
 	if level >= r.config.MaxDepth {
-		return
+		return fmt.Errorf("maximum resolution depth reached")
 	}
 
 	node, exists := r.db[name]
 	if !exists {
-		return
+		return nil
 	}
 
 	nel := shared.NewElements()
@@ -51,4 +57,5 @@ func (r Resolver) resolveNode(name string, level int) {
 	}
 	nel.Sort()
 	r.db[name].Elements = nel
+	return nil
 }

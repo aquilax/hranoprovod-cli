@@ -13,18 +13,24 @@ import (
 	gcfg "gopkg.in/gcfg.v1"
 )
 
-type GlobalOptions struct {
+type GlobalConfig struct {
 	DbFileName  string
 	LogFileName string
 	DateFormat  string
 }
 
+type FilterConfig struct {
+	BeginningTime *time.Time
+	EndTime       *time.Time
+}
+
 // Options contains the options structure
 type Options struct {
-	Global         GlobalOptions
+	GlobalConfig   GlobalConfig
 	ResolverConfig resolver.Config `gcfg:"Resolver"`
 	ParserConfig   parser.Config   `gcfg:"Parser"`
 	ReporterConfig reporter.Config `gcfg:"Reporter"`
+	FilterConfig   FilterConfig
 }
 
 // NewOptions returns new options structure.
@@ -67,16 +73,16 @@ func fileExists(name string) (bool, error) {
 }
 
 func (o *Options) populateGlobals(c *cli.Context) {
-	if c.IsSet("database") || o.Global.DbFileName == "" {
-		o.Global.DbFileName = c.String("database")
+	if c.IsSet("database") || o.GlobalConfig.DbFileName == "" {
+		o.GlobalConfig.DbFileName = c.String("database")
 	}
 
-	if c.IsSet("logfile") || o.Global.LogFileName == "" {
-		o.Global.LogFileName = c.String("logfile")
+	if c.IsSet("logfile") || o.GlobalConfig.LogFileName == "" {
+		o.GlobalConfig.LogFileName = c.String("logfile")
 	}
 
-	if c.IsSet("date-format") || o.Global.DateFormat == "" {
-		o.Global.DateFormat = c.String("date-format")
+	if c.IsSet("date-format") || o.GlobalConfig.DateFormat == "" {
+		o.GlobalConfig.DateFormat = c.String("date-format")
 	}
 }
 
@@ -155,12 +161,12 @@ func (o *Options) populateReporter(c *cli.Context) {
 		}
 
 		if c.Lineage()[i].IsSet("begin") {
-			o.ReporterConfig.BeginningTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("begin"))
-			o.ReporterConfig.HasBeginning = true
+			time := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
+			o.FilterConfig.BeginningTime = &time
 		}
 		if c.Lineage()[i].IsSet("end") {
-			o.ReporterConfig.EndTime = mustGetTime(o.Global.DateFormat, c.Lineage()[i].String("end"))
-			o.ReporterConfig.HasEnd = true
+			time := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
+			o.FilterConfig.EndTime = &time
 		}
 	}
 	o.ReporterConfig.Unresolved = c.Bool("unresolved")

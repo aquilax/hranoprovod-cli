@@ -33,7 +33,7 @@ func newReportElementTotalCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).ReportElement(c.Args().First(), c.IsSet("desc"), o.ParserConfig, o.ResolverConfig)
+			return app.ReportElement(o.GlobalConfig.DbFileName, c.Args().First(), c.IsSet("desc"), o.ParserConfig, o.ResolverConfig, o.ReporterConfig)
 		},
 	}
 }
@@ -47,7 +47,7 @@ func newReportUnresolvedCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).ReportUnresolved(o.ParserConfig, o.ResolverConfig, o.ReporterConfig)
+			return app.NewHranoprovod(o).ReportUnresolved(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }
@@ -67,7 +67,7 @@ func newReportQuantityCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).ReportQuantity(c.IsSet("desc"), o.ParserConfig)
+			return app.NewHranoprovod(o).ReportQuantity(o.GlobalConfig, c.IsSet("desc"), o.ParserConfig, o.FilterConfig)
 		},
 	}
 }
