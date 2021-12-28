@@ -36,14 +36,14 @@ func (hr Hranoprovod) Register(gc GlobalConfig, pc parser.Config, rc resolver.Co
 		return err
 	}
 	r := reporter.NewRegReporter(rpc, nl, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // Register generates report
 func (hr Hranoprovod) Print(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewPrintReporter(rpc, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // Balance generates balance report
@@ -55,7 +55,7 @@ func (hr Hranoprovod) Balance(gc GlobalConfig, pc parser.Config, rc resolver.Con
 	}
 	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewBalanceReporter(rpc, nl, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // Lint lints file
@@ -107,7 +107,7 @@ func ReportElement(dbFileName string, elementName string, ascending bool, pc par
 func (hr Hranoprovod) ReportQuantity(gc GlobalConfig, ascending bool, pc parser.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewQuantityReporter(ascending, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // ReportUnresolved generates report for unresolved elements
@@ -120,14 +120,26 @@ func (hr Hranoprovod) ReportUnresolved(gc GlobalConfig, pc parser.Config, rc res
 	resolver.NewResolver(nl, rc).Resolve()
 	r := reporter.NewUnsolvedReporter(rpc, nl, os.Stdout)
 
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // CSV generates CSV export
 func (hr Hranoprovod) CSV(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewCSVReporter(rpc, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
+}
+
+// Summary generates summary
+func (hr Hranoprovod) Summary(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+	parser := parser.NewParser(pc)
+	nl, err := loadDatabase(parser, gc.DbFileName)
+	if err != nil {
+		return err
+	}
+	resolver.NewResolver(nl, rc).Resolve()
+	r := reporter.NewSummaryReporterTemplate(rpc, nl, os.Stdout)
+	return hr.walkNodes(gc.LogFileName, parser, getNodeFilter(fc), r)
 }
 
 // Stats generates statistics report
@@ -149,7 +161,7 @@ func (hr Hranoprovod) Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Conf
 	var firstLogDate time.Time
 	var lastLogDate time.Time
 	parser.ParseStreamCallback(fLog, pc, func(n *shared.ParserNode, _ error) (stop bool) {
-		lastLogDate, err = time.Parse(n.Header, gc.DateFormat)
+		lastLogDate, err = time.Parse(gc.DateFormat, n.Header)
 		if err == nil {
 			if firstLogDate.IsZero() {
 				firstLogDate = lastLogDate
@@ -173,18 +185,6 @@ func (hr Hranoprovod) Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Conf
 		fmt.Sprintf("  First record:       %s (%d days ago)\n", firstLogDate.Format(rpc.DateFormat), int(time.Since(firstLogDate).Hours()/24)),
 		fmt.Sprintf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(rpc.DateFormat), int(time.Since(lastLogDate).Hours()/24)),
 	}).Flush()
-}
-
-// Summary generates summary
-func (hr Hranoprovod) Summary(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, gc.DbFileName)
-	if err != nil {
-		return err
-	}
-	resolver.NewResolver(nl, rc).Resolve()
-	r := reporter.NewSummaryReporterTemplate(rpc, nl, os.Stdout)
-	return hr.walkNodes(gc.LogFileName, parser, fc, r)
 }
 
 func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
@@ -211,21 +211,50 @@ func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	}()
 }
 
-func (hr Hranoprovod) walkNodes(logFileName string, p parser.Parser, fc FilterConfig, r reporter.Reporter) error {
+type NodeFilter = func(t time.Time, node *shared.ParserNode) (bool, error)
+
+func getNodeFilter(fc FilterConfig) *NodeFilter {
+	if fc.BeginningTime == nil && fc.EndTime == nil {
+		// no filter if beginning and end time are nil
+		return nil
+	}
+
+	inInterval := func(t time.Time) bool {
+		if (fc.BeginningTime != nil && !isGoodDate(t, *fc.BeginningTime, dateBeginning)) || (fc.EndTime != nil && !isGoodDate(t, *fc.EndTime, dateEnd)) {
+			return false
+		}
+		return true
+	}
+
+	filter := func(t time.Time, node *shared.ParserNode) (bool, error) {
+		return inInterval(t), nil
+	}
+	return &filter
+}
+
+func (hr Hranoprovod) walkNodes(logFileName string, p parser.Parser, filter *NodeFilter, r reporter.Reporter) error {
 	var node *shared.ParserNode
 	var ln *shared.LogNode
 	var err error
 	var t time.Time
+	var ok bool
 
 	go p.ParseFile(logFileName)
 	for {
 		select {
 		case node = <-p.Nodes:
-			t, err = time.Parse(node.Header, hr.options.GlobalConfig.DateFormat)
+			t, err = time.Parse(hr.options.GlobalConfig.DateFormat, node.Header)
 			if err != nil {
 				return err
 			}
-			if hr.inInterval(t) {
+			ok = true
+			if filter != nil {
+				ok, err = (*filter)(t, node)
+				if err != nil {
+					return err
+				}
+			}
+			if ok {
 				ln, err = shared.NewLogNodeFromElements(t, node.Elements, node.Metadata)
 				if err != nil {
 					return err
@@ -239,14 +268,6 @@ func (hr Hranoprovod) walkNodes(logFileName string, p parser.Parser, fc FilterCo
 			return nil
 		}
 	}
-}
-
-func (hr Hranoprovod) inInterval(t time.Time) bool {
-	if (hr.options.FilterConfig.BeginningTime != nil && !isGoodDate(t, *hr.options.FilterConfig.BeginningTime, dateBeginning)) ||
-		(hr.options.FilterConfig.EndTime != nil) && !isGoodDate(t, *hr.options.FilterConfig.EndTime, dateEnd) {
-		return false
-	}
-	return true
 }
 
 // compareType identifies the type of date comparison
