@@ -75,7 +75,7 @@ func newRegisterCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Register(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+			return app.Register(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }

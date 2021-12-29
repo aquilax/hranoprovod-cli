@@ -100,7 +100,7 @@ func GetApp() *cli.App {
 		newCsvCommand(ol),
 		newStatsCommand(ol),
 		newSummaryCommand(ol),
-		newGenCommand(app),
+		newGenCommand(ol, app),
 		newPrintCommand(ol),
 	}
 	return app

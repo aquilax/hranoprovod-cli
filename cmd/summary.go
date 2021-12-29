@@ -32,7 +32,7 @@ func newSummaryTodayCommand(ol optionLoader) *cli.Command {
 			o.FilterConfig.BeginningTime = &btime
 			etime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
 			o.FilterConfig.EndTime = &etime
-			return app.NewHranoprovod(o).Summary(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+			return app.Summary(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }
@@ -51,7 +51,7 @@ func newSummaryYesterdayCommand(ol optionLoader) *cli.Command {
 			o.FilterConfig.BeginningTime = &btime
 			etime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
 			o.FilterConfig.EndTime = &etime
-			return app.NewHranoprovod(o).Summary(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+			return app.Summary(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }

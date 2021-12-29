@@ -14,7 +14,7 @@ func newStatsCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
-			return app.NewHranoprovod(o).Stats(o.GlobalConfig, o.ParserConfig, o.ReporterConfig)
+			return app.Stats(o.GlobalConfig, o.ParserConfig, o.ReporterConfig)
 		},
 	}
 }

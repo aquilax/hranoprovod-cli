@@ -30,7 +30,7 @@ func newCsvCommand(ol optionLoader) *cli.Command {
 					if err != nil {
 						return err
 					}
-					return app.NewHranoprovod(o).CSV(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+					return app.CSV(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 				},
 			},
 		},

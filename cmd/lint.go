@@ -14,6 +14,7 @@ func newLintCommand(ol optionLoader) *cli.Command {
 			if err != nil {
 				return err
 			}
+			o.ParserConfig.StopOnError = false
 			return app.Lint(c.Args().First(), o.ParserConfig)
 		},
 	}

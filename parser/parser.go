@@ -26,11 +26,12 @@ const (
 type Config struct {
 	// CommentChar contains the character used to indicate that the line is a comment
 	CommentChar uint8
+	StopOnError bool
 }
 
 // NewDefaultConfig returns the default set of parser configuration
 func NewDefaultConfig() Config {
-	return Config{'#'}
+	return Config{'#', true}
 }
 
 // Parser is the parser data structure
@@ -65,8 +66,17 @@ func (p Parser) ParseFile(fileName string) {
 // ParseCallback is called on node or error event when parsing the stream
 type ParseCallback func(n *shared.ParserNode, err error) (stop bool)
 
+func ParseFileCallback(fileName string, c Config, callback ParseCallback) error {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return NewErrorIO(err, fileName)
+	}
+	defer f.Close()
+	return ParseStreamCallback(f, c, callback)
+}
+
 // ParseStreamCallback parses stream and calls callback on node or error
-func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) {
+func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) error {
 	var node *shared.ParserNode
 	var line string
 	var trimmedLine string
@@ -117,7 +127,10 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) {
 
 			if separatorPos == -1 {
 				callback(nil, NewErrorBadSyntax(lineNumber, line))
-				return
+				if c.StopOnError {
+					return nil
+				}
+				continue
 			}
 			title = strings.Trim(trimmedLine[0:separatorPos], trimText)
 
@@ -126,7 +139,10 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) {
 			fQty, err = strconv.ParseFloat(sQty, 64)
 			if err != nil {
 				callback(nil, NewErrorConversion(sQty, lineNumber, line))
-				return
+				if c.StopOnError {
+					return nil
+				}
+				continue
 			}
 
 			node.Elements.Add(title, fQty)
@@ -136,6 +152,7 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) {
 	if node != nil {
 		callback(node, nil)
 	}
+	return nil
 }
 
 // ParseStream parses the contents of stream
