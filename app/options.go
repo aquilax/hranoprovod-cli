@@ -26,11 +26,11 @@ type FilterConfig struct {
 
 // Options contains the options structure
 type Options struct {
-	GlobalConfig   GlobalConfig
+	GlobalConfig   GlobalConfig    `gcfg:"Global"`
 	ResolverConfig resolver.Config `gcfg:"Resolver"`
 	ParserConfig   parser.Config   `gcfg:"Parser"`
 	ReporterConfig reporter.Config `gcfg:"Reporter"`
-	FilterConfig   FilterConfig
+	FilterConfig   FilterConfig    `gcfg:"Filter"`
 }
 
 // NewOptions returns new options structure.
@@ -61,7 +61,7 @@ func (o *Options) Load(c *cli.Context) error {
 	}
 	o.populateGlobals(c)
 	o.populateLocals(c)
-	return nil
+	return o.populateFilter(c)
 }
 
 func fileExists(name string) (bool, error) {
@@ -97,30 +97,46 @@ func (o *Options) populateResolver(c *cli.Context) {
 	}
 }
 
-func mustGetTime(format string, date string) time.Time {
+func mustGetTime(format string, date string) (time.Time, error) {
 	if date == "today" {
-		return time.Now().Local()
+		return time.Now().Local(), nil
 	}
 	if date == "yesterday" {
-		return time.Now().AddDate(0, 0, -1)
+		return time.Now().AddDate(0, 0, -1), nil
 	}
 	if date == "last7" {
-		return time.Now().AddDate(0, 0, -7)
+		return time.Now().AddDate(0, 0, -7), nil
 	}
 	if date == "last30" {
-		return time.Now().AddDate(0, 0, -30)
+		return time.Now().AddDate(0, 0, -30), nil
 	}
 	var err error
 	var customTime time.Time
 	customTime, err = time.Parse(format, date)
 	if err == nil {
-		return customTime
+		return customTime, nil
 	}
-	customTime, err = naturaldate.Parse(date, time.Now())
-	if err == nil {
-		return customTime
+	return naturaldate.Parse(date, time.Now())
+}
+
+func (o *Options) populateFilter(c *cli.Context) error {
+	for i := len(c.Lineage()) - 1; i >= 0; i-- {
+		if c.Lineage()[i].IsSet("begin") {
+			time, err := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
+			if err != nil {
+				return err
+			}
+			o.FilterConfig.BeginningTime = &time
+		}
+		if c.Lineage()[i].IsSet("end") {
+			time, err := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
+			if err != nil {
+				return err
+			}
+			o.FilterConfig.EndTime = &time
+		}
 	}
-	panic(err)
+	return nil
 }
 
 func (o *Options) populateReporter(c *cli.Context) {
@@ -158,15 +174,6 @@ func (o *Options) populateReporter(c *cli.Context) {
 
 		if c.Lineage()[i].IsSet("internal-template-name") {
 			o.ReporterConfig.InternalTemplateName = c.Lineage()[i].String("internal-template-name")
-		}
-
-		if c.Lineage()[i].IsSet("begin") {
-			time := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
-			o.FilterConfig.BeginningTime = &time
-		}
-		if c.Lineage()[i].IsSet("end") {
-			time := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
-			o.FilterConfig.EndTime = &time
 		}
 	}
 	o.ReporterConfig.Unresolved = c.Bool("unresolved")

@@ -8,20 +8,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const (
-	appName    = "hranoprovod-cli"
-	appUsage   = "Lifestyle tracker"
-	appVersion = "2.4.7"
-	appAuthor  = "aquilax"
-	appEmail   = "aquilax@gmail.com"
-
-	defaultDbFilename       = "food.yaml"
-	defaultLogFilename      = "log.yaml"
-	defaultResolverMaxDepth = 10
-
-	optionsFileName = "/.hranoprovod/config"
-)
-
 var (
 	version = "dev"
 	commit  = "none"
@@ -37,13 +23,13 @@ func GetApp() *cli.App {
 		return o, err
 	}
 
-	app := &cli.App{
-		Name:    appName,
-		Usage:   appUsage,
+	a := &cli.App{
+		Name:    app.Name,
+		Usage:   app.Usage,
 		Version: fmt.Sprintf("%v, commit %v, built at %v", version, commit, date),
 	}
 
-	app.Flags = []cli.Flag{
+	a.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "begin",
 			Aliases: []string{"b"},
@@ -57,21 +43,21 @@ func GetApp() *cli.App {
 		&cli.StringFlag{
 			Name:    "database",
 			Aliases: []string{"d"},
-			Value:   defaultDbFilename,
+			Value:   app.DefaultDbFilename,
 			Usage:   "optional database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
 			Name:    "logfile",
 			Aliases: []string{"l"},
-			Value:   defaultLogFilename,
+			Value:   app.DefaultLogFilename,
 			Usage:   "log file name `FILE`",
 			EnvVars: []string{"HR_LOGFILE"},
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Aliases: []string{"c"},
-			Value:   getDefaultFileName(),
+			Value:   getDefaultFileName(app.ConfigFileName),
 			Usage:   "Configuration file `FILE`",
 			EnvVars: []string{"HR_CONFIG"},
 		},
@@ -83,7 +69,7 @@ func GetApp() *cli.App {
 		},
 		&cli.IntFlag{
 			Name:    "maxdepth",
-			Value:   defaultResolverMaxDepth,
+			Value:   app.DefaultResolverMaxDepth,
 			Usage:   "Resolve depth `DEPTH`",
 			EnvVars: []string{"HR_MAXDEPTH"},
 		},
@@ -92,7 +78,7 @@ func GetApp() *cli.App {
 			Usage: "Disable color output",
 		},
 	}
-	app.Commands = []*cli.Command{
+	a.Commands = []*cli.Command{
 		newRegisterCommand(ol),
 		newBalanceCommand(ol),
 		newLintCommand(ol),
@@ -100,16 +86,16 @@ func GetApp() *cli.App {
 		newCsvCommand(ol),
 		newStatsCommand(ol),
 		newSummaryCommand(ol),
-		newGenCommand(ol, app),
+		newGenCommand(ol, a),
 		newPrintCommand(ol),
 	}
-	return app
+	return a
 }
 
-func getDefaultFileName() string {
+func getDefaultFileName(fillePath string) string {
 	usr, err := user.Current()
 	if err != nil {
 		return ""
 	}
-	return usr.HomeDir + optionsFileName
+	return usr.HomeDir + fillePath
 }
