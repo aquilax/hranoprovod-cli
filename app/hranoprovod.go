@@ -170,14 +170,13 @@ func Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 		return err
 	}
 
-	return reporter.NewStatsReporter(rpc, []string{
-		fmt.Sprintf("  Database file:      %s\n", gc.DbFileName),
-		fmt.Sprintf("  Database records:   %d\n", countDb),
-		fmt.Sprintln(""),
-		fmt.Sprintf("  Log file:           %s\n", gc.LogFileName),
-		fmt.Sprintf("  Log records:        %d\n", countLog),
-		fmt.Sprintf("  First record:       %s (%d days ago)\n", firstLogDate.Format(rpc.DateFormat), int(time.Since(firstLogDate).Hours()/24)),
-		fmt.Sprintf("  Last record:        %s (%d days ago)\n", lastLogDate.Format(rpc.DateFormat), int(time.Since(lastLogDate).Hours()/24)),
+	return reporter.NewStatsReporter(rpc, &reporter.Stats{
+		DbFileName:      gc.DbFileName,
+		LogFileName:     gc.LogFileName,
+		DbRecordsCount:  countDb,
+		LogRecordsCount: countLog,
+		LogFirstRecord:  firstLogDate,
+		LogLastRecord:   lastLogDate,
 	}).Flush()
 }
 
