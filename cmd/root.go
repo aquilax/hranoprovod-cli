@@ -24,9 +24,9 @@ func GetApp() *cli.App {
 	}
 
 	a := &cli.App{
-		Name:    app.Name,
-		Usage:   app.Usage,
-		Version: fmt.Sprintf("%v, commit %v, built at %v", version, commit, date),
+		Name:        app.Name,
+		Description: app.Description,
+		Version:     fmt.Sprintf("%v, commit %v, built at %v", version, commit, date),
 	}
 
 	a.Flags = []cli.Flag{

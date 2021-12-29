@@ -2,7 +2,7 @@
 
 # NAME
 
-hranoprovod-cli - Lifestyle tracker
+hranoprovod-cli - A new cli application
 
 # SYNOPSIS
 

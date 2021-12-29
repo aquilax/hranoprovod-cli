@@ -2,7 +2,7 @@
 
 ## Description
 
-Hranoprovod is command line tracking tool. It supports nested recipes and custom defined tracking elements, which makes it perfect for tracking calories, nutrition data, exercises and other accumulative data.
+Hranoprovod is command line diet tracking tool. It supports nested recipes and is agnostic to the metrics you choose to track, which makes it perfect for tracking calories, nutrition data, exercises and any other measurement that is accumulated on daily basis.
 
 [![asciicast](https://asciinema.org/a/257200.svg)](https://asciinema.org/a/257200)
 
@@ -57,7 +57,7 @@ Running the `hranoprovod-cli` command will show you the command line options
 
 ## Usage
 
-Hranoprovod uses two files with similar format to operate.
+Hranoprovod uses two files with very similar format to operate.
 
 ### Database file (food.yaml)
 
@@ -67,7 +67,7 @@ Contains all the "recipes" in the following format:
 
 Hranoprovod is measure agnostic and it's up to the user to use or state the measurements.
 
-### Log file (log.yaml)
+### Log journal file (log.yaml)
 
 The log file contains dated usage of the recipes, defined in the database file.
 
