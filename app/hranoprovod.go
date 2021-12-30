@@ -11,64 +11,54 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
+type resolvedCallback = func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeList, rpc reporter.Config, nf *LogNodeFilter) error
+
+func withResolvedDatabase(gc GlobalConfig, p parser.Parser, rc resolver.Config, rpc reporter.Config, fc FilterConfig, cb resolvedCallback) error {
+	if nl, err := loadDatabase(p, gc.DbFileName); err == nil {
+		if err = resolver.NewResolver(nl, rc).Resolve(); err == nil {
+			return cb(gc, p, nl, rpc, getIntervalNodeFilter(fc))
+		} else {
+			return err
+		}
+	} else {
+		return err
+	}
+}
+
 // Register generates report
 func Register(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, gc.DbFileName)
-	if err != nil {
-		return err
-	}
-	err = resolver.NewResolver(nl, rc).Resolve()
-	if err != nil {
-		return err
-	}
-	r := reporter.NewRegReporter(rpc, nl, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return withResolvedDatabase(gc, parser.NewParser(pc), rc, rpc, fc,
+		func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeList, rpc reporter.Config, nf *LogNodeFilter) error {
+			r := reporter.NewRegReporter(rpc, nl, rpc.Output)
+			return walkNodes(gc.LogFileName, gc.DateFormat, p, nf, r)
+		})
 }
 
 // Balance generates balance report
 func Balance(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, gc.DbFileName)
-	if err != nil {
-		return err
-	}
-	err = resolver.NewResolver(nl, rc).Resolve()
-	if err != nil {
-		return err
-	}
-	r := reporter.NewBalanceReporter(rpc, nl, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return withResolvedDatabase(gc, parser.NewParser(pc), rc, rpc, fc,
+		func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeList, rpc reporter.Config, nf *LogNodeFilter) error {
+			r := reporter.NewBalanceReporter(rpc, nl, rpc.Output)
+			return walkNodes(gc.LogFileName, gc.DateFormat, p, nf, r)
+		})
 }
 
 // ReportUnresolved generates report for unresolved elements
 func ReportUnresolved(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, gc.DbFileName)
-	if err != nil {
-		return err
-	}
-	err = resolver.NewResolver(nl, rc).Resolve()
-	if err != nil {
-		return err
-	}
-	r := reporter.NewUnsolvedReporter(rpc, nl, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return withResolvedDatabase(gc, parser.NewParser(pc), rc, rpc, fc,
+		func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeList, rpc reporter.Config, nf *LogNodeFilter) error {
+			r := reporter.NewUnsolvedReporter(rpc, nl, rpc.Output)
+			return walkNodes(gc.LogFileName, gc.DateFormat, p, nf, r)
+		})
 }
 
 // Summary generates summary
 func Summary(gc GlobalConfig, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, gc.DbFileName)
-	if err != nil {
-		return err
-	}
-	err = resolver.NewResolver(nl, rc).Resolve()
-	if err != nil {
-		return err
-	}
-	r := reporter.NewSummaryReporterTemplate(rpc, nl, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return withResolvedDatabase(gc, parser.NewParser(pc), rc, rpc, fc,
+		func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeList, rpc reporter.Config, nf *LogNodeFilter) error {
+			r := reporter.NewSummaryReporterTemplate(rpc, nl, rpc.Output)
+			return walkNodes(gc.LogFileName, gc.DateFormat, p, nf, r)
+		})
 }
 
 // Print reads and prints back out the log file
@@ -94,15 +84,15 @@ func CSV(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig
 
 // Lint lints file
 func Lint(fileName string, pc parser.Config) error {
-	p := parser.NewParser(pc)
-	go p.ParseFile(fileName)
+	parser := parser.NewParser(pc)
+	go parser.ParseFile(fileName)
 	return func() error {
 		for {
 			select {
-			case <-p.Nodes:
-			case err := <-p.Errors:
+			case <-parser.Nodes:
+			case err := <-parser.Errors:
 				fmt.Println(err)
-			case <-p.Done:
+			case <-parser.Done:
 				return nil
 			}
 		}
@@ -111,8 +101,8 @@ func Lint(fileName string, pc parser.Config) error {
 
 // ReportElement generates report for single element
 func ReportElement(dbFileName string, elementName string, ascending bool, pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
-	p := parser.NewParser(pc)
-	nl, err := loadDatabase(p, dbFileName)
+	parser := parser.NewParser(pc)
+	nl, err := loadDatabase(parser, dbFileName)
 	if err != nil {
 		return err
 	}

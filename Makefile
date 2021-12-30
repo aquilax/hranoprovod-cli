@@ -8,14 +8,14 @@ unexport HR_DATE_FORMAT
 SHELL=/bin/bash
 BINARY=hranoprovod-cli
 MDEXEC=mdexec
-TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md
+TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md docs/usage.cast
 
-all: $(WASM) $(BINARY) documentation
+all: $(WASM) $(BINARY) docs
 
 $(BINARY):
 	go build -o $(BINARY)
 
-documentation: $(BINARY) docs/command-line.md docs/usage.md README.md
+docs: $(BINARY) docs/command-line.md docs/usage.md README.md
 
 docs/command-line.md:
 	./$(BINARY) gen markdown > $@
@@ -33,4 +33,9 @@ test-release:
 	goreleaser --snapshot --skip-publish --rm-dist
 
 clean:
-	rm $(TARGETS)
+	rm -f $(TARGETS)
+
+documentation/usage.cast: $(BINARY) scripts/usage.sh
+	asciinema rec --overwrite -c "scripts/usage.sh -n" documentation/usage.cast
+
+cast: $(BINARY) docs/usage.cast

@@ -66,6 +66,8 @@ candy/snickers/bar:
   fat: 13.6
   carbohydrate: 35.1
   protein: 4.29
+
+
 ```
 
 ## Register report
@@ -304,8 +306,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (339 days ago)
-  Last record:        2021/01/25 (338 days ago)
+  First record:       2021/01/24 (340 days ago)
+  Last record:        2021/01/25 (339 days ago)
 
 ```
 
