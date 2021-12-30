@@ -15,7 +15,7 @@ type resolvedCallback = func(gc GlobalConfig, p parser.Parser, nl shared.DBNodeL
 
 func withResolvedDatabase(gc GlobalConfig, p parser.Parser, rc resolver.Config, rpc reporter.Config, fc FilterConfig, cb resolvedCallback) error {
 	if nl, err := loadDatabase(p, gc.DbFileName); err == nil {
-		if err = resolver.NewResolver(nl, rc).Resolve(); err == nil {
+		if nl, err = resolver.Resolve(rc, nl); err == nil {
 			return cb(gc, p, nl, rpc, getIntervalNodeFilter(fc))
 		} else {
 			return err
@@ -106,7 +106,7 @@ func ReportElement(dbFileName string, elementName string, ascending bool, pc par
 	if err != nil {
 		return err
 	}
-	err = resolver.NewResolver(nl, rc).Resolve()
+	nl, err = resolver.Resolve(rc, nl)
 	if err != nil {
 		return err
 	}

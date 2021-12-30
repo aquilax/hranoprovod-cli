@@ -194,7 +194,6 @@ func TestParseWg(t *testing.T) {
 }
 
 func BenchmarkParse(b *testing.B) {
-	// run the Fib function b.N times
 	parser := NewParser(NewDefaultConfig())
 	testBuffer := createTestFile(100000)
 	var wg sync.WaitGroup
