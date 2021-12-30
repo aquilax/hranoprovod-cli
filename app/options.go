@@ -61,7 +61,14 @@ func (o *Options) Load(c *cli.Context) error {
 	}
 	o.populateGlobals(c)
 	o.populateLocals(c)
-	return o.populateFilter(c)
+	if err := o.populateFilter(c); err != nil {
+		return err
+	}
+	return validateOptions(c, o)
+}
+
+func validateOptions(c *cli.Context, o *Options) error {
+	return nil
 }
 
 func fileExists(name string) (bool, error) {
@@ -97,7 +104,7 @@ func (o *Options) populateResolver(c *cli.Context) {
 	}
 }
 
-func mustGetTime(format string, date string) (time.Time, error) {
+func getTimeFromString(format string, date string) (time.Time, error) {
 	if date == "today" {
 		return time.Now().Local(), nil
 	}
@@ -122,14 +129,14 @@ func mustGetTime(format string, date string) (time.Time, error) {
 func (o *Options) populateFilter(c *cli.Context) error {
 	for i := len(c.Lineage()) - 1; i >= 0; i-- {
 		if c.Lineage()[i].IsSet("begin") {
-			time, err := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
+			time, err := getTimeFromString(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
 			if err != nil {
 				return err
 			}
 			o.FilterConfig.BeginningTime = &time
 		}
 		if c.Lineage()[i].IsSet("end") {
-			time, err := mustGetTime(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
+			time, err := getTimeFromString(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
 			if err != nil {
 				return err
 			}

@@ -83,20 +83,27 @@ func CSV(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig
 }
 
 // Lint lints file
-func Lint(fileName string, pc parser.Config) error {
+func Lint(fileName string, silent bool, pc parser.Config, rpc reporter.Config) error {
 	parser := parser.NewParser(pc)
 	go parser.ParseFile(fileName)
-	return func() error {
+	err := func() error {
 		for {
 			select {
 			case <-parser.Nodes:
 			case err := <-parser.Errors:
-				fmt.Println(err)
+				fmt.Fprintln(rpc.Output, err)
 			case <-parser.Done:
 				return nil
 			}
 		}
 	}()
+	if err != nil {
+		return err
+	}
+	if !silent {
+		fmt.Fprintln(rpc.Output, "No errors found")
+	}
+	return nil
 }
 
 // ReportElement generates report for single element
@@ -172,6 +179,9 @@ func Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 
 func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
+	if fileName == "" {
+
+	}
 	// Database must be optional. If the default file name is used and the file is not found,
 	// return empty node list
 	if fileName == DefaultDbFilename {
