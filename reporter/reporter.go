@@ -27,6 +27,7 @@ type Config struct {
 	ShortenStrings       bool
 	UseOldRegReporter    bool
 	InternalTemplateName string
+	CSVSeparator         rune
 	Output               io.Writer
 }
 
@@ -47,6 +48,7 @@ func NewDefaultConfig() Config {
 		ShortenStrings:       false,
 		UseOldRegReporter:    false,
 		InternalTemplateName: "default",
+		CSVSeparator:         ',',
 		Output:               os.Stdout,
 	}
 }

@@ -30,7 +30,29 @@ func newCsvCommand(ol optionLoader) *cli.Command {
 					if err != nil {
 						return err
 					}
-					return app.CSV(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+					return app.CSVLog(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+				},
+			},
+			{
+				Name:  "database",
+				Usage: "Exports the database file as CSV",
+				Action: func(c *cli.Context) error {
+					o, err := ol(c)
+					if err != nil {
+						return err
+					}
+					return app.CSVDatabase(o.GlobalConfig.DbFileName, o.ParserConfig, o.ReporterConfig)
+				},
+			},
+			{
+				Name:  "database-resolved",
+				Usage: "Exports the resolved database as CSV",
+				Action: func(c *cli.Context) error {
+					o, err := ol(c)
+					if err != nil {
+						return err
+					}
+					return app.CSVDatabaseResolved(o.GlobalConfig.DbFileName, o.ParserConfig, o.ReporterConfig, o.ResolverConfig)
 				},
 			},
 		},

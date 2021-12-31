@@ -68,6 +68,7 @@ func (o *Options) Load(c *cli.Context) error {
 }
 
 func validateOptions(c *cli.Context, o *Options) error {
+	// TODO: validate options
 	return nil
 }
 

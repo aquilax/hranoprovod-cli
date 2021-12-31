@@ -75,11 +75,50 @@ func ReportQuantity(gc GlobalConfig, ascending bool, pc parser.Config, rpc repor
 	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
 }
 
-// CSV generates CSV export
-func CSV(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
+// CSVLog generates CSV export of the log
+func CSVLog(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	parser := parser.NewParser(pc)
 	r := reporter.NewCSVReporter(rpc, rpc.Output)
 	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+}
+
+// CSVDatabase generates CSV export of the database
+func CSVDatabase(fileName string, pc parser.Config, rpc reporter.Config) error {
+	p := parser.NewParser(pc)
+	r := reporter.NewCSVDatabaseReporter(rpc)
+	go p.ParseFile(fileName)
+	return func() error {
+		for {
+			select {
+			case node := <-p.Nodes:
+				r.Process(shared.NewDBNodeFromNode(node))
+			case error := <-p.Errors:
+				return error
+			case <-p.Done:
+				return r.Flush()
+			}
+		}
+	}()
+}
+
+// CSVDatabaseResolved generates CSV export of the resolved database
+func CSVDatabaseResolved(fileName string, pc parser.Config, rpc reporter.Config, rc resolver.Config) error {
+	p := parser.NewParser(pc)
+	nl, err := mustLoadDatabase(p, fileName)
+	if err != nil {
+		return err
+	}
+	nl, err = resolver.Resolve(rc, nl)
+	if err != nil {
+		return err
+	}
+	r := reporter.NewCSVDatabaseReporter(rpc)
+	for _, n := range nl {
+		if err = r.Process(n); err != nil {
+			return err
+		}
+	}
+	return r.Flush()
 }
 
 // Lint lints file
@@ -109,7 +148,7 @@ func Lint(fileName string, silent bool, pc parser.Config, rpc reporter.Config) e
 // ReportElement generates report for single element
 func ReportElement(dbFileName string, elementName string, ascending bool, pc parser.Config, rc resolver.Config, rpc reporter.Config) error {
 	parser := parser.NewParser(pc)
-	nl, err := loadDatabase(parser, dbFileName)
+	nl, err := mustLoadDatabase(parser, dbFileName)
 	if err != nil {
 		return err
 	}
@@ -178,17 +217,18 @@ func Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 }
 
 func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
-	nodeList := shared.NewDBNodeList()
-	if fileName == "" {
-
-	}
 	// Database must be optional. If the default file name is used and the file is not found,
 	// return empty node list
 	if fileName == DefaultDbFilename {
 		if exists, _ := fileExists(fileName); !exists {
-			return nodeList, nil
+			return shared.NewDBNodeList(), nil
 		}
 	}
+	return mustLoadDatabase(p, fileName)
+}
+
+func mustLoadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
+	nodeList := shared.NewDBNodeList()
 	go p.ParseFile(fileName)
 	return func() (shared.DBNodeList, error) {
 		for {

@@ -3,33 +3,28 @@ package reporter
 import (
 	"encoding/csv"
 	"fmt"
-	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // CSVReporter outputs report for single food
-type CSVReporter struct {
-	config Config
+type CSVDatabaseReporter struct {
 	output *csv.Writer
 }
 
 // NewCSVReporter creates new CSV reporter
-func NewCSVReporter(config Config, writer io.Writer) CSVReporter {
-	w := csv.NewWriter(writer)
+func NewCSVDatabaseReporter(config Config) CSVDatabaseReporter {
+	w := csv.NewWriter(config.Output)
 	w.Comma = config.CSVSeparator
-	return CSVReporter{
-		config,
-		w,
-	}
+	return CSVDatabaseReporter{w}
 }
 
 // Process writes single node
-func (r CSVReporter) Process(ln *shared.LogNode) error {
+func (r CSVDatabaseReporter) Process(n *shared.DBNode) error {
 	var err error
-	for _, e := range ln.Elements {
+	for _, e := range n.Elements {
 		if err = r.output.Write([]string{
-			ln.Time.Format("2006-01-02"),
+			n.Header,
 			e.Name,
 			fmt.Sprintf("%0.2f", e.Value),
 		}); err != nil {
@@ -40,7 +35,7 @@ func (r CSVReporter) Process(ln *shared.LogNode) error {
 }
 
 // Flush does nothing
-func (r CSVReporter) Flush() error {
+func (r CSVDatabaseReporter) Flush() error {
 	r.output.Flush()
 	return nil
 }
