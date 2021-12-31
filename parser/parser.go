@@ -64,7 +64,7 @@ func (p Parser) ParseFile(fileName string) {
 }
 
 // ParseCallback is called on node or error event when parsing the stream
-type ParseCallback func(n *shared.ParserNode, err error) (stop bool)
+type ParseCallback func(n *shared.ParserNode, err error) (stop bool, cbError error)
 
 func ParseFileCallback(fileName string, c Config, callback ParseCallback) error {
 	f, err := os.Open(fileName)
@@ -103,7 +103,9 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 		if line[0] != runeSpace && line[0] != runeTab && line[0] != runeArrayItem {
 			if node != nil {
 				// flush complete node
-				callback(node, nil)
+				if stop, err := callback(node, nil); stop {
+					return err
+				}
 			}
 			// start new node
 			node = shared.NewParserNode(trimmedLine)
@@ -126,9 +128,8 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 			separatorPos = strings.LastIndexAny(trimmedLine, "\t ")
 
 			if separatorPos == -1 {
-				callback(nil, NewErrorBadSyntax(lineNumber, line))
-				if c.StopOnError {
-					return nil
+				if stop, err := callback(nil, NewErrorBadSyntax(lineNumber, line)); stop {
+					return err
 				}
 				continue
 			}
@@ -138,9 +139,8 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 			sQty = strings.Trim(trimmedLine[separatorPos:], trimQty)
 			fQty, err = strconv.ParseFloat(sQty, 64)
 			if err != nil {
-				callback(nil, NewErrorConversion(sQty, lineNumber, line))
-				if c.StopOnError {
-					return nil
+				if stop, err := callback(nil, NewErrorConversion(sQty, lineNumber, line)); stop {
+					return err
 				}
 				continue
 			}
@@ -150,20 +150,21 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 	}
 	// push last node
 	if node != nil {
-		callback(node, nil)
+		_, err = callback(node, nil)
+		return err
 	}
 	return nil
 }
 
 // ParseStream parses the contents of stream
 func (p Parser) ParseStream(reader io.Reader) {
-	ParseStreamCallback(reader, p.config, func(n *shared.ParserNode, err error) (stop bool) {
+	ParseStreamCallback(reader, p.config, func(n *shared.ParserNode, err error) (stop bool, cbError error) {
 		if err != nil {
 			p.Errors <- err
-			return true
+			return true, err
 		}
 		p.Nodes <- n
-		return false
+		return false, nil
 	})
 	p.Done <- true
 }

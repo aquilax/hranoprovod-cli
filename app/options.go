@@ -81,7 +81,7 @@ func fileExists(name string) (bool, error) {
 }
 
 func (o *Options) populateGlobals(c *cli.Context) {
-	if c.IsSet("database") || o.GlobalConfig.DbFileName == "" {
+	if !c.IsSet("no-database") && (c.IsSet("database") || o.GlobalConfig.DbFileName == "") {
 		o.GlobalConfig.DbFileName = c.String("database")
 	}
 

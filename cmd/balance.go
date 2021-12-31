@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"io"
+
 	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
 )
@@ -37,11 +39,15 @@ func newBalanceCommand(ol optionLoader) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			o, err := ol(c)
-			if err != nil {
+			if o, err := ol(c); err != nil {
 				return err
+			} else {
+				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
+					return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
+						return app.Balance(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+					})
+				})
 			}
-			return app.Balance(o.GlobalConfig, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }

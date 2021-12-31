@@ -77,6 +77,11 @@ func GetApp() *cli.App {
 			Name:  "no-color",
 			Usage: "Disable color output",
 		},
+		&cli.BoolFlag{
+			Name:  "no-database",
+			Usage: "Disables loading the database (even if database filename is set)",
+			Value: false,
+		},
 	}
 	a.Commands = []*cli.Command{
 		newRegisterCommand(ol),

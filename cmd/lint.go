@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
@@ -26,15 +27,13 @@ func newLintCommand(ol optionLoader) *cli.Command {
 			return nil
 		},
 		Action: func(c *cli.Context) error {
-			o, err := ol(c)
-			if err != nil {
+			if o, err := ol(c); err != nil {
 				return err
-			}
-			o.ParserConfig.StopOnError = false
-			if streamToLint, err := getFileReader(c.Args().First()); err == nil {
-				return app.Lint(streamToLint, c.IsSet("silent"), o.ParserConfig, o.ReporterConfig)
 			} else {
-				return err
+				return withFileReader(c.Args().First(), func(streamToLint io.Reader) error {
+					o.ParserConfig.StopOnError = false
+					return app.Lint(streamToLint, c.IsSet("silent"), o.ParserConfig, o.ReporterConfig)
+				})
 			}
 		},
 	}

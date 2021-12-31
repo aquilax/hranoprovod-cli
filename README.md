@@ -88,6 +88,7 @@ GLOBAL OPTIONS:
    --date-format DATE_FORMAT  Date format for parsing and printing dates DATE_FORMAT (default: "2006/01/02") [$HR_DATE_FORMAT]
    --maxdepth DEPTH           Resolve depth DEPTH (default: 10) [$HR_MAXDEPTH]
    --no-color                 Disable color output (default: false)
+   --no-database              Disables loading the database (even if database filename is set) (default: false)
    --help, -h                 show help (default: false)
    --version, -v              print the version (default: false)
 

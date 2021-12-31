@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"io"
+
 	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
 )
@@ -26,33 +28,39 @@ func newCsvCommand(ol optionLoader) *cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					o, err := ol(c)
-					if err != nil {
+					if o, err := ol(c); err != nil {
 						return err
+					} else {
+						return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
+							return app.CSVLog(logStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+						})
 					}
-					return app.CSVLog(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 				},
 			},
 			{
 				Name:  "database",
 				Usage: "Exports the database file as CSV",
 				Action: func(c *cli.Context) error {
-					o, err := ol(c)
-					if err != nil {
+					if o, err := ol(c); err != nil {
 						return err
+					} else {
+						return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
+							return app.CSVDatabase(dbStream, o.ParserConfig, o.ReporterConfig)
+						})
 					}
-					return app.CSVDatabase(o.GlobalConfig.DbFileName, o.ParserConfig, o.ReporterConfig)
 				},
 			},
 			{
 				Name:  "database-resolved",
 				Usage: "Exports the resolved database as CSV",
 				Action: func(c *cli.Context) error {
-					o, err := ol(c)
-					if err != nil {
+					if o, err := ol(c); err != nil {
 						return err
+					} else {
+						return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
+							return app.CSVDatabaseResolved(dbStream, o.ParserConfig, o.ReporterConfig, o.ResolverConfig)
+						})
 					}
-					return app.CSVDatabaseResolved(o.GlobalConfig.DbFileName, o.ParserConfig, o.ReporterConfig, o.ResolverConfig)
 				},
 			},
 		},

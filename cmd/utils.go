@@ -5,8 +5,11 @@ import (
 	"os"
 )
 
-func getFileReader(fileName string) (io.Reader, error) {
-	f, err := os.Open(fileName)
-	defer f.Close()
-	return f, err
+func withFileReader(fileName string, cb func(io.Reader) error) error {
+	if f, err := os.Open(fileName); err != nil {
+		return err
+	} else {
+		defer f.Close()
+		return cb(f)
+	}
 }

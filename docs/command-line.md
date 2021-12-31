@@ -18,6 +18,7 @@ hranoprovod-cli
 [--logfile|-l]=[value]
 [--maxdepth]=[value]
 [--no-color]
+[--no-database]
 [--version|-v]
 ```
 
@@ -46,6 +47,8 @@ hranoprovod-cli [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]
 **--maxdepth**="": Resolve depth `DEPTH` (default: 10)
 
 **--no-color**: Disable color output
+
+**--no-database**: Disables loading the database (even if database filename is set)
 
 **--version, -v**: print the version
 

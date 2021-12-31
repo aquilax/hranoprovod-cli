@@ -335,6 +335,14 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+vegetables/lettuce/romaine/100g,calories,15.00
+vegetables/lettuce/romaine/100g,carbohydrate,1.70
+vegetables/lettuce/romaine/100g,fat,0.50
+vegetables/lettuce/romaine/100g,protein,0.90
+sauce/mayonnaise/100g,calories,680.00
+sauce/mayonnaise/100g,carbohydrate,0.60
+sauce/mayonnaise/100g,fat,7.50
+sauce/mayonnaise/100g,protein,1.00
 sandwich/egg/lettuce/100g,calories,273.60
 sandwich/egg/lettuce/100g,carbohydrate,19.88
 sandwich/egg/lettuce/100g,fat,5.12
@@ -355,14 +363,6 @@ egg/boiled/100g,calories,155.00
 egg/boiled/100g,carbohydrate,1.10
 egg/boiled/100g,fat,11.00
 egg/boiled/100g,protein,13.00
-vegetables/lettuce/romaine/100g,calories,15.00
-vegetables/lettuce/romaine/100g,carbohydrate,1.70
-vegetables/lettuce/romaine/100g,fat,0.50
-vegetables/lettuce/romaine/100g,protein,0.90
-sauce/mayonnaise/100g,calories,680.00
-sauce/mayonnaise/100g,carbohydrate,0.60
-sauce/mayonnaise/100g,fat,7.50
-sauce/mayonnaise/100g,protein,1.00
 
 ```
 
