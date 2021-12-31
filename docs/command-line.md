@@ -98,7 +98,9 @@ Shows food balance as tree
 
 ## lint
 
-Lints file
+Lints file for parsing errors
+
+**--silent, -s**: stay silent if no errors are found
 
 ## report
 
@@ -131,6 +133,14 @@ Exports the log file as CSV
 **--begin, -b**="": Beginning of period `DATE`
 
 **--end, -e**="": End of period `DATE`
+
+### database
+
+Exports the database file as CSV
+
+### database-resolved
+
+Exports the resolved database as CSV
 
 ## stats
 

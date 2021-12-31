@@ -185,9 +185,9 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 2021/01/24 --no-color reg -g -s calories
+  -1200.00	day/nonworking
     328.32	sandwich/egg/lettuce/100g
     280.00	candy/snickers/bar
-  -1200.00	day/nonworking
 
 ```
 
@@ -254,7 +254,6 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s
 
 ```
 
-
 ## Other reports
 
 ### Element-total
@@ -287,13 +286,83 @@ coffee/cup
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv log
-2021-01-24;day/nonworking;1.00
-2021-01-24;coffee/cup;1.00
-2021-01-24;sandwich/egg/lettuce/100g;1.20
-2021-01-24;candy/snickers/bar;1.00
-2021-01-25;day/nonworking;1.00
-2021-01-25;coffee/cup;2.00
-2021-01-25;sandwich/egg/lettuce/100g;1.50
+2021-01-24,day/nonworking,1.00
+2021-01-24,coffee/cup,1.00
+2021-01-24,sandwich/egg/lettuce/100g,1.20
+2021-01-24,candy/snickers/bar,1.00
+2021-01-25,day/nonworking,1.00
+2021-01-25,coffee/cup,2.00
+2021-01-25,sandwich/egg/lettuce/100g,1.50
+
+```
+
+### CSV Export of the raw database
+
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database
+day/nonworking,calories,-1200.00
+day/nonworking,fat,-124.00
+day/nonworking,carbohydrate,-50.00
+day/nonworking,protein,-104.00
+bread/rye/100g,calories,259.00
+bread/rye/100g,fat,3.30
+bread/rye/100g,carbohydrate,48.00
+bread/rye/100g,protein,9.00
+egg/boiled/100g,calories,155.00
+egg/boiled/100g,fat,11.00
+egg/boiled/100g,carbohydrate,1.10
+egg/boiled/100g,protein,13.00
+vegetables/lettuce/romaine/100g,calories,15.00
+vegetables/lettuce/romaine/100g,fat,0.50
+vegetables/lettuce/romaine/100g,carbohydrate,1.70
+vegetables/lettuce/romaine/100g,protein,0.90
+sauce/mayonnaise/100g,calories,680.00
+sauce/mayonnaise/100g,fat,7.50
+sauce/mayonnaise/100g,carbohydrate,0.60
+sauce/mayonnaise/100g,protein,1.00
+sandwich/egg/lettuce/100g,bread/rye/100g,0.40
+sandwich/egg/lettuce/100g,egg/boiled/100g,0.20
+sandwich/egg/lettuce/100g,vegetables/lettuce/romaine/100g,0.20
+sandwich/egg/lettuce/100g,sauce/mayonnaise/100g,0.20
+candy/snickers/bar,calories,280.00
+candy/snickers/bar,fat,13.60
+candy/snickers/bar,carbohydrate,35.10
+candy/snickers/bar,protein,4.29
+
+```
+
+### CSV Export of the resolved database
+
+```sh
+$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+sandwich/egg/lettuce/100g,calories,273.60
+sandwich/egg/lettuce/100g,carbohydrate,19.88
+sandwich/egg/lettuce/100g,fat,5.12
+sandwich/egg/lettuce/100g,protein,6.58
+candy/snickers/bar,calories,280.00
+candy/snickers/bar,carbohydrate,35.10
+candy/snickers/bar,fat,13.60
+candy/snickers/bar,protein,4.29
+day/nonworking,calories,-1200.00
+day/nonworking,carbohydrate,-50.00
+day/nonworking,fat,-124.00
+day/nonworking,protein,-104.00
+bread/rye/100g,calories,259.00
+bread/rye/100g,carbohydrate,48.00
+bread/rye/100g,fat,3.30
+bread/rye/100g,protein,9.00
+egg/boiled/100g,calories,155.00
+egg/boiled/100g,carbohydrate,1.10
+egg/boiled/100g,fat,11.00
+egg/boiled/100g,protein,13.00
+vegetables/lettuce/romaine/100g,calories,15.00
+vegetables/lettuce/romaine/100g,carbohydrate,1.70
+vegetables/lettuce/romaine/100g,fat,0.50
+vegetables/lettuce/romaine/100g,protein,0.90
+sauce/mayonnaise/100g,calories,680.00
+sauce/mayonnaise/100g,carbohydrate,0.60
+sauce/mayonnaise/100g,fat,7.50
+sauce/mayonnaise/100g,protein,1.00
 
 ```
 
@@ -306,8 +375,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (340 days ago)
-  Last record:        2021/01/25 (339 days ago)
+  First record:       2021/01/24 (341 days ago)
+  Last record:        2021/01/25 (340 days ago)
 
 ```
 

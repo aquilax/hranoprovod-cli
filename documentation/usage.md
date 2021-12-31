@@ -44,7 +44,6 @@ and the following recipe book file:
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s fat`
 
-
 ## Other reports
 
 ### Element-total
@@ -62,6 +61,14 @@ Prints list of records which were not found in the recipe book
 ### CSV Export of the logged items
 
 `$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv log`
+
+### CSV Export of the raw database
+
+`$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database`
+
+### CSV Export of the resolved database
+
+`$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved`
 
 ### Data statistics
 

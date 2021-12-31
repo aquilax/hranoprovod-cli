@@ -70,7 +70,7 @@ DESCRIPTION:
 COMMANDS:
    register, reg  Shows the log register report
    balance, bal   Shows food balance as tree
-   lint           Lints file
+   lint           Lints file for parsing errors
    report         Generates various reports
    csv            Generates csv exports
    stats          Provide stats information

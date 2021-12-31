@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"io"
 	"sort"
 	"time"
 
@@ -122,9 +123,9 @@ func CSVDatabaseResolved(fileName string, pc parser.Config, rpc reporter.Config,
 }
 
 // Lint lints file
-func Lint(fileName string, silent bool, pc parser.Config, rpc reporter.Config) error {
+func Lint(stream io.Reader, silent bool, pc parser.Config, rpc reporter.Config) error {
 	parser := parser.NewParser(pc)
-	go parser.ParseFile(fileName)
+	go parser.ParseStream(stream)
 	err := func() error {
 		for {
 			select {
