@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"io"
+
 	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
 )
 
-func newPrintCommand(ol optionLoader) *cli.Command {
+func newPrintCommand(cu cmdUtils, printCb app.PrintCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "print",
 		Usage: "Print log",
@@ -22,11 +24,11 @@ func newPrintCommand(ol optionLoader) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			o, err := ol(c)
-			if err != nil {
-				return err
-			}
-			return app.Print(o.GlobalConfig, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReader(c.Args().First(), func(logStream io.Reader) error {
+					return printCb(logStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+				})
+			})
 		},
 	}
 }

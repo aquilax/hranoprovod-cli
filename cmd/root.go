@@ -22,7 +22,7 @@ func GetApp() *cli.App {
 		err := o.Load(c)
 		return o, err
 	}
-
+	u := NewCmdUtils()
 	a := &cli.App{
 		Name:        app.Name,
 		Description: app.Description,
@@ -86,13 +86,13 @@ func GetApp() *cli.App {
 	a.Commands = []*cli.Command{
 		newRegisterCommand(ol),
 		newBalanceCommand(ol),
-		newLintCommand(ol),
+		newLintCommand(u, app.Lint),
 		newReportCommand(ol),
 		newCsvCommand(ol),
 		newStatsCommand(ol),
 		newSummaryCommand(ol),
 		newGenCommand(ol, a),
-		newPrintCommand(ol),
+		newPrintCommand(u, app.Print),
 	}
 	return a
 }

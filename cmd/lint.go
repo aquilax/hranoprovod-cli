@@ -8,7 +8,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newLintCommand(ol optionLoader) *cli.Command {
+func newLintCommand(cu cmdUtils, lint app.LintCmd) *cli.Command {
 	return &cli.Command{
 		Name:      "lint",
 		Usage:     "Lints file for parsing errors",
@@ -27,14 +27,12 @@ func newLintCommand(ol optionLoader) *cli.Command {
 			return nil
 		},
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(c.Args().First(), func(streamToLint io.Reader) error {
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReader(c.Args().First(), func(streamToLint io.Reader) error {
 					o.ParserConfig.StopOnError = false
-					return app.Lint(streamToLint, c.IsSet("silent"), o.ParserConfig, o.ReporterConfig)
+					return lint(streamToLint, c.IsSet("silent"), o.ParserConfig, o.ReporterConfig)
 				})
-			}
+			})
 		},
 	}
 }

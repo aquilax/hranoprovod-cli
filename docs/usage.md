@@ -335,6 +335,18 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+day/nonworking,calories,-1200.00
+day/nonworking,carbohydrate,-50.00
+day/nonworking,fat,-124.00
+day/nonworking,protein,-104.00
+bread/rye/100g,calories,259.00
+bread/rye/100g,carbohydrate,48.00
+bread/rye/100g,fat,3.30
+bread/rye/100g,protein,9.00
+egg/boiled/100g,calories,155.00
+egg/boiled/100g,carbohydrate,1.10
+egg/boiled/100g,fat,11.00
+egg/boiled/100g,protein,13.00
 vegetables/lettuce/romaine/100g,calories,15.00
 vegetables/lettuce/romaine/100g,carbohydrate,1.70
 vegetables/lettuce/romaine/100g,fat,0.50
@@ -351,18 +363,6 @@ candy/snickers/bar,calories,280.00
 candy/snickers/bar,carbohydrate,35.10
 candy/snickers/bar,fat,13.60
 candy/snickers/bar,protein,4.29
-day/nonworking,calories,-1200.00
-day/nonworking,carbohydrate,-50.00
-day/nonworking,fat,-124.00
-day/nonworking,protein,-104.00
-bread/rye/100g,calories,259.00
-bread/rye/100g,carbohydrate,48.00
-bread/rye/100g,fat,3.30
-bread/rye/100g,protein,9.00
-egg/boiled/100g,calories,155.00
-egg/boiled/100g,carbohydrate,1.10
-egg/boiled/100g,fat,11.00
-egg/boiled/100g,protein,13.00
 
 ```
 
@@ -375,8 +375,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (341 days ago)
-  Last record:        2021/01/25 (340 days ago)
+  First record:       2021/01/24 (343 days ago)
+  Last record:        2021/01/25 (342 days ago)
 
 ```
 

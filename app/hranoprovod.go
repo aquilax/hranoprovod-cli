@@ -12,6 +12,8 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
+type App struct{}
+
 type resolvedCallback = func(nl shared.DBNodeList) error
 
 func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Config, cb resolvedCallback) error {
@@ -63,17 +65,15 @@ func Summary(logStream, dbStream io.Reader, dateFormat string, pc parser.Config,
 }
 
 // Print reads and prints back out the log file
-func Print(gc GlobalConfig, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
+func Print(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	r := reporter.NewPrintReporter(rpc, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // ReportQuantity Generates a quantity report
-func ReportQuantity(gc GlobalConfig, ascending bool, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
-	parser := parser.NewParser(pc)
+func ReportQuantity(logStream io.Reader, dateFormat string, ascending bool, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
 	r := reporter.NewQuantityReporter(ascending, rpc.Output)
-	return walkNodes(gc.LogFileName, gc.DateFormat, parser, getIntervalNodeFilter(fc), r)
+	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // CSVLog generates CSV export of the log

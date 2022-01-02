@@ -78,11 +78,13 @@ func newReportQuantityCommand(ol optionLoader) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			o, err := ol(c)
-			if err != nil {
+			if o, err := ol(c); err != nil {
 				return err
+			} else {
+				return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
+					return app.ReportQuantity(logStream, o.GlobalConfig.DateFormat, c.IsSet("desc"), o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+				})
 			}
-			return app.ReportQuantity(o.GlobalConfig, c.IsSet("desc"), o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 		},
 	}
 }
