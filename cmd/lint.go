@@ -29,7 +29,6 @@ func newLintCommand(cu cmdUtils, lint app.LintCmd) *cli.Command {
 		Action: func(c *cli.Context) error {
 			return cu.withOptions(c, func(o *app.Options) error {
 				return cu.withFileReader(c.Args().First(), func(streamToLint io.Reader) error {
-					o.ParserConfig.StopOnError = false
 					return lint(streamToLint, c.IsSet("silent"), o.ParserConfig, o.ReporterConfig)
 				})
 			})
