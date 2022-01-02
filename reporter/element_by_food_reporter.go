@@ -16,11 +16,11 @@ type elementByFoodReporter struct {
 	acc    accumulator.Accumulator
 }
 
-func newElementByFoodReporter(config Config, db shared.DBNodeList, writer io.Writer) *elementByFoodReporter {
+func newElementByFoodReporter(config Config, db shared.DBNodeList) *elementByFoodReporter {
 	return &elementByFoodReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 		accumulator.NewAccumulator(),
 	}
 }

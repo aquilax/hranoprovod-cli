@@ -7,17 +7,26 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
+type CommonConfig struct {
+	Output io.Writer
+	Color  bool
+}
+
+func NewCommonConfig() CommonConfig {
+	return CommonConfig{
+		Output: os.Stdout,
+		Color:  false,
+	}
+}
+
 // Config contains the options for the reporter
 type Config struct {
+	Output               io.Writer
 	CSV                  bool
 	Color                bool
 	TotalsOnly           bool
 	Totals               bool
 	DateFormat           string
-	CaloriesLabel        string
-	FatLabel             string
-	CarbohydrateLabel    string
-	ProteinLabel         string
 	Unresolved           bool
 	SingleElement        string
 	SingleFood           string
@@ -28,7 +37,6 @@ type Config struct {
 	UseOldRegReporter    bool
 	InternalTemplateName string
 	CSVSeparator         rune
-	Output               io.Writer
 }
 
 // NewDefaultConfig returns the default reporter config
@@ -37,10 +45,6 @@ func NewDefaultConfig() Config {
 		CSV:                  false,
 		Color:                false,
 		DateFormat:           "2006/01/02",
-		CaloriesLabel:        "calories",
-		FatLabel:             "fat",
-		CarbohydrateLabel:    "carbohydrate",
-		ProteinLabel:         "protein",
 		Totals:               true,
 		CollapseLast:         false,
 		Collapse:             false,
@@ -60,29 +64,29 @@ type Reporter interface {
 }
 
 // NewRegReporter creates new response handler
-func NewRegReporter(c Config, db shared.DBNodeList, writer io.Writer) Reporter {
+func NewRegReporter(c Config, db shared.DBNodeList) Reporter {
 	if c.Unresolved {
-		return NewUnsolvedReporter(c, db, writer)
+		return NewUnsolvedReporter(c, db)
 	}
 	if len(c.SingleElement) > 0 {
 		if c.ElementGroupByFood {
-			return newElementByFoodReporter(c, db, writer)
+			return newElementByFoodReporter(c, db)
 		}
-		return newSingleReporter(c, db, writer)
+		return newSingleReporter(c, db)
 	}
 	if len(c.SingleFood) > 0 {
-		return newSingleFoodReporter(c, db, writer)
+		return newSingleFoodReporter(c, db)
 	}
 	if c.UseOldRegReporter {
-		return newRegReporter(c, db, writer)
+		return newRegReporter(c, db)
 	}
-	return newRegReporterTemplate(c, db, writer)
+	return newRegReporterTemplate(c, db)
 }
 
 // NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options Config, db shared.DBNodeList, writer io.Writer) Reporter {
+func NewBalanceReporter(options Config, db shared.DBNodeList) Reporter {
 	if len(options.SingleElement) > 0 {
-		return newBalanceSingleReporter(options, db, writer)
+		return newBalanceSingleReporter(options, db)
 	}
-	return newBalanceReporter(options, db, writer)
+	return newBalanceReporter(options, db)
 }

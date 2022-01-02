@@ -28,20 +28,29 @@ func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Conf
 	}
 }
 
-// Register generates report
-func Register(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+type reporterCallback func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter
+
+func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig, rpCb reporterCallback) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
-			r := reporter.NewRegReporter(rpc, nl, rpc.Output)
+			r := rpCb(rpc, nl)
 			return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 		})
+}
+
+// Register generates report
+func Register(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+	rpCb := func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter {
+		return reporter.NewRegReporter(rpc, nl)
+	}
+	return walkWithReporter(logStream, dbStream, dateFormat, pc, rc, rpc, fc, rpCb)
 }
 
 // Balance generates balance report
 func Balance(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
-			r := reporter.NewBalanceReporter(rpc, nl, rpc.Output)
+			r := reporter.NewBalanceReporter(rpc, nl)
 			return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 		})
 }
@@ -50,7 +59,7 @@ func Balance(logStream, dbStream io.Reader, dateFormat string, pc parser.Config,
 func ReportUnresolved(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
-			r := reporter.NewUnsolvedReporter(rpc, nl, rpc.Output)
+			r := reporter.NewUnsolvedReporter(rpc, nl)
 			return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 		})
 }
@@ -59,27 +68,27 @@ func ReportUnresolved(logStream, dbStream io.Reader, dateFormat string, pc parse
 func Summary(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
-			r := reporter.NewSummaryReporterTemplate(rpc, nl, rpc.Output)
+			r := reporter.NewSummaryReporterTemplate(rpc, nl)
 			return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 		})
 }
 
 // Print reads and prints back out the log file
 func Print(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
-	r := reporter.NewPrintReporter(rpc, rpc.Output)
+	r := reporter.NewPrintReporter(rpc)
 	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // ReportQuantity Generates a quantity report
 func ReportQuantity(logStream io.Reader, dateFormat string, ascending bool, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
-	r := reporter.NewQuantityReporter(ascending, rpc.Output)
+	r := reporter.NewQuantityReporter(rpc, ascending)
 	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // CSVLog generates CSV export of the log
-func CSVLog(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
-	r := reporter.NewCSVReporter(rpc, rpc.Output)
-	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
+func CSVLog(logStream io.Reader, c CSVLogConfig) error {
+	r := reporter.NewCSVReporter(c.CSVConfig)
+	return walkNodesInStream(logStream, c.DateFormat, c.Config, getIntervalNodeFilter(c.FilterConfig), r)
 }
 
 // CSVDatabase generates CSV export of the database
@@ -182,7 +191,7 @@ func Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 
 	countLog := 0
 	if err = parser.ParseFileCallback(gc.LogFileName, pc, func(n *shared.ParserNode, _ error) (stop bool, cbError error) {
-		lastLogDate, err = time.Parse(gc.DateFormat, n.Header)
+		lastLogDate, err = time.Parse(pc.DateFormat, n.Header)
 		if err == nil {
 			if firstLogDate.IsZero() {
 				firstLogDate = lastLogDate

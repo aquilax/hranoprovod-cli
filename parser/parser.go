@@ -12,9 +12,11 @@ import (
 )
 
 const (
-	runeTab       = '\t'
-	runeSpace     = ' '
-	runeArrayItem = '-'
+	DefaultDateFormat  = "2006/01/02"
+	DefaultCommentChar = '#'
+	runeTab            = '\t'
+	runeSpace          = ' '
+	runeArrayItem      = '-'
 )
 
 const (
@@ -26,11 +28,12 @@ const (
 type Config struct {
 	// CommentChar contains the character used to indicate that the line is a comment
 	CommentChar uint8
+	DateFormat  string
 }
 
 // NewDefaultConfig returns the default set of parser configuration
 func NewDefaultConfig() Config {
-	return Config{'#'}
+	return Config{DefaultCommentChar, DefaultDateFormat}
 }
 
 // Parser is the parser data structure

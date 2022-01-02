@@ -56,11 +56,11 @@ func getInternalTemplate(internalTemplateName string) string {
 	return defaultTemplate
 }
 
-func newRegReporterTemplate(config Config, db shared.DBNodeList, writer io.Writer) *regReporterTemplate {
+func newRegReporterTemplate(config Config, db shared.DBNodeList) *regReporterTemplate {
 	return &regReporterTemplate{
 		config,
 		db,
-		writer,
+		config.Output,
 		template.Must(template.New("template").Funcs(getTemplateFunctions(config)).Parse(getInternalTemplate(config.InternalTemplateName))),
 	}
 }

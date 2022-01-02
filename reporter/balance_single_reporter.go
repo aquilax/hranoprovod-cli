@@ -17,11 +17,11 @@ type balanceSingleReporter struct {
 	total  float64
 }
 
-func newBalanceSingleReporter(config Config, db shared.DBNodeList, writer io.Writer) *balanceSingleReporter {
+func newBalanceSingleReporter(config Config, db shared.DBNodeList) *balanceSingleReporter {
 	return &balanceSingleReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 		accumulator.NewTreeNode("", 0),
 		0,
 	}

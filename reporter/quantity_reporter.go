@@ -14,11 +14,11 @@ type QuantityReporter struct {
 	output      io.Writer
 }
 
-func NewQuantityReporter(ascending bool, writer io.Writer) QuantityReporter {
+func NewQuantityReporter(config Config, ascending bool) QuantityReporter {
 	return QuantityReporter{
 		ascending,
 		make(map[string]float64),
-		writer,
+		config.Output,
 	}
 }
 

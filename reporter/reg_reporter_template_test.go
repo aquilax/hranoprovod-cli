@@ -23,7 +23,8 @@ func TestRegReporterTemplate(t *testing.T) {
 
 		c := NewDefaultConfig()
 		c.ShortenStrings = true
-		rp := NewRegReporter(c, db, &b)
+		c.Output = &b
+		rp := NewRegReporter(c, db)
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
 			el := shared.NewElements()
 			el.Add("test1", 3.1)

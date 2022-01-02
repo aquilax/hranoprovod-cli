@@ -5,6 +5,7 @@ import (
 	"os/user"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/urfave/cli/v2"
 )
 
@@ -63,7 +64,7 @@ func GetApp() *cli.App {
 		},
 		&cli.StringFlag{
 			Name:    "date-format",
-			Value:   "2006/01/02",
+			Value:   parser.DefaultDateFormat,
 			Usage:   "Date format for parsing and printing dates `DATE_FORMAT`",
 			EnvVars: []string{"HR_DATE_FORMAT"},
 		},
@@ -88,7 +89,7 @@ func GetApp() *cli.App {
 		newBalanceCommand(ol),
 		newLintCommand(u, app.Lint),
 		newReportCommand(ol),
-		newCsvCommand(ol),
+		newCSVCommand(ol),
 		newStatsCommand(ol),
 		newSummaryCommand(ol),
 		newGenCommand(ol, a),

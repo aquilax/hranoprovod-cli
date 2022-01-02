@@ -16,11 +16,11 @@ type balanceReporter struct {
 	root   *accumulator.TreeNode
 }
 
-func newBalanceReporter(config Config, db shared.DBNodeList, writer io.Writer) *balanceReporter {
+func newBalanceReporter(config Config, db shared.DBNodeList) *balanceReporter {
 	return &balanceReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 		accumulator.NewTreeNode("", 0),
 	}
 }

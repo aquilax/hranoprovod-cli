@@ -52,7 +52,9 @@ func TestSummaryReporterTemplate_Process(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var b bytes.Buffer
 			w := bufio.NewWriter(&b)
-			r := NewSummaryReporterTemplate(NewDefaultConfig(), tt.db, w)
+			c := NewDefaultConfig()
+			c.Output = w
+			r := NewSummaryReporterTemplate(c, tt.db)
 			if err := r.Process(tt.ln); err != nil {
 				t.Errorf("SummaryReporterTemplate.Process() error = %v", err)
 			}

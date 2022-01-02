@@ -11,3 +11,9 @@ type (
 	LintCmd  func(stream io.Reader, silent bool, pc parser.Config, rpc reporter.Config) error
 	PrintCmd func(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc FilterConfig) error
 )
+
+type CSVLogConfig struct {
+	parser.Config
+	FilterConfig
+	reporter.CSVConfig
+}

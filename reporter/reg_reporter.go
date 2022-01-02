@@ -17,11 +17,11 @@ type regReporter struct {
 	output io.Writer
 }
 
-func newRegReporter(config Config, db shared.DBNodeList, writer io.Writer) *regReporter {
+func newRegReporter(config Config, db shared.DBNodeList) *regReporter {
 	return &regReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 	}
 }
 

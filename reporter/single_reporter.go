@@ -16,11 +16,11 @@ type singleReporter struct {
 	output io.Writer
 }
 
-func newSingleReporter(config Config, db shared.DBNodeList, writer io.Writer) *singleReporter {
+func newSingleReporter(config Config, db shared.DBNodeList) *singleReporter {
 	return &singleReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 	}
 }
 

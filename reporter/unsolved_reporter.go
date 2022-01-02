@@ -16,11 +16,11 @@ type UnsolvedReporter struct {
 }
 
 // NewUnsolvedReporter returns reporter for unresolved elements
-func NewUnsolvedReporter(config Config, db shared.DBNodeList, writer io.Writer) *UnsolvedReporter {
+func NewUnsolvedReporter(config Config, db shared.DBNodeList) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 		make(map[string]bool),
 	}
 }

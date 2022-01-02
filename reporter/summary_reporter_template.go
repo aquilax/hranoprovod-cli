@@ -30,11 +30,11 @@ type SummaryReporterTemplate struct {
 }
 
 // NewSummaryReporterTemplate creates new summary reporter
-func NewSummaryReporterTemplate(config Config, db shared.DBNodeList, writer io.Writer) *SummaryReporterTemplate {
+func NewSummaryReporterTemplate(config Config, db shared.DBNodeList) *SummaryReporterTemplate {
 	return &SummaryReporterTemplate{
 		config,
 		db,
-		writer,
+		config.Output,
 		template.Must(template.New("summary").Funcs(getTemplateFunctions(config)).Parse(summaryTemplate)),
 	}
 }

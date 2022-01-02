@@ -13,10 +13,10 @@ type PrintReporter struct {
 	output io.Writer
 }
 
-func NewPrintReporter(config Config, writer io.Writer) *PrintReporter {
+func NewPrintReporter(config Config) *PrintReporter {
 	return &PrintReporter{
 		config,
-		writer,
+		config.Output,
 	}
 }
 

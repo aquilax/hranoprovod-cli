@@ -14,11 +14,11 @@ type singleFoodReporter struct {
 	output io.Writer
 }
 
-func newSingleFoodReporter(config Config, db shared.DBNodeList, writer io.Writer) *singleFoodReporter {
+func newSingleFoodReporter(config Config, db shared.DBNodeList) *singleFoodReporter {
 	return &singleFoodReporter{
 		config,
 		db,
-		writer,
+		config.Output,
 	}
 }
 
