@@ -26,6 +26,7 @@ func GetApp() *cli.App {
 	u := NewCmdUtils()
 	a := &cli.App{
 		Name:        app.Name,
+		Usage:       app.Usage,
 		Description: app.Description,
 		Version:     fmt.Sprintf("%v, commit %v, built at %v", version, commit, date),
 	}

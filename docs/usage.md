@@ -335,6 +335,14 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+candy/snickers/bar,calories,280.00
+candy/snickers/bar,carbohydrate,35.10
+candy/snickers/bar,fat,13.60
+candy/snickers/bar,protein,4.29
+day/nonworking,calories,-1200.00
+day/nonworking,carbohydrate,-50.00
+day/nonworking,fat,-124.00
+day/nonworking,protein,-104.00
 bread/rye/100g,calories,259.00
 bread/rye/100g,carbohydrate,48.00
 bread/rye/100g,fat,3.30
@@ -355,14 +363,6 @@ sandwich/egg/lettuce/100g,calories,273.60
 sandwich/egg/lettuce/100g,carbohydrate,19.88
 sandwich/egg/lettuce/100g,fat,5.12
 sandwich/egg/lettuce/100g,protein,6.58
-candy/snickers/bar,calories,280.00
-candy/snickers/bar,carbohydrate,35.10
-candy/snickers/bar,fat,13.60
-candy/snickers/bar,protein,4.29
-day/nonworking,calories,-1200.00
-day/nonworking,carbohydrate,-50.00
-day/nonworking,fat,-124.00
-day/nonworking,protein,-104.00
 
 ```
 

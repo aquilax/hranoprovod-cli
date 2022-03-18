@@ -1,6 +1,6 @@
 # NAME
 
-hranoprovod-cli - A new cli application
+hranoprovod-cli - Diet tracker for the command line
 
 # SYNOPSIS
 
@@ -22,7 +22,7 @@ hranoprovod-cli
 
 # DESCRIPTION
 
-Diet tracker for the command line
+A command line tool to keep log of diet and exercise in text files
 
 **Usage**:
 

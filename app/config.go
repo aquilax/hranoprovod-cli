@@ -2,7 +2,8 @@ package app
 
 const (
 	Name        = "hranoprovod-cli"
-	Description = "Diet tracker for the command line"
+	Usage       = "Diet tracker for the command line"
+	Description = "A command line tool to keep log of diet and exercise in text files"
 	Version     = "2.4.8"
 	Author      = "aquilax"
 	Email       = "aquilax@gmail.com"

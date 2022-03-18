@@ -56,7 +56,7 @@ Running the `hranoprovod-cli` command will show you the command line options
 ```sh
 $ ./hranoprovod-cli --help
 NAME:
-   hranoprovod-cli - A new cli application
+   hranoprovod-cli - Diet tracker for the command line
 
 USAGE:
    hranoprovod-cli [global options] command [command options] [arguments...]
@@ -65,7 +65,7 @@ VERSION:
    dev, commit none, built at unknown
 
 DESCRIPTION:
-   Diet tracker for the command line
+   A command line tool to keep log of diet and exercise in text files
 
 COMMANDS:
    register, reg  Shows the log register report
