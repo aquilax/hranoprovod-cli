@@ -286,13 +286,13 @@ coffee/cup
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv log
-2021-01-24,day/nonworking,1.00
-2021-01-24,coffee/cup,1.00
-2021-01-24,sandwich/egg/lettuce/100g,1.20
-2021-01-24,candy/snickers/bar,1.00
-2021-01-25,day/nonworking,1.00
-2021-01-25,coffee/cup,2.00
-2021-01-25,sandwich/egg/lettuce/100g,1.50
+2021-01-24,day/nonworking,1.000
+2021-01-24,coffee/cup,1.000
+2021-01-24,sandwich/egg/lettuce/100g,1.200
+2021-01-24,candy/snickers/bar,1.000
+2021-01-25,day/nonworking,1.000
+2021-01-25,coffee/cup,2.000
+2021-01-25,sandwich/egg/lettuce/100g,1.500
 
 ```
 
@@ -335,10 +335,6 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
-day/nonworking,calories,-1200.00
-day/nonworking,carbohydrate,-50.00
-day/nonworking,fat,-124.00
-day/nonworking,protein,-104.00
 bread/rye/100g,calories,259.00
 bread/rye/100g,carbohydrate,48.00
 bread/rye/100g,fat,3.30
@@ -363,6 +359,10 @@ candy/snickers/bar,calories,280.00
 candy/snickers/bar,carbohydrate,35.10
 candy/snickers/bar,fat,13.60
 candy/snickers/bar,protein,4.29
+day/nonworking,calories,-1200.00
+day/nonworking,carbohydrate,-50.00
+day/nonworking,fat,-124.00
+day/nonworking,protein,-104.00
 
 ```
 
@@ -375,8 +375,8 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
 
   Log file:           examples/log.yaml
   Log records:        2
-  First record:       2021/01/24 (343 days ago)
-  Last record:        2021/01/25 (342 days ago)
+  First record:       2021/01/24 (418 days ago)
+  Last record:        2021/01/25 (417 days ago)
 
 ```
 

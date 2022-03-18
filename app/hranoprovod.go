@@ -6,6 +6,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/resolver"
@@ -30,7 +31,7 @@ func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Conf
 
 type reporterCallback func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter
 
-func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig, rpCb reporterCallback) error {
+func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config, rpCb reporterCallback) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
 			r := rpCb(rpc, nl)
@@ -39,7 +40,7 @@ func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parse
 }
 
 // Register generates report
-func Register(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+func Register(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config) error {
 	rpCb := func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter {
 		return reporter.NewRegReporter(rpc, nl)
 	}
@@ -47,7 +48,7 @@ func Register(logStream, dbStream io.Reader, dateFormat string, pc parser.Config
 }
 
 // Balance generates balance report
-func Balance(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+func Balance(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
 			r := reporter.NewBalanceReporter(rpc, nl)
@@ -56,7 +57,7 @@ func Balance(logStream, dbStream io.Reader, dateFormat string, pc parser.Config,
 }
 
 // ReportUnresolved generates report for unresolved elements
-func ReportUnresolved(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+func ReportUnresolved(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
 			r := reporter.NewUnsolvedReporter(rpc, nl)
@@ -65,7 +66,7 @@ func ReportUnresolved(logStream, dbStream io.Reader, dateFormat string, pc parse
 }
 
 // Summary generates summary
-func Summary(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc FilterConfig) error {
+func Summary(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config) error {
 	return withResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeList) error {
 			r := reporter.NewSummaryReporterTemplate(rpc, nl)
@@ -74,21 +75,21 @@ func Summary(logStream, dbStream io.Reader, dateFormat string, pc parser.Config,
 }
 
 // Print reads and prints back out the log file
-func Print(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
+func Print(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc filter.Config) error {
 	r := reporter.NewPrintReporter(rpc)
 	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // ReportQuantity Generates a quantity report
-func ReportQuantity(logStream io.Reader, dateFormat string, ascending bool, pc parser.Config, rpc reporter.Config, fc FilterConfig) error {
+func ReportQuantity(logStream io.Reader, dateFormat string, ascending bool, pc parser.Config, rpc reporter.Config, fc filter.Config) error {
 	r := reporter.NewQuantityReporter(rpc, ascending)
 	return walkNodesInStream(logStream, dateFormat, pc, getIntervalNodeFilter(fc), r)
 }
 
 // CSVLog generates CSV export of the log
 func CSVLog(logStream io.Reader, c CSVLogConfig) error {
-	r := reporter.NewCSVReporter(c.CSVConfig)
-	return walkNodesInStream(logStream, c.DateFormat, c.Config, getIntervalNodeFilter(c.FilterConfig), r)
+	r := reporter.NewCSVReporter(c.ReporterConfig)
+	return walkNodesInStream(logStream, c.ParserConfig.DateFormat, c.ParserConfig, getIntervalNodeFilter(c.FilterConfig), r)
 }
 
 // CSVDatabase generates CSV export of the database
@@ -221,17 +222,6 @@ func Stats(gc GlobalConfig, pc parser.Config, rpc reporter.Config) error {
 	}).Flush()
 }
 
-func loadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
-	// Database must be optional. If the default file name is used and the file is not found,
-	// return empty node list
-	if fileName == DefaultDbFilename {
-		if exists, _ := fileExists(fileName); !exists {
-			return shared.NewDBNodeList(), nil
-		}
-	}
-	return mustLoadDatabase(p, fileName)
-}
-
 func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNodeList, error) {
 	nodeList := shared.NewDBNodeList()
 	return nodeList, parser.ParseStreamCallback(dbStream, pc, func(node *shared.ParserNode, err error) (stop bool, cbError error) {
@@ -244,26 +234,9 @@ func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNode
 	})
 }
 
-func mustLoadDatabase(p parser.Parser, fileName string) (shared.DBNodeList, error) {
-	nodeList := shared.NewDBNodeList()
-	go p.ParseFile(fileName)
-	return func() (shared.DBNodeList, error) {
-		for {
-			select {
-			case node := <-p.Nodes:
-				nodeList.Push(shared.NewDBNodeFromNode(node))
-			case error := <-p.Errors:
-				return nodeList, error
-			case <-p.Done:
-				return nodeList, nil
-			}
-		}
-	}()
-}
-
 type LogNodeFilter = func(t time.Time, node *shared.ParserNode) (bool, error)
 
-func getIntervalNodeFilter(fc FilterConfig) *LogNodeFilter {
+func getIntervalNodeFilter(fc filter.Config) *LogNodeFilter {
 	if fc.BeginningTime == nil && fc.EndTime == nil {
 		// no filter if beginning and end time are nil
 		return nil
@@ -280,43 +253,6 @@ func getIntervalNodeFilter(fc FilterConfig) *LogNodeFilter {
 		return inInterval(t), nil
 	}
 	return &filter
-}
-
-func walkNodes(logFileName string, dateFormat string, p parser.Parser, filter *LogNodeFilter, r reporter.Reporter) error {
-	var node *shared.ParserNode
-	var ln *shared.LogNode
-	var err error
-	var t time.Time
-	var ok bool
-
-	go p.ParseFile(logFileName)
-	for {
-		select {
-		case node = <-p.Nodes:
-			t, err = time.Parse(dateFormat, node.Header)
-			if err != nil {
-				return err
-			}
-			ok = true
-			if filter != nil {
-				ok, err = (*filter)(t, node)
-				if err != nil {
-					return err
-				}
-			}
-			if ok {
-				ln, err = shared.NewLogNodeFromElements(t, node.Elements, node.Metadata)
-				if err != nil {
-					return err
-				}
-				r.Process(ln)
-			}
-		case err = <-p.Errors:
-			return err
-		case <-p.Done:
-			return r.Flush()
-		}
-	}
 }
 
 func walkNodesInStream(logStream io.Reader, dateFormat string, pc parser.Config, filter *LogNodeFilter, r reporter.Reporter) error {

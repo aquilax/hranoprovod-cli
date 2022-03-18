@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/reporter"
 	"github.com/stretchr/testify/assert"
@@ -40,7 +40,7 @@ func Test_newPrintCommand(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
 			mockCu := getMockCu(tt.wantContent)
-			mockPrint := func(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc app.FilterConfig) error {
+			mockPrint := func(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc filter.Config) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(logStream)
 				assert.Equal(t, string(content), tt.wantContent)

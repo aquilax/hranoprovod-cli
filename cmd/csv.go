@@ -42,9 +42,9 @@ func newCSVLogCommand(ol optionLoader) *cli.Command {
 			} else {
 				// TODO: better config loading strategy is needed
 				cfg := app.CSVLogConfig{
-					Config:       o.ParserConfig,
-					FilterConfig: o.FilterConfig,
-					CSVConfig:    reporter.NewCSVConfig(reporter.CommonConfig{Color: o.ReporterConfig.Color}),
+					ParserConfig:   o.ParserConfig,
+					FilterConfig:   o.FilterConfig,
+					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Color)),
 				}
 				return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
 					return app.CSVLog(logStream, cfg)

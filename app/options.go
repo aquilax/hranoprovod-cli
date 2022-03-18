@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/resolver"
@@ -19,18 +20,13 @@ type GlobalConfig struct {
 	DateFormat  string
 }
 
-type FilterConfig struct {
-	BeginningTime *time.Time
-	EndTime       *time.Time
-}
-
 // Options contains the options structure
 type Options struct {
 	GlobalConfig   GlobalConfig    `gcfg:"Global"`
 	ResolverConfig resolver.Config `gcfg:"Resolver"`
 	ParserConfig   parser.Config   `gcfg:"Parser"`
 	ReporterConfig reporter.Config `gcfg:"Reporter"`
-	FilterConfig   FilterConfig    `gcfg:"Filter"`
+	FilterConfig   filter.Config   `gcfg:"Filter"`
 }
 
 // NewOptions returns new options structure.
