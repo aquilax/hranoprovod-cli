@@ -6,8 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,11 +49,11 @@ func Test_newLintCommand(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
 			mockCu := getMockCu([]string{tt.wantContent})
-			mockLint := func(stream io.Reader, silent bool, pc parser.Config, rpc reporter.Config) error {
+			mockLint := func(stream io.Reader, lc app.LintConfig) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(stream)
 				assert.Equal(t, string(content), tt.wantContent)
-				assert.Equal(t, silent, tt.wantSilent)
+				assert.Equal(t, lc.Silent, tt.wantSilent)
 				return tt.lintError
 			}
 			a := getMockApp(newLintCommand(mockCu, mockLint))

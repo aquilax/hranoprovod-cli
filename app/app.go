@@ -1,20 +1,16 @@
 package app
 
-import (
-	"io"
+const (
+	Name        = "hranoprovod-cli"
+	Usage       = "Diet tracker for the command line"
+	Description = "A command line tool to keep log of diet and exercise in text files"
+	Version     = "2.4.8"
+	Author      = "aquilax"
+	Email       = "aquilax@gmail.com"
 
-	"github.com/aquilax/hranoprovod-cli/v2/filter"
-	"github.com/aquilax/hranoprovod-cli/v2/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/reporter"
+	ConfigFileName = "/.hranoprovod/config"
+
+	DefaultDbFilename       = "food.yaml"
+	DefaultLogFilename      = "log.yaml"
+	DefaultResolverMaxDepth = 10
 )
-
-type (
-	LintCmd  func(stream io.Reader, silent bool, pc parser.Config, rpc reporter.Config) error
-	PrintCmd func(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc filter.Config) error
-)
-
-type CSVLogConfig struct {
-	ParserConfig   parser.Config
-	FilterConfig   filter.Config
-	ReporterConfig reporter.CSVConfig
-}

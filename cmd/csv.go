@@ -4,8 +4,15 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/aquilax/hranoprovod-cli/v2/reporter"
 	"github.com/urfave/cli/v2"
+)
+
+type (
+	CSVLogCmd              func(logStream io.Reader, c app.CSVLogConfig) error
+	CSVDatabaseCmd         func(dbStream io.Reader, cdc app.CSVDatabaseConfig) error
+	CSVDatabaseResolvedCmd func(dbStream io.Reader, cdrc app.CSVDatabaseResolvedConfig) error
 )
 
 func newCSVCommand(cu cmdUtils) *cli.Command {
@@ -13,14 +20,14 @@ func newCSVCommand(cu cmdUtils) *cli.Command {
 		Name:  "csv",
 		Usage: "Generates csv exports",
 		Subcommands: []*cli.Command{
-			newCSVLogCommand(cu),
-			newCSVDatabaseCommand(cu),
-			newCSVDatabaseResolvedCommand(cu),
+			newCSVLogCommand(cu, app.CSVLog),
+			newCSVDatabaseCommand(cu, app.CSVDatabase),
+			newCSVDatabaseResolvedCommand(cu, app.CSVDatabaseResolved),
 		},
 	}
 }
 
-func newCSVLogCommand(cu cmdUtils) *cli.Command {
+func newCSVLogCommand(cu cmdUtils, csvLog CSVLogCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "log",
 		Usage: "Exports the log file as CSV",
@@ -37,7 +44,7 @@ func newCSVLogCommand(cu cmdUtils) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				cfg := app.CSVLogConfig{
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
@@ -45,36 +52,43 @@ func newCSVLogCommand(cu cmdUtils) *cli.Command {
 				}
 				return cu.withFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					logStream := streams[0]
-					return app.CSVLog(logStream, cfg)
+					return csvLog(logStream, cfg)
 				})
 			})
 		},
 	}
 }
 
-func newCSVDatabaseCommand(cu cmdUtils) *cli.Command {
+func newCSVDatabaseCommand(cu cmdUtils, csvDatabase CSVDatabaseCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database",
 		Usage: "Exports the database file as CSV",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
 					dbStream := streams[0]
-					return app.CSVDatabase(dbStream, o.ParserConfig, o.ReporterConfig)
+					return csvDatabase(dbStream, app.CSVDatabaseConfig{
+						ParserConfig:   o.ParserConfig,
+						ReporterConfig: o.ReporterConfig,
+					})
 				})
 			})
 		},
 	}
 }
-func newCSVDatabaseResolvedCommand(cu cmdUtils) *cli.Command {
+func newCSVDatabaseResolvedCommand(cu cmdUtils, csvDatabaseResolved CSVDatabaseResolvedCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database-resolved",
 		Usage: "Exports the resolved database as CSV",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
 					dbStream := streams[0]
-					return app.CSVDatabaseResolved(dbStream, o.ParserConfig, o.ReporterConfig, o.ResolverConfig)
+					return app.CSVDatabaseResolved(dbStream, app.CSVDatabaseResolvedConfig{
+						ParserConfig:   o.ParserConfig,
+						ReporterConfig: o.ReporterConfig,
+						ResolverConfig: o.ResolverConfig,
+					})
 				})
 			})
 		},

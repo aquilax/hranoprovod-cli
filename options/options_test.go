@@ -1,4 +1,4 @@
-package app
+package options
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 
 func TestOptions(t *testing.T) {
 	t.Run("Given options", func(t *testing.T) {
-		o := NewOptions()
+		o := New()
 		t.Run("New options is created", func(t *testing.T) {
 			assert.NotNil(t, o)
 			assert.NotNil(t, o.ReporterConfig)

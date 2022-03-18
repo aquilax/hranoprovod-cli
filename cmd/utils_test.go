@@ -4,7 +4,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
@@ -23,8 +23,8 @@ func getMockCu(contents []string) cmdUtils {
 			}
 			return cb(streams)
 		},
-		func(c *cli.Context, cb func(*app.Options) error) error {
-			return cb(app.NewOptions())
+		func(c *cli.Context, cb func(*options.Options) error) error {
+			return cb(options.New())
 		},
 	}
 }

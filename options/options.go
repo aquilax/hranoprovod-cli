@@ -1,4 +1,4 @@
-package app
+package options
 
 import (
 	"errors"
@@ -29,8 +29,8 @@ type Options struct {
 	FilterConfig   filter.Config   `gcfg:"Filter"`
 }
 
-// NewOptions returns new options structure.
-func NewOptions() *Options {
+// New returns new options structure.
+func New() *Options {
 	o := &Options{}
 	o.ReporterConfig = reporter.NewDefaultConfig()
 	o.ReporterConfig.Color = true

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,7 +16,7 @@ func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
 				Name:  "man",
 				Usage: "Generate man page",
 				Action: func(c *cli.Context) error {
-					return cu.withOptions(c, func(o *app.Options) error {
+					return cu.withOptions(c, func(o *options.Options) error {
 						man, err := a.ToMan()
 						if err != nil {
 							return err
@@ -30,7 +30,7 @@ func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
 				Name:  "markdown",
 				Usage: "Generate markdown page",
 				Action: func(c *cli.Context) error {
-					return cu.withOptions(c, func(o *app.Options) error {
+					return cu.withOptions(c, func(o *options.Options) error {
 						markdown, err := a.ToMarkdown()
 						if err != nil {
 							return err

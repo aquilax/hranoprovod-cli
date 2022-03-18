@@ -2,16 +2,22 @@ package cmd
 
 import (
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
-func newStatsCommand(cu cmdUtils) *cli.Command {
+type StatsCmd func(logFileName, dbFileName string, sc app.StatsConfig) error
+
+func newStatsCommand(cu cmdUtils, stats StatsCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "stats",
 		Usage: "Provide stats information",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
-				return app.Stats(o.GlobalConfig, o.ParserConfig, o.ReporterConfig)
+			return cu.withOptions(c, func(o *options.Options) error {
+				return stats(o.GlobalConfig.LogFileName, o.GlobalConfig.LogFileName, app.StatsConfig{
+					ParserConfig:   o.ParserConfig,
+					ReporterConfig: o.ReporterConfig,
+				})
 			})
 		},
 	}

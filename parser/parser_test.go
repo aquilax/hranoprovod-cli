@@ -138,6 +138,14 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, "  asdasd2", bsError.Line)
 		})
 
+		t.Run("Works with comments", func(t *testing.T) {
+			file := `# vim: sts=2 expandtab indentexpr=
+`
+			go parser.ParseStream(strings.NewReader(file))
+			_, err := readChannels(parser)
+			assert.Nil(t, err)
+		})
+
 		t.Run("It raises conversion error", func(t *testing.T) {
 			t.Skip("TODO: Figure out why this is failing")
 			file := `asdasd

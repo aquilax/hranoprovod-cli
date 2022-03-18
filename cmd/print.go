@@ -4,10 +4,13 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
-func newPrintCommand(cu cmdUtils, printCb app.PrintCmd) *cli.Command {
+type PrintCmd func(logStream io.Reader, pc app.PrintConfig) error
+
+func newPrintCommand(cu cmdUtils, printCb PrintCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "print",
 		Usage: "Print log",
@@ -24,10 +27,15 @@ func newPrintCommand(cu cmdUtils, printCb app.PrintCmd) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				return cu.withFileReaders([]string{c.Args().First()}, func(streams []io.Reader) error {
 					logStream := streams[0]
-					return printCb(logStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
+					return printCb(logStream, app.PrintConfig{
+						DateFormat:     o.GlobalConfig.DateFormat,
+						ParserConfig:   o.ParserConfig,
+						ReporterConfig: o.ReporterConfig,
+						FilterConfig:   o.FilterConfig,
+					})
 				})
 			})
 		},

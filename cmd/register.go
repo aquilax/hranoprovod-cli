@@ -4,10 +4,13 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
-func newRegisterCommand(cu cmdUtils) *cli.Command {
+type RegisterCmd func(logStream, dbStream io.Reader, rc app.RegisterConfig) error
+
+func newRegisterCommand(cu cmdUtils, register RegisterCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "register",
 		Aliases: []string{"reg"},
@@ -73,10 +76,16 @@ func newRegisterCommand(cu cmdUtils) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
-					return app.Register(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+					return register(logStream, dbStream, app.RegisterConfig{
+						DateFormat:     o.GlobalConfig.DateFormat,
+						ParserConfig:   o.ParserConfig,
+						ResolverConfig: o.ResolverConfig,
+						ReporterConfig: o.ReporterConfig,
+						FilterConfig:   o.FilterConfig,
+					})
 				})
 			})
 		},

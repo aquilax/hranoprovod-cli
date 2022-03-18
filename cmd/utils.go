@@ -4,13 +4,13 @@ import (
 	"io"
 	"os"
 
-	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
 type cmdUtils struct {
 	withFileReaders func(fileNames []string, cb func([]io.Reader) error) error
-	withOptions     func(c *cli.Context, cb func(*app.Options) error) error
+	withOptions     func(c *cli.Context, cb func(*options.Options) error) error
 }
 
 func NewCmdUtils() cmdUtils {
@@ -27,8 +27,8 @@ func NewCmdUtils() cmdUtils {
 			}
 			return cb(result)
 		},
-		withOptions: func(c *cli.Context, cb func(*app.Options) error) error {
-			o := app.NewOptions()
+		withOptions: func(c *cli.Context, cb func(*options.Options) error) error {
+			o := options.New()
 			if err := o.Load(c); err != nil {
 				return err
 			}

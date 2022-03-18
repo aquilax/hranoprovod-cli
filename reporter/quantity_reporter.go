@@ -9,14 +9,14 @@ import (
 )
 
 type QuantityReporter struct {
-	ascending   bool
+	descending  bool
 	accumulator map[string]float64
 	output      io.Writer
 }
 
-func NewQuantityReporter(config Config, ascending bool) QuantityReporter {
+func NewQuantityReporter(config Config, descending bool) QuantityReporter {
 	return QuantityReporter{
-		ascending,
+		descending,
 		make(map[string]float64),
 		config.Output,
 	}
@@ -45,7 +45,7 @@ func (r QuantityReporter) Flush() error {
 		sortable = append(sortable, SortTuple{k, v})
 	}
 
-	if r.ascending {
+	if r.descending {
 		sort.SliceStable(sortable, func(i, j int) bool {
 			return sortable[i].value > sortable[j].value
 		})

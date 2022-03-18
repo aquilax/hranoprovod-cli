@@ -185,9 +185,9 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 2021/01/24 --no-color reg -g -s calories
+    280.00	candy/snickers/bar
   -1200.00	day/nonworking
     328.32	sandwich/egg/lettuce/100g
-    280.00	candy/snickers/bar
 
 ```
 
@@ -335,6 +335,10 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+sauce/mayonnaise/100g,calories,680.00
+sauce/mayonnaise/100g,carbohydrate,0.60
+sauce/mayonnaise/100g,fat,7.50
+sauce/mayonnaise/100g,protein,1.00
 sandwich/egg/lettuce/100g,calories,273.60
 sandwich/egg/lettuce/100g,carbohydrate,19.88
 sandwich/egg/lettuce/100g,fat,5.12
@@ -359,10 +363,6 @@ vegetables/lettuce/romaine/100g,calories,15.00
 vegetables/lettuce/romaine/100g,carbohydrate,1.70
 vegetables/lettuce/romaine/100g,fat,0.50
 vegetables/lettuce/romaine/100g,protein,0.90
-sauce/mayonnaise/100g,calories,680.00
-sauce/mayonnaise/100g,carbohydrate,0.60
-sauce/mayonnaise/100g,fat,7.50
-sauce/mayonnaise/100g,protein,1.00
 
 ```
 
@@ -370,8 +370,8 @@ sauce/mayonnaise/100g,protein,1.00
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats
-  Database file:      examples/food.yaml
-  Database records:   7
+  Database file:      examples/log.yaml
+  Database records:   2
 
   Log file:           examples/log.yaml
   Log records:        2

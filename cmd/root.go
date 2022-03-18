@@ -80,13 +80,13 @@ func GetApp() *cli.App {
 		},
 	}
 	a.Commands = []*cli.Command{
-		newRegisterCommand(u),
-		newBalanceCommand(u),
+		newRegisterCommand(u, app.Register),
+		newBalanceCommand(u, app.Balance),
 		newLintCommand(u, app.Lint),
 		newReportCommand(u),
 		newCSVCommand(u),
-		newStatsCommand(u),
-		newSummaryCommand(u),
+		newStatsCommand(u, app.Stats),
+		newSummaryCommand(u, app.Summary),
 		newGenCommand(u, a),
 		newPrintCommand(u, app.Print),
 	}

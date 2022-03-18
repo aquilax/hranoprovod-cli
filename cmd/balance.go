@@ -4,10 +4,13 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/urfave/cli/v2"
 )
 
-func newBalanceCommand(cu cmdUtils) *cli.Command {
+type BalanceCmd func(logStream, dbStream io.Reader, bc app.BalanceConfig) error
+
+func newBalanceCommand(cu cmdUtils, balance BalanceCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "balance",
 		Aliases: []string{"bal"},
@@ -39,10 +42,16 @@ func newBalanceCommand(cu cmdUtils) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *app.Options) error {
+			return cu.withOptions(c, func(o *options.Options) error {
 				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
-					return app.Balance(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+					return balance(logStream, dbStream, app.BalanceConfig{
+						DateFormat:     o.GlobalConfig.DateFormat,
+						ParserConfig:   o.ParserConfig,
+						ResolverConfig: o.ResolverConfig,
+						ReporterConfig: o.ReporterConfig,
+						FilterConfig:   o.FilterConfig,
+					})
 				})
 			})
 		},
