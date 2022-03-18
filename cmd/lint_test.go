@@ -49,8 +49,7 @@ func Test_newLintCommand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
-			mockCu := getMockCu(tt.wantContent)
-
+			mockCu := getMockCu([]string{tt.wantContent})
 			mockLint := func(stream io.Reader, silent bool, pc parser.Config, rpc reporter.Config) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(stream)

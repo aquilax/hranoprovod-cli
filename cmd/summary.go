@@ -8,59 +8,54 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newSummaryCommand(ol optionLoader) *cli.Command {
+func newSummaryCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "summary",
 		Usage: "Show summary",
 		Subcommands: []*cli.Command{
-			newSummaryTodayCommand(ol),
-			newSummaryYesterdayCommand(ol),
+			newSummaryTodayCommand(cu),
+			newSummaryYesterdayCommand(cu),
 		},
 	}
 }
 
-func newSummaryTodayCommand(ol optionLoader) *cli.Command {
+func newSummaryTodayCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "today",
 		Usage: "Show summary for today",
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
-					return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
-						t := time.Now().Local()
-						btime := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-						o.FilterConfig.BeginningTime = &btime
-						etime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-						o.FilterConfig.EndTime = &etime
-						return app.Summary(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
-					})
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					dbStream, logStream := streams[0], streams[1]
+					t := time.Now().Local()
+					bTime := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+					o.FilterConfig.BeginningTime = &bTime
+					eTime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+					o.FilterConfig.EndTime = &eTime
+					return app.Summary(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 				})
-			}
+			})
 		},
 	}
 }
 
-func newSummaryYesterdayCommand(ol optionLoader) *cli.Command {
+func newSummaryYesterdayCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "yesterday",
 		Usage: "Show summary for yesterday",
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
-					return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
-						t := time.Now().Local().AddDate(0, 0, -1)
-						btime := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-						o.FilterConfig.BeginningTime = &btime
-						etime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
-						o.FilterConfig.EndTime = &etime
-						return app.Summary(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
-					})
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					dbStream, logStream := streams[0], streams[1]
+					t := time.Now().Local().AddDate(0, 0, -1)
+					bTime := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
+					o.FilterConfig.BeginningTime = &bTime
+					eTime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
+					o.FilterConfig.EndTime = &eTime
+					return app.Summary(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
+
 				})
-			}
+			})
 		},
 	}
 }

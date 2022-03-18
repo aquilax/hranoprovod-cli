@@ -39,7 +39,7 @@ func Test_newPrintCommand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
-			mockCu := getMockCu(tt.wantContent)
+			mockCu := getMockCu([]string{tt.wantContent})
 			mockPrint := func(logStream io.Reader, dateFormat string, pc parser.Config, rpc reporter.Config, fc filter.Config) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(logStream)

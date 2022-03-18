@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newRegisterCommand(ol optionLoader) *cli.Command {
+func newRegisterCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:    "register",
 		Aliases: []string{"reg"},
@@ -73,15 +73,12 @@ func newRegisterCommand(ol optionLoader) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
-					return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
-						return app.Register(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
-					})
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					dbStream, logStream := streams[0], streams[1]
+					return app.Register(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 				})
-			}
+			})
 		},
 	}
 }

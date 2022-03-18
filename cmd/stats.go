@@ -5,16 +5,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newStatsCommand(ol optionLoader) *cli.Command {
+func newStatsCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "stats",
 		Usage: "Provide stats information",
 		Action: func(c *cli.Context) error {
-			o, err := ol(c)
-			if err != nil {
-				return err
-			}
-			return app.Stats(o.GlobalConfig, o.ParserConfig, o.ReporterConfig)
+			return cu.withOptions(c, func(o *app.Options) error {
+				return app.Stats(o.GlobalConfig, o.ParserConfig, o.ReporterConfig)
+			})
 		},
 	}
 }

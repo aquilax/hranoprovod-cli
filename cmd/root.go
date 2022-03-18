@@ -18,12 +18,8 @@ var (
 type optionLoader = func(*cli.Context) (*app.Options, error)
 
 func GetApp() *cli.App {
-	ol := func(c *cli.Context) (*app.Options, error) {
-		o := app.NewOptions()
-		err := o.Load(c)
-		return o, err
-	}
 	u := NewCmdUtils()
+
 	a := &cli.App{
 		Name:        app.Name,
 		Usage:       app.Usage,
@@ -86,14 +82,14 @@ func GetApp() *cli.App {
 		},
 	}
 	a.Commands = []*cli.Command{
-		newRegisterCommand(ol),
-		newBalanceCommand(ol),
+		newRegisterCommand(u),
+		newBalanceCommand(u),
 		newLintCommand(u, app.Lint),
-		newReportCommand(ol),
-		newCSVCommand(ol),
-		newStatsCommand(ol),
-		newSummaryCommand(ol),
-		newGenCommand(ol, a),
+		newReportCommand(u),
+		newCSVCommand(u),
+		newStatsCommand(u),
+		newSummaryCommand(u),
+		newGenCommand(u, a),
 		newPrintCommand(u, app.Print),
 	}
 	return a

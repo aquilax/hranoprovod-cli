@@ -14,10 +14,14 @@ func getMockApp(cmd *cli.Command) cli.App {
 	}
 }
 
-func getMockCu(content string) cmdUtils {
+func getMockCu(contents []string) cmdUtils {
 	return cmdUtils{
-		func(fileName string, cb func(io.Reader) error) error {
-			return cb(strings.NewReader(content))
+		func(fileNames []string, cb func([]io.Reader) error) error {
+			streams := make([]io.Reader, len(fileNames))
+			for i := range fileNames {
+				streams[i] = strings.NewReader(contents[i])
+			}
+			return cb(streams)
 		},
 		func(c *cli.Context, cb func(*app.Options) error) error {
 			return cb(app.NewOptions())

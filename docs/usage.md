@@ -335,6 +335,10 @@ candy/snickers/bar,protein,4.29
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color csv database-resolved
+sandwich/egg/lettuce/100g,calories,273.60
+sandwich/egg/lettuce/100g,carbohydrate,19.88
+sandwich/egg/lettuce/100g,fat,5.12
+sandwich/egg/lettuce/100g,protein,6.58
 candy/snickers/bar,calories,280.00
 candy/snickers/bar,carbohydrate,35.10
 candy/snickers/bar,fat,13.60
@@ -359,10 +363,6 @@ sauce/mayonnaise/100g,calories,680.00
 sauce/mayonnaise/100g,carbohydrate,0.60
 sauce/mayonnaise/100g,fat,7.50
 sauce/mayonnaise/100g,protein,1.00
-sandwich/egg/lettuce/100g,calories,273.60
-sandwich/egg/lettuce/100g,carbohydrate,19.88
-sandwich/egg/lettuce/100g,fat,5.12
-sandwich/egg/lettuce/100g,protein,6.58
 
 ```
 

@@ -9,14 +9,23 @@ import (
 )
 
 type cmdUtils struct {
-	withFileReader func(fileName string, cb func(io.Reader) error) error
-	withOptions    func(c *cli.Context, cb func(*app.Options) error) error
+	withFileReaders func(fileNames []string, cb func([]io.Reader) error) error
+	withOptions     func(c *cli.Context, cb func(*app.Options) error) error
 }
 
 func NewCmdUtils() cmdUtils {
 	return cmdUtils{
-		withFileReader: func(fileName string, cb func(io.Reader) error) error {
-			return withFileReader(fileName, cb)
+		withFileReaders: func(fileNames []string, cb func([]io.Reader) error) error {
+			result := make([]io.Reader, len(fileNames))
+			for i, fileName := range fileNames {
+				if f, err := os.Open(fileName); err != nil {
+					return err
+				} else {
+					defer f.Close()
+					result[i] = f
+				}
+			}
+			return cb(result)
 		},
 		withOptions: func(c *cli.Context, cb func(*app.Options) error) error {
 			o := app.NewOptions()
@@ -25,14 +34,5 @@ func NewCmdUtils() cmdUtils {
 			}
 			return cb(o)
 		},
-	}
-}
-
-func withFileReader(fileName string, cb func(io.Reader) error) error {
-	if f, err := os.Open(fileName); err != nil {
-		return err
-	} else {
-		defer f.Close()
-		return cb(f)
 	}
 }

@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/urfave/cli/v2"
 )
 
-func newGenCommand(ol optionLoader, a *cli.App) *cli.Command {
+func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
 	return &cli.Command{
 		Name:  "gen",
 		Usage: "Generate documentation",
@@ -15,32 +16,28 @@ func newGenCommand(ol optionLoader, a *cli.App) *cli.Command {
 				Name:  "man",
 				Usage: "Generate man page",
 				Action: func(c *cli.Context) error {
-					o, err := ol(c)
-					if err != nil {
+					return cu.withOptions(c, func(o *app.Options) error {
+						man, err := a.ToMan()
+						if err != nil {
+							return err
+						}
+						_, err = fmt.Fprint(o.ReporterConfig.Output, man)
 						return err
-					}
-					man, err := a.ToMan()
-					if err != nil {
-						return err
-					}
-					_, err = fmt.Fprint(o.ReporterConfig.Output, man)
-					return err
+					})
 				},
 			},
 			{
 				Name:  "markdown",
 				Usage: "Generate markdown page",
 				Action: func(c *cli.Context) error {
-					o, err := ol(c)
-					if err != nil {
+					return cu.withOptions(c, func(o *app.Options) error {
+						markdown, err := a.ToMarkdown()
+						if err != nil {
+							return err
+						}
+						_, err = fmt.Fprint(o.ReporterConfig.Output, markdown)
 						return err
-					}
-					markdown, err := a.ToMarkdown()
-					if err != nil {
-						return err
-					}
-					_, err = fmt.Fprint(o.ReporterConfig.Output, markdown)
-					return err
+					})
 				},
 			},
 		},

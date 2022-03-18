@@ -25,7 +25,8 @@ func newPrintCommand(cu cmdUtils, printCb app.PrintCmd) *cli.Command {
 		},
 		Action: func(c *cli.Context) error {
 			return cu.withOptions(c, func(o *app.Options) error {
-				return cu.withFileReader(c.Args().First(), func(logStream io.Reader) error {
+				return cu.withFileReaders([]string{c.Args().First()}, func(streams []io.Reader) error {
+					logStream := streams[0]
 					return printCb(logStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 				})
 			})

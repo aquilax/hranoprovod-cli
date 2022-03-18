@@ -8,19 +8,19 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func newReportCommand(ol optionLoader) *cli.Command {
+func newReportCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "report",
 		Usage: "Generates various reports",
 		Subcommands: []*cli.Command{
-			newReportElementTotalCommand(ol),
-			newReportUnresolvedCommand(ol),
-			newReportQuantityCommand(ol),
+			newReportElementTotalCommand(cu),
+			newReportUnresolvedCommand(cu),
+			newReportQuantityCommand(cu),
 		},
 	}
 }
 
-func newReportElementTotalCommand(ol optionLoader) *cli.Command {
+func newReportElementTotalCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:      "element-total",
 		Usage:     "Generates total sum for element grouped by food",
@@ -38,36 +38,32 @@ func newReportElementTotalCommand(ol optionLoader) *cli.Command {
 			return nil
 		},
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
+					dbStream := streams[0]
 					return app.ReportElement(dbStream, c.Args().First(), c.IsSet("desc"), o.ParserConfig, o.ResolverConfig, o.ReporterConfig)
 				})
-			}
+			})
 		},
 	}
 }
 
-func newReportUnresolvedCommand(ol optionLoader) *cli.Command {
+func newReportUnresolvedCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "unresolved",
 		Usage: "Print list of unresolved elements",
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.DbFileName, func(dbStream io.Reader) error {
-					return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
-						return app.ReportUnresolved(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
-					})
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					dbStream, logStream := streams[0], streams[1]
+					return app.ReportUnresolved(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
 				})
-			}
+			})
 		},
 	}
 }
 
-func newReportQuantityCommand(ol optionLoader) *cli.Command {
+func newReportQuantityCommand(cu cmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "quantity",
 		Usage: "Total quantities per food",
@@ -78,13 +74,12 @@ func newReportQuantityCommand(ol optionLoader) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if o, err := ol(c); err != nil {
-				return err
-			} else {
-				return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
+			return cu.withOptions(c, func(o *app.Options) error {
+				return cu.withFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					logStream := streams[0]
 					return app.ReportQuantity(logStream, o.GlobalConfig.DateFormat, c.IsSet("desc"), o.ParserConfig, o.ReporterConfig, o.FilterConfig)
 				})
-			}
+			})
 		},
 	}
 }
