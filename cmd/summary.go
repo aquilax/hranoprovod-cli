@@ -53,7 +53,6 @@ func newSummaryYesterdayCommand(cu cmdUtils) *cli.Command {
 					eTime := time.Date(t.Year(), t.Month(), t.Day(), 24, 0, 0, -1, t.Location())
 					o.FilterConfig.EndTime = &eTime
 					return app.Summary(logStream, dbStream, o.GlobalConfig.DateFormat, o.ParserConfig, o.ResolverConfig, o.ReporterConfig, o.FilterConfig)
-
 				})
 			})
 		},

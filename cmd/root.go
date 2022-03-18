@@ -15,8 +15,6 @@ var (
 	date    = "unknown"
 )
 
-type optionLoader = func(*cli.Context) (*app.Options, error)
-
 func GetApp() *cli.App {
 	u := NewCmdUtils()
 
