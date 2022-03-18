@@ -44,7 +44,7 @@ func newCSVLogCommand(ol optionLoader) *cli.Command {
 				cfg := app.CSVLogConfig{
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
-					ReporterConfig: reporter.NewCSVConfig(reporter.CommonConfig{Color: o.ReporterConfig.Color}),
+					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Color)),
 				}
 				return withFileReader(o.GlobalConfig.LogFileName, func(logStream io.Reader) error {
 					return app.CSVLog(logStream, cfg)

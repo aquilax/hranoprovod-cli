@@ -1,5 +1,3 @@
-% hranoprovod-cli 8
-
 # NAME
 
 hranoprovod-cli - A new cli application
@@ -21,6 +19,10 @@ hranoprovod-cli
 [--no-database]
 [--version|-v]
 ```
+
+# DESCRIPTION
+
+Diet tracker for the command line
 
 **Usage**:
 
