@@ -9,9 +9,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type SummaryCmd func(logStream, dbStream io.Reader, sc app.SummaryConfig) error
+type summaryCmd func(logStream, dbStream io.Reader, sc app.SummaryConfig) error
 
-func newSummaryCommand(cu cmdUtils, summary SummaryCmd) *cli.Command {
+func newSummaryCommand(cu cmdUtils, summary summaryCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "summary",
 		Usage: "Show summary",
@@ -22,7 +22,7 @@ func newSummaryCommand(cu cmdUtils, summary SummaryCmd) *cli.Command {
 	}
 }
 
-func newSummaryTodayCommand(cu cmdUtils, summary SummaryCmd) *cli.Command {
+func newSummaryTodayCommand(cu cmdUtils, summary summaryCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "today",
 		Usage: "Show summary for today",
@@ -48,7 +48,7 @@ func newSummaryTodayCommand(cu cmdUtils, summary SummaryCmd) *cli.Command {
 	}
 }
 
-func newSummaryYesterdayCommand(cu cmdUtils, summary SummaryCmd) *cli.Command {
+func newSummaryYesterdayCommand(cu cmdUtils, summary summaryCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "yesterday",
 		Usage: "Show summary for yesterday",

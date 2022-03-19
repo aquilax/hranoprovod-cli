@@ -3,10 +3,19 @@ package cmd
 import (
 	"fmt"
 	"os/user"
+	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
 	"github.com/urfave/cli/v2"
+)
+
+const (
+	configFileName = "/.hranoprovod/config"
+
+	defaultDbFilename       = "food.yaml"
+	defaultLogFilename      = "log.yaml"
+	defaultResolverMaxDepth = 10
 )
 
 var (
@@ -15,14 +24,17 @@ var (
 	date    = "unknown"
 )
 
+// GetApp returns a cli app
 func GetApp() *cli.App {
-	u := NewCmdUtils()
+	u := newCmdUtils()
 
 	a := &cli.App{
-		Name:        app.Name,
-		Usage:       app.Usage,
-		Description: app.Description,
+		Name:        "hranoprovod-cli",
+		Usage:       "Diet tracker for the command line",
+		Description: "A command line tool to keep log of diet and exercise in text files",
+		Authors:     []*cli.Author{{Name: "aquilax", Email: "aquilax@gmail.com"}},
 		Version:     fmt.Sprintf("%v, commit %v, built at %v", version, commit, date),
+		Compiled:    time.Now(),
 	}
 
 	a.Flags = []cli.Flag{
@@ -39,21 +51,21 @@ func GetApp() *cli.App {
 		&cli.StringFlag{
 			Name:    "database",
 			Aliases: []string{"d"},
-			Value:   app.DefaultDbFilename,
+			Value:   defaultDbFilename,
 			Usage:   "optional database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
 			Name:    "logfile",
 			Aliases: []string{"l"},
-			Value:   app.DefaultLogFilename,
+			Value:   defaultLogFilename,
 			Usage:   "log file name `FILE`",
 			EnvVars: []string{"HR_LOGFILE"},
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Aliases: []string{"c"},
-			Value:   getDefaultFileName(app.ConfigFileName),
+			Value:   getDefaultFileName(configFileName),
 			Usage:   "Configuration file `FILE`",
 			EnvVars: []string{"HR_CONFIG"},
 		},
@@ -65,7 +77,7 @@ func GetApp() *cli.App {
 		},
 		&cli.IntFlag{
 			Name:    "maxdepth",
-			Value:   app.DefaultResolverMaxDepth,
+			Value:   defaultResolverMaxDepth,
 			Usage:   "Resolve depth `DEPTH`",
 			EnvVars: []string{"HR_MAXDEPTH"},
 		},

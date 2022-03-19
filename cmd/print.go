@@ -8,9 +8,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type PrintCmd func(logStream io.Reader, pc app.PrintConfig) error
+type printCmd func(logStream io.Reader, pc app.PrintConfig) error
 
-func newPrintCommand(cu cmdUtils, printCb PrintCmd) *cli.Command {
+func newPrintCommand(cu cmdUtils, printCb printCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "print",
 		Usage: "Print log",

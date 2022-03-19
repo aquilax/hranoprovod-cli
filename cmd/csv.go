@@ -10,9 +10,9 @@ import (
 )
 
 type (
-	CSVLogCmd              func(logStream io.Reader, c app.CSVLogConfig) error
-	CSVDatabaseCmd         func(dbStream io.Reader, cdc app.CSVDatabaseConfig) error
-	CSVDatabaseResolvedCmd func(dbStream io.Reader, cdrc app.CSVDatabaseResolvedConfig) error
+	csvLogCmd              func(logStream io.Reader, c app.CSVLogConfig) error
+	csvDatabaseCmd         func(dbStream io.Reader, cdc app.CSVDatabaseConfig) error
+	csvDatabaseResolvedCmd func(dbStream io.Reader, cdrc app.CSVDatabaseResolvedConfig) error
 )
 
 func newCSVCommand(cu cmdUtils) *cli.Command {
@@ -27,7 +27,7 @@ func newCSVCommand(cu cmdUtils) *cli.Command {
 	}
 }
 
-func newCSVLogCommand(cu cmdUtils, csvLog CSVLogCmd) *cli.Command {
+func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "log",
 		Usage: "Exports the log file as CSV",
@@ -59,7 +59,7 @@ func newCSVLogCommand(cu cmdUtils, csvLog CSVLogCmd) *cli.Command {
 	}
 }
 
-func newCSVDatabaseCommand(cu cmdUtils, csvDatabase CSVDatabaseCmd) *cli.Command {
+func newCSVDatabaseCommand(cu cmdUtils, csvDatabase csvDatabaseCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database",
 		Usage: "Exports the database file as CSV",
@@ -76,7 +76,7 @@ func newCSVDatabaseCommand(cu cmdUtils, csvDatabase CSVDatabaseCmd) *cli.Command
 		},
 	}
 }
-func newCSVDatabaseResolvedCommand(cu cmdUtils, csvDatabaseResolved CSVDatabaseResolvedCmd) *cli.Command {
+func newCSVDatabaseResolvedCommand(cu cmdUtils, csvDatabaseResolved csvDatabaseResolvedCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database-resolved",
 		Usage: "Exports the resolved database as CSV",

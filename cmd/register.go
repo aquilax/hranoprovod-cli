@@ -8,9 +8,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type RegisterCmd func(logStream, dbStream io.Reader, rc app.RegisterConfig) error
+type registerCmd func(logStream, dbStream io.Reader, rc app.RegisterConfig) error
 
-func newRegisterCommand(cu cmdUtils, register RegisterCmd) *cli.Command {
+func newRegisterCommand(cu cmdUtils, register registerCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "register",
 		Aliases: []string{"reg"},

@@ -67,6 +67,9 @@ VERSION:
 DESCRIPTION:
    A command line tool to keep log of diet and exercise in text files
 
+AUTHOR:
+   aquilax <aquilax@gmail.com>
+
 COMMANDS:
    register, reg  Shows the log register report
    balance, bal   Shows food balance as tree

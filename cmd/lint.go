@@ -9,9 +9,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type LintCmd func(stream io.Reader, lc app.LintConfig) error
+type lintCmd func(stream io.Reader, lc app.LintConfig) error
 
-func newLintCommand(cu cmdUtils, lint LintCmd) *cli.Command {
+func newLintCommand(cu cmdUtils, lint lintCmd) *cli.Command {
 	return &cli.Command{
 		Name:      "lint",
 		Usage:     "Lints file for parsing errors",

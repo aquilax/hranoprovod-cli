@@ -10,9 +10,9 @@ import (
 )
 
 type (
-	ReportElementCmd    func(dbStream io.Reader, rec app.ReportElementConfig) error
-	ReportUnresolvedCmd func(logStream, dbStream io.Reader, ruc app.ReportUnresolvedConfig) error
-	ReportQuantityCmd   func(logStream io.Reader, rqc app.ReportQuantityConfig) error
+	reportElementCmd    func(dbStream io.Reader, rec app.ReportElementConfig) error
+	reportUnresolvedCmd func(logStream, dbStream io.Reader, ruc app.ReportUnresolvedConfig) error
+	reportQuantityCmd   func(logStream io.Reader, rqc app.ReportQuantityConfig) error
 )
 
 func newReportCommand(cu cmdUtils) *cli.Command {
@@ -27,7 +27,7 @@ func newReportCommand(cu cmdUtils) *cli.Command {
 	}
 }
 
-func newReportElementTotalCommand(cu cmdUtils, reportElement ReportElementCmd) *cli.Command {
+func newReportElementTotalCommand(cu cmdUtils, reportElement reportElementCmd) *cli.Command {
 	return &cli.Command{
 		Name:      "element-total",
 		Usage:     "Generates total sum for element grouped by food",
@@ -61,7 +61,7 @@ func newReportElementTotalCommand(cu cmdUtils, reportElement ReportElementCmd) *
 	}
 }
 
-func newReportUnresolvedCommand(cu cmdUtils, reportUnresolved ReportUnresolvedCmd) *cli.Command {
+func newReportUnresolvedCommand(cu cmdUtils, reportUnresolved reportUnresolvedCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "unresolved",
 		Usage: "Print list of unresolved elements",
@@ -82,7 +82,7 @@ func newReportUnresolvedCommand(cu cmdUtils, reportUnresolved ReportUnresolvedCm
 	}
 }
 
-func newReportQuantityCommand(cu cmdUtils, reportQuantity ReportQuantityCmd) *cli.Command {
+func newReportQuantityCommand(cu cmdUtils, reportQuantity reportQuantityCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "quantity",
 		Usage: "Total quantities per food",

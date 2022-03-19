@@ -4,11 +4,13 @@ import (
 	"time"
 )
 
+// MetadataPair contains metadata key value pair
 type MetadataPair struct {
 	Name  string
 	Value string
 }
 
+// Metadata contains list of metadata pairs
 type Metadata []MetadataPair
 
 // ParserNode contains general node data

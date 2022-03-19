@@ -7,7 +7,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
-// Separator is used to separate the categories
+// DefaultCategorySeparator the default string used to separate categories
 const DefaultCategorySeparator = "/"
 
 // TreeNode contains data for a single balance tree node

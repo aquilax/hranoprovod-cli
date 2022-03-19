@@ -13,17 +13,17 @@ type cmdUtils struct {
 	withOptions     func(c *cli.Context, cb func(*options.Options) error) error
 }
 
-func NewCmdUtils() cmdUtils {
+func newCmdUtils() cmdUtils {
 	return cmdUtils{
 		withFileReaders: func(fileNames []string, cb func([]io.Reader) error) error {
 			result := make([]io.Reader, len(fileNames))
 			for i, fileName := range fileNames {
-				if f, err := os.Open(fileName); err != nil {
+				f, err := os.Open(fileName)
+				if err != nil {
 					return err
-				} else {
-					defer f.Close()
-					result[i] = f
 				}
+				defer f.Close()
+				result[i] = f
 			}
 			return cb(result)
 		},

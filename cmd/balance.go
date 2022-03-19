@@ -8,9 +8,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type BalanceCmd func(logStream, dbStream io.Reader, bc app.BalanceConfig) error
+type balanceCmd func(logStream, dbStream io.Reader, bc app.BalanceConfig) error
 
-func newBalanceCommand(cu cmdUtils, balance BalanceCmd) *cli.Command {
+func newBalanceCommand(cu cmdUtils, balance balanceCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "balance",
 		Aliases: []string{"bal"},

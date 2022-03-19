@@ -6,9 +6,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type StatsCmd func(logFileName, dbFileName string, sc app.StatsConfig) error
+type statsCmd func(logFileName, dbFileName string, sc app.StatsConfig) error
 
-func newStatsCommand(cu cmdUtils, stats StatsCmd) *cli.Command {
+func newStatsCommand(cu cmdUtils, stats statsCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "stats",
 		Usage: "Provide stats information",
