@@ -13,13 +13,13 @@ type Config struct {
 // Resolver contains the resolver data
 // Deprecated: Deprecated in favor of using Resolve function directly
 type Resolver struct {
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	config Config
 }
 
 // NewResolver creates new resolver
 // Deprecated: Deprecated in favor of using Resolve function directly
-func NewResolver(db shared.DBNodeList, c Config) Resolver {
+func NewResolver(db shared.DBNodeMap, c Config) Resolver {
 	return Resolver{db, c}
 }
 
@@ -63,7 +63,7 @@ func (r Resolver) resolveNode(name string, level int) error {
 	return nil
 }
 
-func resolveNode(maxDepth int, db shared.DBNodeList, name string, level int) error {
+func resolveNode(maxDepth int, db shared.DBNodeMap, name string, level int) error {
 	if level >= maxDepth {
 		return fmt.Errorf("maximum resolution depth reached")
 	}
@@ -90,7 +90,7 @@ func resolveNode(maxDepth int, db shared.DBNodeList, name string, level int) err
 	return nil
 }
 
-func Resolve(c Config, db shared.DBNodeList) (shared.DBNodeList, error) {
+func Resolve(c Config, db shared.DBNodeMap) (shared.DBNodeMap, error) {
 	for name := range db {
 		if err := resolveNode(c.MaxDepth, db, name, 0); err != nil {
 			return db, err

@@ -11,13 +11,13 @@ import (
 
 type balanceSingleReporter struct {
 	config Config
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	output io.Writer
 	root   *accumulator.TreeNode
 	total  float64
 }
 
-func newBalanceSingleReporter(config Config, db shared.DBNodeList) *balanceSingleReporter {
+func newBalanceSingleReporter(config Config, db shared.DBNodeMap) *balanceSingleReporter {
 	return &balanceSingleReporter{
 		config,
 		db,

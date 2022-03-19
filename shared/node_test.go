@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDBNodeList(t *testing.T) {
-	t.Run("Given NodeList", func(t *testing.T) {
-		nl := NewDBNodeList()
-		t.Run("Creates new DBNodeList", func(t *testing.T) {
+func TestDBnodeMap(t *testing.T) {
+	t.Run("Given nodeMap", func(t *testing.T) {
+		nl := NewDBNodeMap()
+		t.Run("Creates new DBnodeMap", func(t *testing.T) {
 			assert.NotNil(t, nl)
 		})
 		t.Run("Adding new node", func(t *testing.T) {

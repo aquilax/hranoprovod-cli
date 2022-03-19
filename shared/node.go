@@ -42,16 +42,16 @@ func NewDBNodeFromNode(n *ParserNode) *DBNode {
 	return &dbn
 }
 
-// DBNodeList contains list of general nodes
-type DBNodeList map[string]*DBNode
+// DBNodeMap contains list of general nodes
+type DBNodeMap map[string]*DBNode
 
-// NewDBNodeList creates new list of general nodes
-func NewDBNodeList() DBNodeList {
-	return DBNodeList{}
+// NewDBNodeMap creates new list of general nodes
+func NewDBNodeMap() DBNodeMap {
+	return DBNodeMap{}
 }
 
 // Push adds node to the node list
-func (db *DBNodeList) Push(node *DBNode) {
+func (db *DBNodeMap) Push(node *DBNode) {
 	(*db)[(*node).Header] = node
 }
 

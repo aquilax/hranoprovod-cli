@@ -10,13 +10,13 @@ import (
 // UnsolvedReporter is unresolved reporter
 type UnsolvedReporter struct {
 	config Config
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	output io.Writer
 	list   map[string]bool
 }
 
 // NewUnsolvedReporter returns reporter for unresolved elements
-func NewUnsolvedReporter(config Config, db shared.DBNodeList) *UnsolvedReporter {
+func NewUnsolvedReporter(config Config, db shared.DBNodeMap) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		config,
 		db,

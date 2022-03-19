@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func getTestNodeList() shared.DBNodeList {
-	return shared.DBNodeList{
+func getTestnodeMap() shared.DBNodeMap {
+	return shared.DBNodeMap{
 		"node1": &shared.DBNode{
 			Header: "node1",
 			Elements: shared.Elements{
@@ -26,8 +26,8 @@ func getTestNodeList() shared.DBNodeList {
 	}
 }
 
-func getSizeNNodeList(n int) shared.DBNodeList {
-	var nl = shared.DBNodeList{}
+func getSizeNnodeMap(n int) shared.DBNodeMap {
+	var nl = shared.DBNodeMap{}
 	for i := 0; i < n; i++ {
 		name := fmt.Sprintf("node-%d", i)
 		nl[name] = &shared.DBNode{
@@ -44,7 +44,7 @@ func getSizeNNodeList(n int) shared.DBNodeList {
 
 func TestResolver(t *testing.T) {
 	t.Run("Given nodes database and reslover", func(t *testing.T) {
-		nl := getTestNodeList()
+		nl := getTestnodeMap()
 		resolver := NewResolver(nl, Config{10})
 		t.Run("Resolve resolves the database", func(t *testing.T) {
 			resolver.Resolve()
@@ -66,7 +66,7 @@ func TestResolver(t *testing.T) {
 
 func TestResolver_Resolve(t *testing.T) {
 	t.Run("Given nodes database and reslover", func(t *testing.T) {
-		nl := getTestNodeList()
+		nl := getTestnodeMap()
 		t.Run("Resolve resolves the database", func(t *testing.T) {
 			nl, err := Resolve(Config{10}, nl)
 			assert.Equal(t, err, nil)
@@ -87,14 +87,14 @@ func TestResolver_Resolve(t *testing.T) {
 }
 
 func BenchmarkResolve(b *testing.B) {
-	nl := getSizeNNodeList(100)
+	nl := getSizeNnodeMap(100)
 	for n := 0; n < b.N; n++ {
 		Resolve(Config{10}, nl)
 	}
 }
 
 func BenchmarkResolverResolve(b *testing.B) {
-	nl := getSizeNNodeList(100)
+	nl := getSizeNnodeMap(100)
 	resolver := NewResolver(nl, Config{10})
 	for n := 0; n < b.N; n++ {
 		resolver.Resolve()

@@ -24,7 +24,7 @@ func Test_balanceReporter_printNode(t *testing.T) {
 
 	type fields struct {
 		config Config
-		db     shared.DBNodeList
+		db     shared.DBNodeMap
 		output io.Writer
 		root   *accumulator.TreeNode
 	}

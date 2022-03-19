@@ -13,13 +13,13 @@ import (
 func TestSummaryReporterTemplate_Process(t *testing.T) {
 	tests := []struct {
 		name string
-		db   shared.DBNodeList
+		db   shared.DBNodeMap
 		ln   *shared.LogNode
 		want string
 	}{
 		{
 			"generates summary report",
-			shared.DBNodeList{
+			shared.DBNodeMap{
 				"test1": &shared.DBNode{
 					Header: "test1",
 					Elements: shared.Elements{

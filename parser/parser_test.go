@@ -9,24 +9,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// NodeList contains list of general nodes
-type nodeList map[string]*shared.ParserNode
+// nodeMap contains list of general nodes
+type nodeMap map[string]*shared.ParserNode
 
 // Push adds node to the node list
-func (db nodeList) push(node *shared.ParserNode) {
+func (db nodeMap) push(node *shared.ParserNode) {
 	db[(*node).Header] = node
 }
 
-func readChannels(parser Parser) (nodeList, error) {
-	nodeList := nodeList{}
+func readChannels(parser Parser) (nodeMap, error) {
+	nodeMap := nodeMap{}
 	for {
 		select {
 		case node := <-parser.Nodes:
-			nodeList.push(node)
+			nodeMap.push(node)
 		case breakingError := <-parser.Errors:
 			return nil, breakingError
 		case <-parser.Done:
-			return nodeList, nil
+			return nodeMap, nil
 		}
 	}
 }
@@ -36,8 +36,8 @@ func TestParser(t *testing.T) {
 		parser := NewParser(NewDefaultConfig())
 		t.Run("It completes successfully on empty string", func(t *testing.T) {
 			go parser.ParseStream(strings.NewReader(""))
-			nodeList, error := readChannels(parser)
-			assert.Equal(t, 0, len(nodeList))
+			nodeMap, error := readChannels(parser)
+			assert.Equal(t, 0, len(nodeMap))
 			assert.Nil(t, error)
 		})
 
@@ -58,10 +58,10 @@ func TestParser(t *testing.T) {
   el1: 1.35
 `
 			go parser.ParseStream(strings.NewReader(file))
-			nodeList, err := readChannels(parser)
-			assert.Equal(t, 2, len(nodeList))
+			nodeMap, err := readChannels(parser)
+			assert.Equal(t, 2, len(nodeMap))
 			assert.Nil(t, err)
-			node := (nodeList)["2011/07/17"]
+			node := (nodeMap)["2011/07/17"]
 			assert.Equal(t, "2011/07/17", node.Header)
 			elements := node.Elements
 			assert.NotNil(t, elements)
@@ -92,10 +92,10 @@ func TestParser(t *testing.T) {
 - el1: 1.35
 `
 			go parser.ParseStream(strings.NewReader(file))
-			nodeList, err := readChannels(parser)
-			assert.Equal(t, 2, len(nodeList))
+			nodeMap, err := readChannels(parser)
+			assert.Equal(t, 2, len(nodeMap))
 			assert.Nil(t, err)
-			node := (nodeList)["2011/07/17"]
+			node := (nodeMap)["2011/07/17"]
 			assert.Equal(t, "2011/07/17", node.Header)
 			elements := node.Elements
 			assert.NotNil(t, elements)
@@ -114,10 +114,10 @@ func TestParser(t *testing.T) {
   el1: 1.22
 `
 			go parser.ParseStream(strings.NewReader(file))
-			nodeList, err := readChannels(parser)
-			assert.Equal(t, 1, len(nodeList))
+			nodeMap, err := readChannels(parser)
+			assert.Equal(t, 1, len(nodeMap))
 			assert.Nil(t, err)
-			node := (nodeList)["2011/07/17"]
+			node := (nodeMap)["2011/07/17"]
 			assert.Equal(t, "2011/07/17", node.Header)
 			elements := node.Elements
 			assert.Equal(t, 2, len(elements))

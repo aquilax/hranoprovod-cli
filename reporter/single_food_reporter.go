@@ -10,11 +10,11 @@ import (
 
 type singleFoodReporter struct {
 	config Config
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	output io.Writer
 }
 
-func newSingleFoodReporter(config Config, db shared.DBNodeList) *singleFoodReporter {
+func newSingleFoodReporter(config Config, db shared.DBNodeMap) *singleFoodReporter {
 	return &singleFoodReporter{
 		config,
 		db,

@@ -13,7 +13,7 @@ import (
 func TestRegReporterTemplate(t *testing.T) {
 	t.Run("Given template reg reporter", func(t *testing.T) {
 		var b bytes.Buffer
-		db := shared.NewDBNodeList()
+		db := shared.NewDBNodeMap()
 		dbElements := shared.NewElements()
 		dbElements.Add("el1", 1.1)
 		dbElements.Add("el2", 1.2)

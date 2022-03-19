@@ -64,7 +64,7 @@ type Reporter interface {
 }
 
 // NewRegReporter creates new response handler
-func NewRegReporter(c Config, db shared.DBNodeList) Reporter {
+func NewRegReporter(c Config, db shared.DBNodeMap) Reporter {
 	if c.Unresolved {
 		return NewUnsolvedReporter(c, db)
 	}
@@ -84,7 +84,7 @@ func NewRegReporter(c Config, db shared.DBNodeList) Reporter {
 }
 
 // NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options Config, db shared.DBNodeList) Reporter {
+func NewBalanceReporter(options Config, db shared.DBNodeMap) Reporter {
 	if len(options.SingleElement) > 0 {
 		return newBalanceSingleReporter(options, db)
 	}

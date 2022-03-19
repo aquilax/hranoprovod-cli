@@ -11,12 +11,12 @@ import (
 
 type balanceReporter struct {
 	config Config
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	output io.Writer
 	root   *accumulator.TreeNode
 }
 
-func newBalanceReporter(config Config, db shared.DBNodeList) *balanceReporter {
+func newBalanceReporter(config Config, db shared.DBNodeMap) *balanceReporter {
 	return &balanceReporter{
 		config,
 		db,
@@ -45,6 +45,7 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 	}
 
 	for _, el := range ln.Elements {
+		el := el
 		r.root.AddDeep(el, accumulator.DefaultCategorySeparator)
 	}
 	return nil

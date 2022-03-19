@@ -12,7 +12,7 @@ import (
 func TestReporter(t *testing.T) {
 	t.Run("Given reporter", func(t *testing.T) {
 		var b bytes.Buffer
-		nl := shared.NewDBNodeList()
+		nl := shared.NewDBNodeMap()
 		c := NewDefaultConfig()
 		c.Unresolved = true
 		c.Output = &b

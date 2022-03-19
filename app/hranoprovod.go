@@ -23,7 +23,7 @@ type RegisterConfig struct {
 
 // Register generates report
 func Register(logStream, dbStream io.Reader, rc RegisterConfig) error {
-	rpCb := func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter {
+	rpCb := func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter {
 		return reporter.NewRegReporter(rpc, nl)
 	}
 	return walkWithReporter(logStream, dbStream, rc.DateFormat, rc.ParserConfig, rc.ResolverConfig, rc.ReporterConfig, rc.FilterConfig, rpCb)
@@ -34,7 +34,7 @@ type BalanceConfig = RegisterConfig
 // Balance generates balance report
 func Balance(logStream, dbStream io.Reader, bc BalanceConfig) error {
 	return withResolvedDatabase(dbStream, bc.ParserConfig, bc.ResolverConfig,
-		func(nl shared.DBNodeList) error {
+		func(nl shared.DBNodeMap) error {
 			r := reporter.NewBalanceReporter(bc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(bc.FilterConfig)
 			return walkNodesInStream(logStream, bc.DateFormat, bc.ParserConfig, f, r)
@@ -46,7 +46,7 @@ type ReportUnresolvedConfig = RegisterConfig
 // ReportUnresolved generates report for unresolved elements
 func ReportUnresolved(logStream, dbStream io.Reader, ruc ReportUnresolvedConfig) error {
 	return withResolvedDatabase(dbStream, ruc.ParserConfig, ruc.ResolverConfig,
-		func(nl shared.DBNodeList) error {
+		func(nl shared.DBNodeMap) error {
 			r := reporter.NewUnsolvedReporter(ruc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(ruc.FilterConfig)
 			return walkNodesInStream(logStream, ruc.DateFormat, ruc.ParserConfig, f, r)
@@ -58,7 +58,7 @@ type SummaryConfig = RegisterConfig
 // Summary generates summary
 func Summary(logStream, dbStream io.Reader, sc SummaryConfig) error {
 	return withResolvedDatabase(dbStream, sc.ParserConfig, sc.ResolverConfig,
-		func(nl shared.DBNodeList) error {
+		func(nl shared.DBNodeMap) error {
 			r := reporter.NewSummaryReporterTemplate(sc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(sc.FilterConfig)
 			return walkNodesInStream(logStream, sc.DateFormat, sc.ParserConfig, f, r)
@@ -147,9 +147,16 @@ func CSVDatabaseResolved(dbStream io.Reader, cdc CSVDatabaseResolvedConfig) erro
 	if err != nil {
 		return err
 	}
+	keys := make([]string, len(nl))
+	i := 0
+	for n := range nl {
+		keys[i] = n
+		i++
+	}
+	sort.Strings(keys)
 	r := reporter.NewCSVDatabaseReporter(cdc.ReporterConfig)
-	for _, n := range nl {
-		if err = r.Process(n); err != nil {
+	for _, key := range keys {
+		if err = r.Process(nl[key]); err != nil {
 			return err
 		}
 	}
@@ -267,7 +274,7 @@ func Stats(logFileName, dbFileName string, sc StatsConfig) error {
 	}).Flush()
 }
 
-type resolvedCallback = func(nl shared.DBNodeList) error
+type resolvedCallback = func(nl shared.DBNodeMap) error
 
 func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Config, cb resolvedCallback) error {
 	if nl, err := loadDatabaseFromStream(dbStream, pc); err == nil {
@@ -281,24 +288,24 @@ func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Conf
 	}
 }
 
-type reporterCallback func(rpc reporter.Config, nl shared.DBNodeList) reporter.Reporter
+type reporterCallback func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter
 
 func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config, rpCb reporterCallback) error {
 	return withResolvedDatabase(dbStream, pc, rc,
-		func(nl shared.DBNodeList) error {
+		func(nl shared.DBNodeMap) error {
 			r := rpCb(rpc, nl)
 			f := filter.GetIntervalNodeFilter(fc)
 			return walkNodesInStream(logStream, dateFormat, pc, f, r)
 		})
 }
 
-func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNodeList, error) {
-	nodeList := shared.NewDBNodeList()
-	return nodeList, parser.ParseStreamCallback(dbStream, pc, func(node *shared.ParserNode, err error) (stop bool, cbError error) {
+func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNodeMap, error) {
+	nodeMap := shared.NewDBNodeMap()
+	return nodeMap, parser.ParseStreamCallback(dbStream, pc, func(node *shared.ParserNode, err error) (stop bool, cbError error) {
 		if err != nil {
 			return true, err
 		} else {
-			nodeList.Push(shared.NewDBNodeFromNode(node))
+			nodeMap.Push(shared.NewDBNodeFromNode(node))
 			return false, nil
 		}
 	})

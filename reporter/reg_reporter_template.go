@@ -44,7 +44,7 @@ const leftAlignedTemplate = `{{formatDate .Time}}
 
 type regReporterTemplate struct {
 	config   Config
-	db       shared.DBNodeList
+	db       shared.DBNodeMap
 	output   io.Writer
 	template *template.Template
 }
@@ -56,7 +56,7 @@ func getInternalTemplate(internalTemplateName string) string {
 	return defaultTemplate
 }
 
-func newRegReporterTemplate(config Config, db shared.DBNodeList) *regReporterTemplate {
+func newRegReporterTemplate(config Config, db shared.DBNodeMap) *regReporterTemplate {
 	return &regReporterTemplate{
 		config,
 		db,

@@ -25,7 +25,7 @@ type reportItem struct {
 	Totals   *[]total
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeList, config Config) reportItem {
+func getReportItem(ln *shared.LogNode, db shared.DBNodeMap, config Config) reportItem {
 	var acc accumulator.Accumulator
 	if config.Totals {
 		acc = accumulator.NewAccumulator()

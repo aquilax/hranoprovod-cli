@@ -13,11 +13,11 @@ import (
 
 type regReporter struct {
 	config Config
-	db     shared.DBNodeList
+	db     shared.DBNodeMap
 	output io.Writer
 }
 
-func newRegReporter(config Config, db shared.DBNodeList) *regReporter {
+func newRegReporter(config Config, db shared.DBNodeMap) *regReporter {
 	return &regReporter{
 		config,
 		db,
