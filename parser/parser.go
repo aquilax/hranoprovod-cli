@@ -28,12 +28,11 @@ const (
 type Config struct {
 	// CommentChar contains the character used to indicate that the line is a comment
 	CommentChar uint8
-	DateFormat  string
 }
 
 // NewDefaultConfig returns the default set of parser configuration
 func NewDefaultConfig() Config {
-	return Config{DefaultCommentChar, DefaultDateFormat}
+	return Config{DefaultCommentChar}
 }
 
 // Parser is the parser data structure

@@ -12,6 +12,10 @@ type Config struct {
 	EndTime       *time.Time
 }
 
+func NewDefaultConfig() Config {
+	return Config{}
+}
+
 // LogNodeFilter is a filter callback function that filters nodes based on the filter config
 type LogNodeFilter = func(t time.Time, node *shared.ParserNode) (bool, error)
 

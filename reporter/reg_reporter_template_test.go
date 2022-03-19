@@ -23,6 +23,7 @@ func TestRegReporterTemplate(t *testing.T) {
 
 		c := NewDefaultConfig()
 		c.ShortenStrings = true
+		c.Color = false
 		c.Output = &b
 		rp := NewRegReporter(c, db)
 		t.Run("Prints list of unresolved items", func(t *testing.T) {

@@ -29,7 +29,7 @@ func newCmdUtils() cmdUtils {
 		},
 		withOptions: func(c *cli.Context, cb func(*options.Options) error) error {
 			o := options.New()
-			if err := o.Load(c); err != nil {
+			if err := o.Load(c, true); err != nil {
 				return err
 			}
 			return cb(o)

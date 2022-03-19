@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,7 +38,7 @@ func Test_newPrintCommand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
-			mockCu := getMockCu([]string{tt.wantContent})
+			mockCu := getMockCmdUtils([]string{tt.wantContent}, options.New())
 			mockPrint := func(logStream io.Reader, pc app.PrintConfig) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(logStream)

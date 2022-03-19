@@ -14,10 +14,26 @@ import (
 	gcfg "gopkg.in/gcfg.v1"
 )
 
+const (
+	ConfigFileName     = "/.hranoprovod/config"
+	DefaultDbFilename  = "food.yaml"
+	DefaultLogFilename = "log.yaml"
+)
+
 type GlobalConfig struct {
+	Now         time.Time
 	DbFileName  string
 	LogFileName string
 	DateFormat  string
+}
+
+func NewDefaultGlobalConfig() GlobalConfig {
+	return GlobalConfig{
+		time.Now().Local(),
+		DefaultDbFilename,
+		DefaultLogFilename,
+		parser.DefaultDateFormat,
+	}
 }
 
 // Options contains the options structure
@@ -31,32 +47,39 @@ type Options struct {
 
 // New returns new options structure.
 func New() *Options {
-	o := &Options{}
-	o.ReporterConfig = reporter.NewDefaultConfig()
-	o.ReporterConfig.Color = true
-	o.ParserConfig = parser.NewDefaultConfig()
-	return o
+	return &Options{
+		NewDefaultGlobalConfig(),
+		resolver.NewDefaultConfig(),
+		parser.NewDefaultConfig(),
+		reporter.NewDefaultConfig(),
+		filter.NewDefaultConfig(),
+	}
 }
 
 // Load loads the settings from config file/command line params/defaults from given context.
-func (o *Options) Load(c *cli.Context) error {
-	fileName := c.String("config")
-	// First try to load the o file
-	exists, err := fileExists(fileName)
-	if err != nil {
-		return err
-	}
-	// Non existing file passed
-	if !exists && c.IsSet("config") {
-		return errors.New("File " + fileName + "not found")
-	}
-	if exists {
-		if err := gcfg.ReadFileInto(o, fileName); err != nil {
+func (o *Options) Load(c *cli.Context, useConfigFile bool) error {
+	if useConfigFile {
+		fileName := c.String("config")
+		// First try to load the o file
+		exists, err := fileExists(fileName)
+		if err != nil {
 			return err
 		}
+		// Non existing file passed
+		if !exists && c.IsSet("config") {
+			return errors.New("File " + fileName + "not found")
+		}
+		if exists {
+			if err := gcfg.ReadFileInto(o, fileName); err != nil {
+				return err
+			}
+		}
 	}
-	o.populateGlobals(c)
-	o.populateLocals(c)
+	if err := o.populateGlobals(c); err != nil {
+		return err
+	}
+	o.populateResolver(c)
+	o.populateReporter(c)
 	if err := o.populateFilter(c); err != nil {
 		return err
 	}
@@ -76,7 +99,7 @@ func fileExists(name string) (bool, error) {
 	return err != nil, err
 }
 
-func (o *Options) populateGlobals(c *cli.Context) {
+func (o *Options) populateGlobals(c *cli.Context) error {
 	if !c.IsSet("no-database") && (c.IsSet("database") || o.GlobalConfig.DbFileName == "") {
 		o.GlobalConfig.DbFileName = c.String("database")
 	}
@@ -88,11 +111,14 @@ func (o *Options) populateGlobals(c *cli.Context) {
 	if c.IsSet("date-format") || o.GlobalConfig.DateFormat == "" {
 		o.GlobalConfig.DateFormat = c.String("date-format")
 	}
-}
-
-func (o *Options) populateLocals(c *cli.Context) {
-	o.populateResolver(c)
-	o.populateReporter(c)
+	if c.IsSet("today") {
+		now, err := time.Parse(o.GlobalConfig.DateFormat, c.String("today"))
+		if err != nil {
+			return err
+		}
+		o.GlobalConfig.Now = now
+	}
+	return nil
 }
 
 func (o *Options) populateResolver(c *cli.Context) {
@@ -101,18 +127,18 @@ func (o *Options) populateResolver(c *cli.Context) {
 	}
 }
 
-func getTimeFromString(format string, date string) (time.Time, error) {
+func getTimeFromString(now time.Time, format string, date string) (time.Time, error) {
 	if date == "today" {
-		return time.Now().Local(), nil
+		return now.Local(), nil
 	}
 	if date == "yesterday" {
-		return time.Now().AddDate(0, 0, -1), nil
+		return now.AddDate(0, 0, -1), nil
 	}
 	if date == "last7" {
-		return time.Now().AddDate(0, 0, -7), nil
+		return now.AddDate(0, 0, -7), nil
 	}
 	if date == "last30" {
-		return time.Now().AddDate(0, 0, -30), nil
+		return now.AddDate(0, 0, -30), nil
 	}
 	var err error
 	var customTime time.Time
@@ -126,14 +152,14 @@ func getTimeFromString(format string, date string) (time.Time, error) {
 func (o *Options) populateFilter(c *cli.Context) error {
 	for i := len(c.Lineage()) - 1; i >= 0; i-- {
 		if c.Lineage()[i].IsSet("begin") {
-			time, err := getTimeFromString(o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
+			time, err := getTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
 			if err != nil {
 				return err
 			}
 			o.FilterConfig.BeginningTime = &time
 		}
 		if c.Lineage()[i].IsSet("end") {
-			time, err := getTimeFromString(o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
+			time, err := getTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
 			if err != nil {
 				return err
 			}

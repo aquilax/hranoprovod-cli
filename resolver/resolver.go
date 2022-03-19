@@ -6,8 +6,14 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
+const DefaultMaxDepth = 10
+
 type Config struct {
 	MaxDepth int
+}
+
+func NewDefaultConfig() Config {
+	return Config{DefaultMaxDepth}
 }
 
 // Resolver contains the resolver data

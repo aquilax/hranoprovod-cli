@@ -95,6 +95,7 @@ func ReportQuantity(logStream io.Reader, rqc ReportQuantityConfig) error {
 }
 
 type CSVLogConfig struct {
+	DateFormat     string
 	ParserConfig   parser.Config
 	FilterConfig   filter.Config
 	ReporterConfig reporter.CSVConfig
@@ -104,7 +105,7 @@ type CSVLogConfig struct {
 func CSVLog(logStream io.Reader, c CSVLogConfig) error {
 	r := reporter.NewCSVReporter(c.ReporterConfig)
 	f := filter.GetIntervalNodeFilter(c.FilterConfig)
-	return walkNodesInStream(logStream, c.ParserConfig.DateFormat, c.ParserConfig, f, r)
+	return walkNodesInStream(logStream, c.DateFormat, c.ParserConfig, f, r)
 }
 
 type CSVDatabaseConfig struct {

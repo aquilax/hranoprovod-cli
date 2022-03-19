@@ -43,7 +43,7 @@ type Config struct {
 func NewDefaultConfig() Config {
 	return Config{
 		CSV:                  false,
-		Color:                false,
+		Color:                true,
 		DateFormat:           "2006/01/02",
 		Totals:               true,
 		CollapseLast:         false,

@@ -46,6 +46,7 @@ func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
 		Action: func(c *cli.Context) error {
 			return cu.withOptions(c, func(o *options.Options) error {
 				cfg := app.CSVLogConfig{
+					DateFormat:     o.GlobalConfig.DateFormat,
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
 					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Color)),

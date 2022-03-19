@@ -6,16 +6,10 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/app"
+	"github.com/aquilax/hranoprovod-cli/v2/options"
 	"github.com/aquilax/hranoprovod-cli/v2/parser"
+	"github.com/aquilax/hranoprovod-cli/v2/resolver"
 	"github.com/urfave/cli/v2"
-)
-
-const (
-	configFileName = "/.hranoprovod/config"
-
-	defaultDbFilename       = "food.yaml"
-	defaultLogFilename      = "log.yaml"
-	defaultResolverMaxDepth = 10
 )
 
 var (
@@ -44,28 +38,32 @@ func GetApp() *cli.App {
 			Usage:   "Beginning of period `DATE`",
 		},
 		&cli.StringFlag{
-			Name:    "end, e",
+			Name:    "end",
 			Aliases: []string{"e"},
 			Usage:   "End of period `DATE`",
 		},
 		&cli.StringFlag{
+			Name:  "today",
+			Usage: "Overwrite today's date `DATE`",
+		},
+		&cli.StringFlag{
 			Name:    "database",
 			Aliases: []string{"d"},
-			Value:   defaultDbFilename,
+			Value:   options.DefaultDbFilename,
 			Usage:   "optional database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
 			Name:    "logfile",
 			Aliases: []string{"l"},
-			Value:   defaultLogFilename,
+			Value:   options.DefaultLogFilename,
 			Usage:   "log file name `FILE`",
 			EnvVars: []string{"HR_LOGFILE"},
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Aliases: []string{"c"},
-			Value:   getDefaultFileName(configFileName),
+			Value:   getDefaultFileName(options.ConfigFileName),
 			Usage:   "Configuration file `FILE`",
 			EnvVars: []string{"HR_CONFIG"},
 		},
@@ -77,7 +75,7 @@ func GetApp() *cli.App {
 		},
 		&cli.IntFlag{
 			Name:    "maxdepth",
-			Value:   defaultResolverMaxDepth,
+			Value:   resolver.DefaultMaxDepth,
 			Usage:   "Resolve depth `DEPTH`",
 			EnvVars: []string{"HR_MAXDEPTH"},
 		},

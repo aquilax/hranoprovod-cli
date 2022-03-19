@@ -53,6 +53,7 @@ func TestSummaryReporterTemplate_Process(t *testing.T) {
 			var b bytes.Buffer
 			w := bufio.NewWriter(&b)
 			c := NewDefaultConfig()
+			c.Color = false
 			c.Output = w
 			r := NewSummaryReporterTemplate(c, tt.db)
 			if err := r.Process(tt.ln); err != nil {

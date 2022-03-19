@@ -89,7 +89,7 @@ function p() {
   x=$(PS1="$DEMO_PROMPT" "$BASH" --norc -i </dev/null 2>&1 | sed -n '${s/^\(.*\)exit$/\1/p;}')
 
   # show command number is selected
-  if $SHOW_CMD_NUMS; then
+  if "$SHOW_CMD_NUMS"; then
    printf "[$((++C_NUM))] $x"
   else
    printf "$x"
