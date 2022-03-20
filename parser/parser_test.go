@@ -5,15 +5,14 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 	"github.com/stretchr/testify/assert"
 )
 
 // nodeMap contains list of general nodes
-type nodeMap map[string]*shared.ParserNode
+type nodeMap map[string]*hranoprovod.ParserNode
 
 // Push adds node to the node list
-func (db nodeMap) push(node *shared.ParserNode) {
+func (db nodeMap) push(node *hranoprovod.ParserNode) {
 	db[(*node).Header] = node
 }
 
@@ -72,10 +71,10 @@ func TestParser(t *testing.T) {
 			assert.Equal(t, -4.0, elements[1].Value)
 			assert.Equal(t, "el/3", elements[2].Name)
 			assert.Equal(t, 3.0, elements[2].Value)
-			assert.Equal(t, shared.Metadata{
-				shared.MetadataPair{Name: "meta", Value: "value1"},
-				shared.MetadataPair{Name: "meta", Value: "value2"},
-				shared.MetadataPair{Name: "", Value: "metadata-no-name"},
+			assert.Equal(t, hranoprovod.Metadata{
+				hranoprovod.MetadataPair{Name: "meta", Value: "value1"},
+				hranoprovod.MetadataPair{Name: "meta", Value: "value2"},
+				hranoprovod.MetadataPair{Name: "", Value: "metadata-no-name"},
 			}, *node.Metadata)
 		})
 

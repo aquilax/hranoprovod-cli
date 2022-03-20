@@ -3,13 +3,13 @@ package reporter
 import (
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 type reportElement struct {
-	shared.Element
-	Ingredients shared.Elements
+	hranoprovod.Element
+	Ingredients hranoprovod.Elements
 }
 
 type total struct {
@@ -25,7 +25,7 @@ type reportItem struct {
 	Totals   *[]total
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeMap, config Config) reportItem {
+func getReportItem(ln *hranoprovod.LogNode, db hranoprovod.DBNodeMap, config Config) reportItem {
 	var acc accumulator.Accumulator
 	if config.Totals {
 		acc = accumulator.NewAccumulator()

@@ -3,7 +3,7 @@ package filter
 import (
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 // Config contains node filtering configuration
@@ -17,7 +17,7 @@ func NewDefaultConfig() Config {
 }
 
 // LogNodeFilter is a filter callback function that filters nodes based on the filter config
-type LogNodeFilter = func(t time.Time, node *shared.ParserNode) (bool, error)
+type LogNodeFilter = func(t time.Time, node *hranoprovod.ParserNode) (bool, error)
 
 // GetIntervalNodeFilter creates a node filter callback function given filter config
 func GetIntervalNodeFilter(fc Config) *LogNodeFilter {
@@ -33,7 +33,7 @@ func GetIntervalNodeFilter(fc Config) *LogNodeFilter {
 		return true
 	}
 
-	filter := func(t time.Time, node *shared.ParserNode) (bool, error) {
+	filter := func(t time.Time, node *hranoprovod.ParserNode) (bool, error) {
 		return inInterval(t), nil
 	}
 	return &filter

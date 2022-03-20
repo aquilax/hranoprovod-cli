@@ -10,10 +10,10 @@ BINARY=hranoprovod-cli
 MDEXEC=mdexec
 TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md docs/usage.cast
 
-all: $(WASM) $(BINARY) docs
+all: $(BINARY) docs
 
 $(BINARY):
-	go build -o $(BINARY)
+	go build -o $(BINARY) hranoprovod/main.go
 
 docs: $(BINARY) docs/command-line.md docs/usage.md README.md
 

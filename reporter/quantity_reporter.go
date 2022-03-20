@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 type QuantityReporter struct {
@@ -23,7 +23,7 @@ func NewQuantityReporter(config Config, descending bool) QuantityReporter {
 }
 
 // Process writes single node
-func (r QuantityReporter) Process(ln *shared.LogNode) error {
+func (r QuantityReporter) Process(ln *hranoprovod.LogNode) error {
 	for _, e := range ln.Elements {
 		if _, ok := r.accumulator[e.Name]; !ok {
 			r.accumulator[e.Name] = 0

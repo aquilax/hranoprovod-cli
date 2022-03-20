@@ -4,20 +4,20 @@ import (
 	"bufio"
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 type ElementReporter struct {
 	config Config
-	list   []shared.Element
+	list   []hranoprovod.Element
 	output *bufio.Writer
 }
 
-func NewElementReporter(c Config, list []shared.Element) *ElementReporter {
+func NewElementReporter(c Config, list []hranoprovod.Element) *ElementReporter {
 	return &ElementReporter{c, list, bufio.NewWriter(c.Output)}
 }
 
-func (er ElementReporter) Process(ln *shared.LogNode) error {
+func (er ElementReporter) Process(ln *hranoprovod.LogNode) error {
 	return nil
 }
 func (er ElementReporter) Flush() error {

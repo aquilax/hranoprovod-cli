@@ -4,19 +4,19 @@ import (
 	"bufio"
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 // UnsolvedReporter is unresolved reporter
 type UnsolvedReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 	list   map[string]bool
 }
 
 // NewUnsolvedReporter returns reporter for unresolved elements
-func NewUnsolvedReporter(config Config, db shared.DBNodeMap) *UnsolvedReporter {
+func NewUnsolvedReporter(config Config, db hranoprovod.DBNodeMap) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		config,
 		db,
@@ -26,7 +26,7 @@ func NewUnsolvedReporter(config Config, db shared.DBNodeMap) *UnsolvedReporter {
 }
 
 // Process handles single node
-func (r *UnsolvedReporter) Process(ln *shared.LogNode) error {
+func (r *UnsolvedReporter) Process(ln *hranoprovod.LogNode) error {
 	for _, e := range ln.Elements {
 		_, found := r.db[e.Name]
 		if !found {

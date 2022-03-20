@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 // CSVReporter outputs report for single food
@@ -20,7 +20,7 @@ func NewCSVDatabaseReporter(config Config) CSVDatabaseReporter {
 }
 
 // Process writes single node
-func (r CSVDatabaseReporter) Process(n *shared.DBNode) error {
+func (r CSVDatabaseReporter) Process(n *hranoprovod.DBNode) error {
 	var err error
 	for _, e := range n.Elements {
 		if err = r.output.Write([]string{

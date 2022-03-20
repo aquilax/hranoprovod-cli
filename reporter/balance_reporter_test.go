@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 func getSimpleTree() *accumulator.TreeNode {
@@ -25,7 +24,7 @@ func Test_balanceReporter_printNode(t *testing.T) {
 
 	type fields struct {
 		config Config
-		db     shared.DBNodeMap
+		db     hranoprovod.DBNodeMap
 		output io.Writer
 		root   *accumulator.TreeNode
 	}

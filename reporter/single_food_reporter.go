@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 type singleFoodReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 }
 
-func newSingleFoodReporter(config Config, db shared.DBNodeMap) *singleFoodReporter {
+func newSingleFoodReporter(config Config, db hranoprovod.DBNodeMap) *singleFoodReporter {
 	return &singleFoodReporter{
 		config,
 		db,
@@ -22,7 +22,7 @@ func newSingleFoodReporter(config Config, db shared.DBNodeMap) *singleFoodReport
 	}
 }
 
-func (r *singleFoodReporter) Process(ln *shared.LogNode) error {
+func (r *singleFoodReporter) Process(ln *hranoprovod.LogNode) error {
 	for _, e := range ln.Elements {
 		matched, err := regexp.MatchString(r.config.SingleFood, e.Name)
 		if err != nil {

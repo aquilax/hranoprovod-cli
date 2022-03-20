@@ -3,7 +3,7 @@ package resolver
 import (
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 const DefaultMaxDepth = 10
@@ -19,13 +19,13 @@ func NewDefaultConfig() Config {
 // Resolver contains the resolver data
 // Deprecated: Deprecated in favor of using Resolve function directly
 type Resolver struct {
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	config Config
 }
 
 // NewResolver creates new resolver
 // Deprecated: Deprecated in favor of using Resolve function directly
-func NewResolver(db shared.DBNodeMap, c Config) Resolver {
+func NewResolver(db hranoprovod.DBNodeMap, c Config) Resolver {
 	return Resolver{db, c}
 }
 
@@ -51,7 +51,7 @@ func (r Resolver) resolveNode(name string, level int) error {
 		return nil
 	}
 
-	nel := shared.NewElements()
+	nel := hranoprovod.NewElements()
 
 	for _, e := range node.Elements {
 		r.resolveNode(e.Name, level+1)
@@ -59,7 +59,7 @@ func (r Resolver) resolveNode(name string, level int) error {
 		if exists {
 			nel.SumMerge(foundNode.Elements, e.Value)
 		} else {
-			var tm shared.Elements
+			var tm hranoprovod.Elements
 			tm.Add(e.Name, e.Value)
 			nel.SumMerge(tm, 1)
 		}
@@ -69,7 +69,7 @@ func (r Resolver) resolveNode(name string, level int) error {
 	return nil
 }
 
-func resolveNode(maxDepth int, db shared.DBNodeMap, name string, level int) error {
+func resolveNode(maxDepth int, db hranoprovod.DBNodeMap, name string, level int) error {
 	if level >= maxDepth {
 		return fmt.Errorf("maximum resolution depth reached")
 	}
@@ -79,14 +79,14 @@ func resolveNode(maxDepth int, db shared.DBNodeMap, name string, level int) erro
 		return nil
 	}
 
-	nel := shared.NewElements()
+	nel := hranoprovod.NewElements()
 
 	for _, e := range node.Elements {
 		resolveNode(maxDepth, db, e.Name, level+1)
 		if foundNode, exists := db[e.Name]; exists {
 			nel.SumMerge(foundNode.Elements, e.Value)
 		} else {
-			var tm shared.Elements
+			var tm hranoprovod.Elements
 			tm.Add(e.Name, e.Value)
 			nel.SumMerge(tm, 1)
 		}
@@ -96,7 +96,7 @@ func resolveNode(maxDepth int, db shared.DBNodeMap, name string, level int) erro
 	return nil
 }
 
-func Resolve(c Config, db shared.DBNodeMap) (shared.DBNodeMap, error) {
+func Resolve(c Config, db hranoprovod.DBNodeMap) (hranoprovod.DBNodeMap, error) {
 	for name := range db {
 		if err := resolveNode(c.MaxDepth, db, name, 0); err != nil {
 			return db, err

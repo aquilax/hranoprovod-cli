@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"text/template"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 const summaryTemplate = `{{formatDate .Time}} :
@@ -24,13 +24,13 @@ const summaryTemplate = `{{formatDate .Time}} :
 // SummaryReporterTemplate is a summary reporter
 type SummaryReporterTemplate struct {
 	config   Config
-	db       shared.DBNodeMap
+	db       hranoprovod.DBNodeMap
 	output   *bufio.Writer
 	template *template.Template
 }
 
 // NewSummaryReporterTemplate creates new summary reporter
-func NewSummaryReporterTemplate(config Config, db shared.DBNodeMap) *SummaryReporterTemplate {
+func NewSummaryReporterTemplate(config Config, db hranoprovod.DBNodeMap) *SummaryReporterTemplate {
 	return &SummaryReporterTemplate{
 		config,
 		db,
@@ -40,7 +40,7 @@ func NewSummaryReporterTemplate(config Config, db shared.DBNodeMap) *SummaryRepo
 }
 
 // Process process shared node
-func (r *SummaryReporterTemplate) Process(ln *shared.LogNode) error {
+func (r *SummaryReporterTemplate) Process(ln *hranoprovod.LogNode) error {
 	return r.template.Execute(r.output, getReportItem(ln, r.db, r.config))
 }
 

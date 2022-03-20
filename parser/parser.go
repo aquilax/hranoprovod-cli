@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 const (
@@ -38,7 +38,7 @@ func NewDefaultConfig() Config {
 // Parser is the parser data structure
 type Parser struct {
 	config Config
-	Nodes  chan *shared.ParserNode
+	Nodes  chan *hranoprovod.ParserNode
 	Errors chan error
 	Done   chan bool
 }
@@ -47,7 +47,7 @@ type Parser struct {
 func NewParser(c Config) Parser {
 	return Parser{
 		config: c,
-		Nodes:  make(chan *shared.ParserNode),
+		Nodes:  make(chan *hranoprovod.ParserNode),
 		Errors: make(chan error),
 		Done:   make(chan bool),
 	}
@@ -65,7 +65,7 @@ func (p Parser) ParseFile(fileName string) {
 }
 
 // ParseCallback is called on node or error event when parsing the stream
-type ParseCallback func(n *shared.ParserNode, err error) (stop bool, cbError error)
+type ParseCallback func(n *hranoprovod.ParserNode, err error) (stop bool, cbError error)
 
 func ParseFileCallback(fileName string, c Config, callback ParseCallback) error {
 	f, err := os.Open(fileName)
@@ -78,7 +78,7 @@ func ParseFileCallback(fileName string, c Config, callback ParseCallback) error 
 
 // ParseStreamCallback parses stream and calls callback on node or error
 func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) error {
-	var node *shared.ParserNode
+	var node *hranoprovod.ParserNode
 	var line string
 	var trimmedLine string
 	var title string
@@ -86,7 +86,7 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 	var separatorPos int
 	var err error
 	var fQty float64
-	var mp *shared.MetadataPair
+	var mp *hranoprovod.MetadataPair
 
 	lineNumber := 0
 	lineScanner := bufio.NewScanner(reader)
@@ -109,7 +109,7 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 				}
 			}
 			// start new node
-			node = shared.NewParserNode(trimmedLine)
+			node = hranoprovod.NewParserNode(trimmedLine)
 			continue
 		}
 
@@ -119,7 +119,7 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 				mp, _ = getMetadataPair(trimmedLine)
 				if mp != nil {
 					if node.Metadata == nil {
-						node.Metadata = &shared.Metadata{*mp}
+						node.Metadata = &hranoprovod.Metadata{*mp}
 					} else {
 						*node.Metadata = append(*node.Metadata, *mp)
 					}
@@ -159,7 +159,7 @@ func ParseStreamCallback(reader io.Reader, c Config, callback ParseCallback) err
 
 // ParseStream parses the contents of stream
 func (p Parser) ParseStream(reader io.Reader) {
-	ParseStreamCallback(reader, p.config, func(n *shared.ParserNode, err error) (stop bool, cbError error) {
+	ParseStreamCallback(reader, p.config, func(n *hranoprovod.ParserNode, err error) (stop bool, cbError error) {
 		if err != nil {
 			p.Errors <- err
 			return true, err
@@ -170,16 +170,16 @@ func (p Parser) ParseStream(reader io.Reader) {
 	p.Done <- true
 }
 
-func getMetadataPair(line string) (*shared.MetadataPair, error) {
+func getMetadataPair(line string) (*hranoprovod.MetadataPair, error) {
 	trimmedLine := strings.TrimSpace(strings.Trim(line, "#"))
 	separatorPos := strings.Index(trimmedLine, ":")
 	if separatorPos > -1 {
-		return &shared.MetadataPair{
+		return &hranoprovod.MetadataPair{
 			Name:  strings.Trim(trimmedLine[:separatorPos], "# \t"),
 			Value: strings.TrimSpace(trimmedLine[separatorPos+1:]),
 		}, nil
 	}
-	return &shared.MetadataPair{
+	return &hranoprovod.MetadataPair{
 		Name:  "",
 		Value: trimmedLine,
 	}, nil
