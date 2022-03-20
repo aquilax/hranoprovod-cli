@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 type Stats struct {
@@ -27,7 +27,7 @@ func NewStatsReporter(c Config, stats *Stats) *StatsReporter {
 	return &StatsReporter{c, stats}
 }
 
-func (sr StatsReporter) Process(ln *shared.LogNode) error {
+func (sr StatsReporter) Process(ln *hranoprovod.LogNode) error {
 	return nil
 }
 func (sr StatsReporter) Flush() error {

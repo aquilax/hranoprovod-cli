@@ -4,38 +4,37 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 	"github.com/stretchr/testify/assert"
 )
 
-func getTestnodeMap() shared.DBNodeMap {
-	return shared.DBNodeMap{
-		"node1": &shared.DBNode{
+func getTestnodeMap() hranoprovod.DBNodeMap {
+	return hranoprovod.DBNodeMap{
+		"node1": &hranoprovod.DBNode{
 			Header: "node1",
-			Elements: shared.Elements{
-				shared.Element{Name: "element1", Value: 100},
-				shared.Element{Name: "element2", Value: 200},
+			Elements: hranoprovod.Elements{
+				hranoprovod.Element{Name: "element1", Value: 100},
+				hranoprovod.Element{Name: "element2", Value: 200},
 			},
 		},
-		"node2": &shared.DBNode{
+		"node2": &hranoprovod.DBNode{
 			Header: "node2",
-			Elements: shared.Elements{
-				shared.Element{Name: "node1", Value: 2},
+			Elements: hranoprovod.Elements{
+				hranoprovod.Element{Name: "node1", Value: 2},
 			},
 		},
 	}
 }
 
-func getSizeNnodeMap(n int) shared.DBNodeMap {
-	var nl = shared.DBNodeMap{}
+func getSizeNnodeMap(n int) hranoprovod.DBNodeMap {
+	var nl = hranoprovod.DBNodeMap{}
 	for i := 0; i < n; i++ {
 		name := fmt.Sprintf("node-%d", i)
-		nl[name] = &shared.DBNode{
+		nl[name] = &hranoprovod.DBNode{
 			Header: name,
-			Elements: shared.Elements{
-				shared.Element{Name: fmt.Sprintf("node-%d", i+1), Value: float64(i + 1)},
-				shared.Element{Name: fmt.Sprintf("node-%d", i+2), Value: float64(i + 2)},
-				shared.Element{Name: fmt.Sprintf("node-%d", i+3), Value: float64(i + 3)},
+			Elements: hranoprovod.Elements{
+				hranoprovod.Element{Name: fmt.Sprintf("node-%d", i+1), Value: float64(i + 1)},
+				hranoprovod.Element{Name: fmt.Sprintf("node-%d", i+2), Value: float64(i + 2)},
+				hranoprovod.Element{Name: fmt.Sprintf("node-%d", i+3), Value: float64(i + 3)},
 			},
 		}
 	}

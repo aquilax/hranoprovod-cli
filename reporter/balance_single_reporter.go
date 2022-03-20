@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 type balanceSingleReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 	root   *accumulator.TreeNode
 	total  float64
 }
 
-func newBalanceSingleReporter(config Config, db shared.DBNodeMap) *balanceSingleReporter {
+func newBalanceSingleReporter(config Config, db hranoprovod.DBNodeMap) *balanceSingleReporter {
 	return &balanceSingleReporter{
 		config,
 		db,
@@ -27,20 +27,20 @@ func newBalanceSingleReporter(config Config, db shared.DBNodeMap) *balanceSingle
 	}
 }
 
-func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
+func (r *balanceSingleReporter) Process(ln *hranoprovod.LogNode) error {
 	for _, el := range ln.Elements {
 		repl, found := r.db[el.Name]
 		if found {
 			for _, repl := range repl.Elements {
 				if repl.Name == r.config.SingleElement {
-					r.root.AddDeep(shared.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
+					r.root.AddDeep(hranoprovod.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
 					// Add to grand total
 					r.total += repl.Value * el.Value
 				}
 			}
 		} else {
 			if el.Name == r.config.SingleElement {
-				r.root.AddDeep(shared.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
+				r.root.AddDeep(hranoprovod.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
 			}
 		}
 	}

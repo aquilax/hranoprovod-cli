@@ -5,7 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,12 +30,12 @@ const expected = `2019/10/10
 func TestRegReporterTemplate(t *testing.T) {
 	t.Run("Given template reg reporter", func(t *testing.T) {
 		var b bytes.Buffer
-		db := shared.NewDBNodeMap()
-		dbElements := shared.NewElements()
+		db := hranoprovod.NewDBNodeMap()
+		dbElements := hranoprovod.NewElements()
 		dbElements.Add("el1", 1.1)
 		dbElements.Add("el2", 1.2)
 		dbElements.Add("el3", 1.3)
-		dbNode := shared.DBNode{Header: "test2", Elements: dbElements}
+		dbNode := hranoprovod.DBNode{Header: "test2", Elements: dbElements}
 		db.Push(&dbNode)
 
 		c := NewDefaultConfig()
@@ -45,12 +44,12 @@ func TestRegReporterTemplate(t *testing.T) {
 		c.Output = &b
 		rp := NewRegReporter(c, db)
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
-			el := shared.NewElements()
+			el := hranoprovod.NewElements()
 			el.Add("test1", 3.1)
 			el.Add("test1", 3.1)
 			el.Add("test2", 3.2)
 			el.Add("test3/test3/test3/test3/test3/test3/test3/test3/test3", 3.3)
-			ln := shared.NewLogNode(time.Date(2019, 10, 10, 0, 0, 0, 0, time.UTC), el, nil)
+			ln := hranoprovod.NewLogNode(time.Date(2019, 10, 10, 0, 0, 0, 0, time.UTC), el, nil)
 			err := rp.Process(ln)
 			rp.Flush()
 			assert.Nil(t, err)

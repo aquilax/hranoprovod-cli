@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +17,7 @@ func TestTreeNode_AddDeep(t *testing.T) {
 			"spreads correctly the values to categories",
 			func() *TreeNode {
 				tn := NewTreeNode("root", 0)
-				tn.AddDeep(shared.NewElement("one/two", 10), DefaultCategorySeparator)
+				tn.AddDeep(hranoprovod.NewElement("one/two", 10), DefaultCategorySeparator)
 				return tn
 			},
 			&TreeNode{
@@ -42,8 +41,8 @@ func TestTreeNode_AddDeep(t *testing.T) {
 			"accumulates correctly the values",
 			func() *TreeNode {
 				tn := NewTreeNode("root", 0)
-				tn.AddDeep(shared.NewElement("one", 10), DefaultCategorySeparator)
-				tn.AddDeep(shared.NewElement("one/two", 20), DefaultCategorySeparator)
+				tn.AddDeep(hranoprovod.NewElement("one", 10), DefaultCategorySeparator)
+				tn.AddDeep(hranoprovod.NewElement("one/two", 20), DefaultCategorySeparator)
 				return tn
 			},
 			&TreeNode{

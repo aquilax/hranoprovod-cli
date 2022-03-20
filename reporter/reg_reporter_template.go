@@ -5,8 +5,8 @@ import (
 	"sort"
 	"text/template"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 const defaultTemplate = `{{formatDate .Time}}
@@ -44,7 +44,7 @@ const leftAlignedTemplate = `{{formatDate .Time}}
 
 type regReporterTemplate struct {
 	config   Config
-	db       shared.DBNodeMap
+	db       hranoprovod.DBNodeMap
 	output   *bufio.Writer
 	template *template.Template
 }
@@ -56,7 +56,7 @@ func getInternalTemplate(internalTemplateName string) string {
 	return defaultTemplate
 }
 
-func newRegReporterTemplate(config Config, db shared.DBNodeMap) *regReporterTemplate {
+func newRegReporterTemplate(config Config, db hranoprovod.DBNodeMap) *regReporterTemplate {
 	return &regReporterTemplate{
 		config,
 		db,
@@ -65,7 +65,7 @@ func newRegReporterTemplate(config Config, db shared.DBNodeMap) *regReporterTemp
 	}
 }
 
-func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
+func (r *regReporterTemplate) Process(ln *hranoprovod.LogNode) error {
 	return r.template.Execute(r.output, getReportItem(ln, r.db, r.config))
 }
 

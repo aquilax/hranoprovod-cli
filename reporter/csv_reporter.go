@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 const DefaultOutputTimeFormat = "2006-01-02"
@@ -42,7 +42,7 @@ func NewCSVReporter(config CSVConfig) CSVReporter {
 }
 
 // Process writes single node
-func (r CSVReporter) Process(ln *shared.LogNode) error {
+func (r CSVReporter) Process(ln *hranoprovod.LogNode) error {
 	var err error
 	for _, e := range ln.Elements {
 		if err = r.output.Write([]string{

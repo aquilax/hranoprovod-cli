@@ -13,7 +13,7 @@ TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md docs/usage.cast
 all: $(BINARY) docs
 
 $(BINARY):
-	go build -o $(BINARY)
+	go build -o $(BINARY) hranoprovod/main.go
 
 docs: $(BINARY) docs/command-line.md docs/usage.md README.md
 

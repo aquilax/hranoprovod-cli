@@ -1,4 +1,4 @@
-package shared
+package hranoprovod
 
 import (
 	"time"

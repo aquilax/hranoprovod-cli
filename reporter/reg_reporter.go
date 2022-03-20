@@ -7,17 +7,17 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 type regReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 }
 
-func newRegReporter(config Config, db shared.DBNodeMap) *regReporter {
+func newRegReporter(config Config, db hranoprovod.DBNodeMap) *regReporter {
 	return &regReporter{
 		config,
 		db,
@@ -25,7 +25,7 @@ func newRegReporter(config Config, db shared.DBNodeMap) *regReporter {
 	}
 }
 
-func (r *regReporter) Process(ln *shared.LogNode) error {
+func (r *regReporter) Process(ln *hranoprovod.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	r.printDate(ln.Time)
 	for _, element := range ln.Elements {
@@ -84,7 +84,7 @@ func (r *regReporter) printDate(ts time.Time) {
 	fmt.Fprintf(r.output, "%s\n", ts.Format(r.config.DateFormat))
 }
 
-func (r *regReporter) printElement(element shared.Element) {
+func (r *regReporter) printElement(element hranoprovod.Element) {
 	fmt.Fprintf(r.output, "\t%-27s :%s\n", element.Name, r.cNum(element.Value))
 }
 

@@ -4,19 +4,19 @@ import (
 	"bufio"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // elementByFoodReporter outputs report for single element groupped by food
 type elementByFoodReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 	acc    accumulator.Accumulator
 }
 
-func newElementByFoodReporter(config Config, db shared.DBNodeMap) *elementByFoodReporter {
+func newElementByFoodReporter(config Config, db hranoprovod.DBNodeMap) *elementByFoodReporter {
 	return &elementByFoodReporter{
 		config,
 		db,
@@ -25,7 +25,7 @@ func newElementByFoodReporter(config Config, db shared.DBNodeMap) *elementByFood
 	}
 }
 
-func (r *elementByFoodReporter) Process(ln *shared.LogNode) error {
+func (r *elementByFoodReporter) Process(ln *hranoprovod.LogNode) error {
 	singleElement := r.config.SingleElement
 	for _, e := range ln.Elements {
 		node, found := r.db[e.Name]

@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 type CommonConfig struct {
@@ -59,12 +59,12 @@ func NewDefaultConfig() Config {
 
 // Reporter is the reporting interface
 type Reporter interface {
-	Process(ln *shared.LogNode) error
+	Process(ln *hranoprovod.LogNode) error
 	Flush() error
 }
 
 // NewRegReporter creates new response handler
-func NewRegReporter(c Config, db shared.DBNodeMap) Reporter {
+func NewRegReporter(c Config, db hranoprovod.DBNodeMap) Reporter {
 	if c.Unresolved {
 		return NewUnsolvedReporter(c, db)
 	}
@@ -84,7 +84,7 @@ func NewRegReporter(c Config, db shared.DBNodeMap) Reporter {
 }
 
 // NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options Config, db shared.DBNodeMap) Reporter {
+func NewBalanceReporter(options Config, db hranoprovod.DBNodeMap) Reporter {
 	if len(options.SingleElement) > 0 {
 		return newBalanceSingleReporter(options, db)
 	}

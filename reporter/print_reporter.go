@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 // PrintReporter outputs log report
@@ -20,7 +20,7 @@ func NewPrintReporter(config Config) *PrintReporter {
 	}
 }
 
-func (pr PrintReporter) Process(ln *shared.LogNode) error {
+func (pr PrintReporter) Process(ln *hranoprovod.LogNode) error {
 	var err error
 	if _, err = fmt.Fprintf(pr.output, "%s:\n", ln.Time.Format(pr.config.DateFormat)); err != nil {
 		return err

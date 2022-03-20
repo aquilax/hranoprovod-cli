@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
-	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
 
 // singleReporter outputs report for single food
 type singleReporter struct {
 	config Config
-	db     shared.DBNodeMap
+	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
 }
 
-func newSingleReporter(config Config, db shared.DBNodeMap) *singleReporter {
+func newSingleReporter(config Config, db hranoprovod.DBNodeMap) *singleReporter {
 	return &singleReporter{
 		config,
 		db,
@@ -24,7 +24,7 @@ func newSingleReporter(config Config, db shared.DBNodeMap) *singleReporter {
 	}
 }
 
-func (r *singleReporter) Process(ln *shared.LogNode) error {
+func (r *singleReporter) Process(ln *hranoprovod.LogNode) error {
 	acc := accumulator.NewAccumulator()
 	singleElement := r.config.SingleElement
 	for _, e := range ln.Elements {
