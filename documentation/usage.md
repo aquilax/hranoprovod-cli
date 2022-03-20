@@ -72,7 +72,7 @@ Prints list of records which were not found in the recipe book
 
 ### Data statistics
 
-`$ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color stats`
+`$ ./hranoprovod-cli --today 2022/01/01 -d examples/food.yaml -l examples/log.yaml --no-color stats`
 
 ### Total quantities per food
 

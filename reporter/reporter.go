@@ -12,9 +12,9 @@ type CommonConfig struct {
 	Color  bool
 }
 
-func NewCommonConfig(color bool) CommonConfig {
+func NewCommonConfig(output io.Writer, color bool) CommonConfig {
 	return CommonConfig{
-		Output: os.Stdout,
+		Output: output,
 		Color:  color,
 	}
 }

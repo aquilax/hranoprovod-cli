@@ -1,4 +1,4 @@
-.PHONY: clean test test-release
+.PHONY: clean test test-release snapshots
 
 unexport HR_DATABASE
 unexport HR_LOGFILE
@@ -39,3 +39,11 @@ documentation/usage.cast: $(BINARY) scripts/usage.sh
 	asciinema rec --overwrite -c "scripts/usage.sh -n" documentation/usage.cast
 
 cast: $(BINARY) docs/usage.cast
+
+snapshots:
+	UPDATE_SNAPSHOTS=1 go test ./...
+
+coverage:
+	go test -race -coverprofile=coverage.out -covermode=atomic ./...
+	go tool cover -func=coverage.out
+	# rm coverage.out

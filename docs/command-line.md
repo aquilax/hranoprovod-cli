@@ -17,6 +17,7 @@ hranoprovod-cli
 [--maxdepth]=[value]
 [--no-color]
 [--no-database]
+[--today]=[value]
 [--version|-v]
 ```
 
@@ -51,6 +52,8 @@ hranoprovod-cli [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]
 **--no-color**: Disable color output
 
 **--no-database**: Disables loading the database (even if database filename is set)
+
+**--today**="": Overwrite today's date `DATE`
 
 **--version, -v**: print the version
 

@@ -49,7 +49,7 @@ func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
 					DateFormat:     o.GlobalConfig.DateFormat,
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
-					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Color)),
+					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Output, o.ReporterConfig.Color)),
 				}
 				return cu.withFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					logStream := streams[0]

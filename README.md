@@ -85,6 +85,7 @@ COMMANDS:
 GLOBAL OPTIONS:
    --begin DATE, -b DATE      Beginning of period DATE
    --end DATE, -e DATE        End of period DATE
+   --today DATE               Overwrite today's date DATE
    --database FILE, -d FILE   optional database file name FILE (default: "food.yaml") [$HR_DATABASE]
    --logfile FILE, -l FILE    log file name FILE (default: "log.yaml") [$HR_LOGFILE]
    --config FILE, -c FILE     Configuration file FILE (default: "/home/aquilax/.hranoprovod/config") [$HR_CONFIG]

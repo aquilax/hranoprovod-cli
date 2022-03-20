@@ -233,6 +233,7 @@ func ReportElement(dbStream io.Reader, rec ReportElementConfig) error {
 }
 
 type StatsConfig struct {
+	Now            time.Time
 	ParserConfig   parser.Config
 	ReporterConfig reporter.Config
 }
@@ -270,6 +271,7 @@ func Stats(logFileName, dbFileName string, sc StatsConfig) error {
 		LogFileName:     logFileName,
 		DbRecordsCount:  countDb,
 		LogRecordsCount: countLog,
+		Now:             sc.Now,
 		LogFirstRecord:  firstLogDate,
 		LogLastRecord:   lastLogDate,
 	}).Flush()

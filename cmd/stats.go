@@ -15,6 +15,7 @@ func newStatsCommand(cu cmdUtils, stats statsCmd) *cli.Command {
 		Action: func(c *cli.Context) error {
 			return cu.withOptions(c, func(o *options.Options) error {
 				return stats(o.GlobalConfig.LogFileName, o.GlobalConfig.LogFileName, app.StatsConfig{
+					Now:            o.GlobalConfig.Now,
 					ParserConfig:   o.ParserConfig,
 					ReporterConfig: o.ReporterConfig,
 				})
