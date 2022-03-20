@@ -156,15 +156,7 @@ Provide stats information
 
 ## summary
 
-Show summary
-
-### today
-
-Show summary for today
-
-### yesterday
-
-Show summary for yesterday
+Show summary for date
 
 ## gen
 

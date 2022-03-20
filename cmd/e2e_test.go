@@ -116,6 +116,16 @@ func Test_E2E(t *testing.T) {
 			nil,
 			`testAssets/summary.txt`,
 		},
+		{
+			"register works as expected",
+			[]string{"register"},
+			func(w io.Writer) cli.App {
+				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+				return getMockApp(newRegisterCommand(mockCu, app.Register))
+			},
+			nil,
+			`testAssets/register.txt`,
+		},
 	}
 
 	updateSnapshots := os.Getenv("UPDATE_SNAPSHOTS") == "1"

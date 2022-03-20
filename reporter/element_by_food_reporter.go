@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
@@ -12,7 +12,7 @@ import (
 type elementByFoodReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 	acc    accumulator.Accumulator
 }
 
@@ -20,7 +20,7 @@ func newElementByFoodReporter(config Config, db shared.DBNodeMap) *elementByFood
 	return &elementByFoodReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 		accumulator.NewAccumulator(),
 	}
 }
@@ -44,7 +44,7 @@ func (r *elementByFoodReporter) Flush() error {
 	for name, arr := range r.acc {
 		r.printSingleElementByFoodRow(name, arr[accumulator.Positive], arr[accumulator.Negative])
 	}
-	return nil
+	return r.output.Flush()
 }
 
 func (r *elementByFoodReporter) printSingleElementByFoodRow(name string, pos float64, neg float64) {

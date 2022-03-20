@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
@@ -11,7 +11,7 @@ import (
 type UnsolvedReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 	list   map[string]bool
 }
 
@@ -20,7 +20,7 @@ func NewUnsolvedReporter(config Config, db shared.DBNodeMap) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 		make(map[string]bool),
 	}
 }
@@ -41,5 +41,5 @@ func (r *UnsolvedReporter) Flush() error {
 	for name := range r.list {
 		fmt.Fprintln(r.output, name)
 	}
-	return nil
+	return r.output.Flush()
 }

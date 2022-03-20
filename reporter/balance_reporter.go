@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"strings"
 
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
@@ -12,7 +12,7 @@ import (
 type balanceReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 	root   *accumulator.TreeNode
 }
 
@@ -20,7 +20,7 @@ func newBalanceReporter(config Config, db shared.DBNodeMap) *balanceReporter {
 	return &balanceReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 		accumulator.NewTreeNode("", 0),
 	}
 }
@@ -57,7 +57,7 @@ func (r *balanceReporter) Flush() error {
 		return nil
 	}
 	r.printNode(r.root, 0)
-	return nil
+	return r.output.Flush()
 }
 
 func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {

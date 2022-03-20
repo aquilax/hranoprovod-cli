@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"sort"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
@@ -11,14 +11,14 @@ import (
 type QuantityReporter struct {
 	descending  bool
 	accumulator map[string]float64
-	output      io.Writer
+	output      *bufio.Writer
 }
 
 func NewQuantityReporter(config Config, descending bool) QuantityReporter {
 	return QuantityReporter{
 		descending,
 		make(map[string]float64),
-		config.Output,
+		bufio.NewWriter(config.Output),
 	}
 }
 
@@ -58,5 +58,5 @@ func (r QuantityReporter) Flush() error {
 		el := el
 		fmt.Fprintf(r.output, "%0.2f\t%s\n", el.value, el.name)
 	}
-	return nil
+	return r.output.Flush()
 }

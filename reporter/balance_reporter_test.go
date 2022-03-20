@@ -1,6 +1,7 @@
 package reporter
 
 import (
+	"bufio"
 	"bytes"
 	"io"
 	"testing"
@@ -60,11 +61,12 @@ func Test_balanceReporter_printNode(t *testing.T) {
 			r := &balanceReporter{
 				config: tt.fields.config,
 				db:     tt.fields.db,
-				output: tt.fields.output,
+				output: bufio.NewWriter(tt.fields.output),
 				root:   tt.fields.root,
 			}
 			print(tt.args.node.Name)
 			r.printNodeCollapsed(tt.args.node, tt.args.level)
+			r.output.Flush()
 			got := buffer.String()
 			if got != tt.want {
 				t.Errorf("Output = \n%v, want \n%v", got, tt.want)

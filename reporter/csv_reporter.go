@@ -56,8 +56,8 @@ func (r CSVReporter) Process(ln *shared.LogNode) error {
 	return nil
 }
 
-// Flush does nothing
+// Flush flushes the buffer
 func (r CSVReporter) Flush() error {
 	r.output.Flush()
-	return nil
+	return r.output.Error()
 }

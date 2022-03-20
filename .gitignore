@@ -26,4 +26,4 @@ hranoprovod-cli
 .vscode
 dist/
 snap-token.txt
-coverate.out
+coverage.out

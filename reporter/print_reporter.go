@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
 )
@@ -10,13 +10,13 @@ import (
 // PrintReporter outputs log report
 type PrintReporter struct {
 	config Config
-	output io.Writer
+	output *bufio.Writer
 }
 
 func NewPrintReporter(config Config) *PrintReporter {
 	return &PrintReporter{
 		config,
-		config.Output,
+		bufio.NewWriter(config.Output),
 	}
 }
 
@@ -48,5 +48,5 @@ func (pr PrintReporter) Process(ln *shared.LogNode) error {
 }
 
 func (pr PrintReporter) Flush() error {
-	return nil
+	return pr.output.Flush()
 }

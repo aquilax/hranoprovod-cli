@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"regexp"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
@@ -11,14 +11,14 @@ import (
 type singleFoodReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 }
 
 func newSingleFoodReporter(config Config, db shared.DBNodeMap) *singleFoodReporter {
 	return &singleFoodReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 	}
 }
 
@@ -36,5 +36,5 @@ func (r *singleFoodReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *singleFoodReporter) Flush() error {
-	return nil
+	return r.output.Flush()
 }

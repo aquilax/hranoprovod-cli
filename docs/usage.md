@@ -185,9 +185,9 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg --
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 2021/01/24 --no-color reg -g -s calories
-    280.00	candy/snickers/bar
   -1200.00	day/nonworking
     328.32	sandwich/egg/lettuce/100g
+    280.00	candy/snickers/bar
 
 ```
 
@@ -215,10 +215,6 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c
-      1.00 | candy/snickers/bar
-      3.00 | coffee/cup
-      2.00 | day/nonworking
-      2.70 | sandwich/egg/lettuce/100g
 
 ```
 

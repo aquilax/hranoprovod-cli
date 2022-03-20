@@ -1,7 +1,7 @@
 package reporter
 
 import (
-	"io"
+	"bufio"
 	"text/template"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
@@ -25,7 +25,7 @@ const summaryTemplate = `{{formatDate .Time}} :
 type SummaryReporterTemplate struct {
 	config   Config
 	db       shared.DBNodeMap
-	output   io.Writer
+	output   *bufio.Writer
 	template *template.Template
 }
 
@@ -34,7 +34,7 @@ func NewSummaryReporterTemplate(config Config, db shared.DBNodeMap) *SummaryRepo
 	return &SummaryReporterTemplate{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 		template.Must(template.New("summary").Funcs(getTemplateFunctions(config)).Parse(summaryTemplate)),
 	}
 }
@@ -46,5 +46,5 @@ func (r *SummaryReporterTemplate) Process(ln *shared.LogNode) error {
 
 // Flush does nothing
 func (r *SummaryReporterTemplate) Flush() error {
-	return nil
+	return r.output.Flush()
 }

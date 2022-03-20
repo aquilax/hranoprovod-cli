@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
@@ -13,14 +13,14 @@ import (
 type singleReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 }
 
 func newSingleReporter(config Config, db shared.DBNodeMap) *singleReporter {
 	return &singleReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 	}
 }
 
@@ -50,7 +50,7 @@ func (r *singleReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *singleReporter) Flush() error {
-	return nil
+	return r.output.Flush()
 }
 
 func (r *singleReporter) printSingleElementRow(ts time.Time, name string, pos float64, neg float64) {

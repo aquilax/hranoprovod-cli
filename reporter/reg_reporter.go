@@ -1,8 +1,8 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"sort"
 	"strings"
 	"time"
@@ -14,14 +14,14 @@ import (
 type regReporter struct {
 	config Config
 	db     shared.DBNodeMap
-	output io.Writer
+	output *bufio.Writer
 }
 
 func newRegReporter(config Config, db shared.DBNodeMap) *regReporter {
 	return &regReporter{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 	}
 }
 
@@ -65,7 +65,7 @@ func (r *regReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *regReporter) Flush() error {
-	return nil
+	return r.output.Flush()
 }
 
 func (r *regReporter) cNum(num float64) string {

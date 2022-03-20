@@ -37,6 +37,7 @@ func TestRegReporterTemplate(t *testing.T) {
 			err := rp.Process(ln)
 			rp.Flush()
 			assert.Nil(t, err)
+			println(b.String())
 			assert.Equal(t, string(expected), b.String())
 		})
 	})

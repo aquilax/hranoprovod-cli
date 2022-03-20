@@ -1,7 +1,7 @@
 package reporter
 
 import (
-	"io"
+	"bufio"
 	"sort"
 	"text/template"
 
@@ -45,7 +45,7 @@ const leftAlignedTemplate = `{{formatDate .Time}}
 type regReporterTemplate struct {
 	config   Config
 	db       shared.DBNodeMap
-	output   io.Writer
+	output   *bufio.Writer
 	template *template.Template
 }
 
@@ -60,7 +60,7 @@ func newRegReporterTemplate(config Config, db shared.DBNodeMap) *regReporterTemp
 	return &regReporterTemplate{
 		config,
 		db,
-		config.Output,
+		bufio.NewWriter(config.Output),
 		template.Must(template.New("template").Funcs(getTemplateFunctions(config)).Parse(getInternalTemplate(config.InternalTemplateName))),
 	}
 }
@@ -70,7 +70,7 @@ func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
 }
 
 func (r *regReporterTemplate) Flush() error {
-	return nil
+	return r.output.Flush()
 }
 
 func newTotalFromAccumulator(acc accumulator.Accumulator) *[]total {

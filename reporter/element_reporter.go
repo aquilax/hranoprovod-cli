@@ -1,6 +1,7 @@
 package reporter
 
 import (
+	"bufio"
 	"fmt"
 
 	"github.com/aquilax/hranoprovod-cli/v2/shared"
@@ -9,10 +10,11 @@ import (
 type ElementReporter struct {
 	config Config
 	list   []shared.Element
+	output *bufio.Writer
 }
 
 func NewElementReporter(c Config, list []shared.Element) *ElementReporter {
-	return &ElementReporter{c, list}
+	return &ElementReporter{c, list, bufio.NewWriter(c.Output)}
 }
 
 func (er ElementReporter) Process(ln *shared.LogNode) error {
@@ -25,5 +27,5 @@ func (er ElementReporter) Flush() error {
 			return err
 		}
 	}
-	return err
+	return er.output.Flush()
 }

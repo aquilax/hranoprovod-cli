@@ -34,8 +34,8 @@ func (r CSVDatabaseReporter) Process(n *shared.DBNode) error {
 	return nil
 }
 
-// Flush does nothing
+// Flush flushes the buffer
 func (r CSVDatabaseReporter) Flush() error {
 	r.output.Flush()
-	return nil
+	return r.output.Error()
 }
