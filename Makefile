@@ -1,4 +1,4 @@
-.PHONY: clean test test-release snapshots
+.PHONY: all clean test test-release snapshots
 
 unexport HR_DATABASE
 unexport HR_LOGFILE
@@ -6,24 +6,27 @@ unexport HR_CONFIG
 unexport HR_DATE_FORMAT
 
 SHELL=/bin/bash
-BINARY=hranoprovod-cli
+TARGET=hranoprovod-cli
 MDEXEC=mdexec
-TARGETS=${BINARY} docs/command-line.md docs/usage.md README.md docs/usage.cast
+SRC=$(shell find . -type f -name '*.go' -not -path "./vendor/*")
+DOC_TARGETS=${TARGET} docs/command-line.md docs/usage.md README.md docs/usage.cast
 
-all: $(BINARY) docs
+.DEFAULT_GOAL: $(TARGET)
 
-$(BINARY):
-	go build -o $(BINARY) hranoprovod/main.go
+all: $(TARGET) docs
 
-docs: $(BINARY) docs/command-line.md docs/usage.md README.md
+$(TARGET): $(SRC)
+	go build -o $(TARGET) hranoprovod/main.go
 
-docs/command-line.md:
-	./$(BINARY) gen markdown > $@
+docs: $(TARGET) docs/command-line.md docs/usage.md README.md
 
-docs/usage.md:
+docs/command-line.md: $(TARGET)
+	./$(TARGET) gen markdown > $@
+
+docs/usage.md: $(TARGET) documentation/usage.md
 	$(MDEXEC) documentation/usage.md > $@
 
-README.md:
+README.md: $(TARGET) documentation/README.md
 	$(MDEXEC) documentation/README.md > $@
 
 test:
@@ -33,12 +36,12 @@ test-release:
 	goreleaser --snapshot --skip-publish --rm-dist
 
 clean:
-	rm -f $(TARGETS)
+	rm -f $(DOC_TARGETS)
 
-documentation/usage.cast: $(BINARY) scripts/usage.sh
+documentation/usage.cast: $(TARGET) scripts/usage.sh
 	asciinema rec --overwrite -c "scripts/usage.sh -n" documentation/usage.cast
 
-cast: $(BINARY) docs/usage.cast
+cast: $(TARGET) documentation/usage.cast
 
 snapshots:
 	UPDATE_SNAPSHOTS=1 go test ./...

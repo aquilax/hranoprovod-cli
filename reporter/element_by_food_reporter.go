@@ -3,6 +3,7 @@ package reporter
 import (
 	"bufio"
 	"fmt"
+	"sort"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
 )
@@ -40,7 +41,15 @@ func (r *elementByFoodReporter) Process(ln *hranoprovod.LogNode) error {
 }
 
 func (r *elementByFoodReporter) Flush() error {
-	for name, arr := range r.acc {
+	keys := make([]string, len(r.acc))
+	i := 0
+	for name := range r.acc {
+		keys[i] = name
+		i++
+	}
+	sort.Strings(keys)
+	for _, name := range keys {
+		arr := r.acc[name]
 		r.printSingleElementByFoodRow(name, arr[hranoprovod.Positive], arr[hranoprovod.Negative])
 	}
 	return r.output.Flush()
