@@ -6,14 +6,13 @@ import (
 	"strings"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 type balanceSingleReporter struct {
 	config Config
 	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
-	root   *accumulator.TreeNode
+	root   *hranoprovod.TreeNode
 	total  float64
 }
 
@@ -22,7 +21,7 @@ func newBalanceSingleReporter(config Config, db hranoprovod.DBNodeMap) *balanceS
 		config,
 		db,
 		bufio.NewWriter(config.Output),
-		accumulator.NewTreeNode("", 0),
+		hranoprovod.NewTreeNode("", 0),
 		0,
 	}
 }
@@ -33,14 +32,14 @@ func (r *balanceSingleReporter) Process(ln *hranoprovod.LogNode) error {
 		if found {
 			for _, repl := range repl.Elements {
 				if repl.Name == r.config.SingleElement {
-					r.root.AddDeep(hranoprovod.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
+					r.root.AddDeep(hranoprovod.NewElement(el.Name, repl.Value*el.Value), hranoprovod.DefaultCategorySeparator)
 					// Add to grand total
 					r.total += repl.Value * el.Value
 				}
 			}
 		} else {
 			if el.Name == r.config.SingleElement {
-				r.root.AddDeep(hranoprovod.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
+				r.root.AddDeep(hranoprovod.NewElement(el.Name, 0), hranoprovod.DefaultCategorySeparator)
 			}
 		}
 	}
@@ -59,7 +58,7 @@ func (r *balanceSingleReporter) Flush() error {
 	return r.output.Flush()
 }
 
-func (r *balanceSingleReporter) printNode(node *accumulator.TreeNode, level int) {
+func (r *balanceSingleReporter) printNode(node *hranoprovod.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 		if r.config.CollapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
@@ -72,7 +71,7 @@ func (r *balanceSingleReporter) printNode(node *accumulator.TreeNode, level int)
 	}
 }
 
-func (r *balanceSingleReporter) printNodeCollapsed(node *accumulator.TreeNode, level int) {
+func (r *balanceSingleReporter) printNodeCollapsed(node *hranoprovod.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 

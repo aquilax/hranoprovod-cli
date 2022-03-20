@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 type regReporter struct {
@@ -26,7 +25,7 @@ func newRegReporter(config Config, db hranoprovod.DBNodeMap) *regReporter {
 }
 
 func (r *regReporter) Process(ln *hranoprovod.LogNode) error {
-	acc := accumulator.NewAccumulator()
+	acc := hranoprovod.NewAccumulator()
 	r.printDate(ln.Time)
 	for _, element := range ln.Elements {
 		if !r.config.TotalsOnly {
@@ -57,7 +56,7 @@ func (r *regReporter) Process(ln *hranoprovod.LogNode) error {
 			sort.Sort(ss)
 			for _, name := range ss {
 				arr := acc[name]
-				r.printTotalRow(name, arr[accumulator.Positive], arr[accumulator.Negative])
+				r.printTotalRow(name, arr[hranoprovod.Positive], arr[hranoprovod.Negative])
 			}
 		}
 	}

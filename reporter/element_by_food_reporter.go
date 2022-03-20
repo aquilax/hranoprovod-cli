@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 // elementByFoodReporter outputs report for single element groupped by food
@@ -13,7 +12,7 @@ type elementByFoodReporter struct {
 	config Config
 	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
-	acc    accumulator.Accumulator
+	acc    hranoprovod.Accumulator
 }
 
 func newElementByFoodReporter(config Config, db hranoprovod.DBNodeMap) *elementByFoodReporter {
@@ -21,7 +20,7 @@ func newElementByFoodReporter(config Config, db hranoprovod.DBNodeMap) *elementB
 		config,
 		db,
 		bufio.NewWriter(config.Output),
-		accumulator.NewAccumulator(),
+		hranoprovod.NewAccumulator(),
 	}
 }
 
@@ -42,7 +41,7 @@ func (r *elementByFoodReporter) Process(ln *hranoprovod.LogNode) error {
 
 func (r *elementByFoodReporter) Flush() error {
 	for name, arr := range r.acc {
-		r.printSingleElementByFoodRow(name, arr[accumulator.Positive], arr[accumulator.Negative])
+		r.printSingleElementByFoodRow(name, arr[hranoprovod.Positive], arr[hranoprovod.Negative])
 	}
 	return r.output.Flush()
 }

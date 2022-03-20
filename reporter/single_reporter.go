@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 // singleReporter outputs report for single food
@@ -25,7 +24,7 @@ func newSingleReporter(config Config, db hranoprovod.DBNodeMap) *singleReporter 
 }
 
 func (r *singleReporter) Process(ln *hranoprovod.LogNode) error {
-	acc := accumulator.NewAccumulator()
+	acc := hranoprovod.NewAccumulator()
 	singleElement := r.config.SingleElement
 	for _, e := range ln.Elements {
 		repl, found := r.db[e.Name]
@@ -43,7 +42,7 @@ func (r *singleReporter) Process(ln *hranoprovod.LogNode) error {
 	}
 	if len(acc) > 0 {
 		arr := (acc)[singleElement]
-		r.printSingleElementRow(ln.Time, r.config.SingleElement, arr[accumulator.Positive], arr[accumulator.Negative])
+		r.printSingleElementRow(ln.Time, r.config.SingleElement, arr[hranoprovod.Positive], arr[hranoprovod.Negative])
 	}
 	return nil
 

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 type reportElement struct {
@@ -26,9 +25,9 @@ type reportItem struct {
 }
 
 func getReportItem(ln *hranoprovod.LogNode, db hranoprovod.DBNodeMap, config Config) reportItem {
-	var acc accumulator.Accumulator
+	var acc hranoprovod.Accumulator
 	if config.Totals {
-		acc = accumulator.NewAccumulator()
+		acc = hranoprovod.NewAccumulator()
 	}
 	re := make([]reportElement, len(ln.Elements))
 	//sort.Sort(ln.Elements)

@@ -6,7 +6,6 @@ import (
 	"text/template"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 const defaultTemplate = `{{formatDate .Time}}
@@ -73,7 +72,7 @@ func (r *regReporterTemplate) Flush() error {
 	return r.output.Flush()
 }
 
-func newTotalFromAccumulator(acc accumulator.Accumulator) *[]total {
+func newTotalFromAccumulator(acc hranoprovod.Accumulator) *[]total {
 	var result = make([]total, len(acc))
 	var ss = make(sort.StringSlice, len(acc))
 	i := 0
@@ -83,7 +82,7 @@ func newTotalFromAccumulator(acc accumulator.Accumulator) *[]total {
 	}
 	sort.Sort(ss)
 	for i, name := range ss {
-		result[i] = total{name, acc[name][accumulator.Positive], acc[name][accumulator.Negative], acc[name][accumulator.Positive] + acc[name][accumulator.Negative]}
+		result[i] = total{name, acc[name][hranoprovod.Positive], acc[name][hranoprovod.Negative], acc[name][hranoprovod.Positive] + acc[name][hranoprovod.Negative]}
 	}
 	return &result
 }

@@ -1,10 +1,8 @@
-package accumulator
+package hranoprovod
 
 import (
 	"sort"
 	"strings"
-
-	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
 // DefaultCategorySeparator the default string used to separate categories
@@ -37,7 +35,7 @@ func (tn *TreeNode) Add(child *TreeNode) *TreeNode {
 }
 
 // AddDeep adds recursive child nodes to the current node given an element
-func (tn *TreeNode) AddDeep(el hranoprovod.Element, separator string) {
+func (tn *TreeNode) AddDeep(el Element, separator string) {
 	parent := tn
 	names := strings.Split(el.Name, separator)
 	for _, name := range names {

@@ -6,14 +6,14 @@ import (
 	"io"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
+	"github.com/aquilax/hranoprovod-cli/v2"
 )
 
-func getSimpleTree() *accumulator.TreeNode {
-	root := accumulator.NewTreeNode("test", 10.0)
-	root.Add(accumulator.NewTreeNode("child1", 10.0))
-	child2 := root.Add(accumulator.NewTreeNode("child2", 10.0))
-	child2.Add(accumulator.NewTreeNode("child2.1", 10.0)).Add(accumulator.NewTreeNode("child2.1.1", 10.0))
+func getSimpleTree() *hranoprovod.TreeNode {
+	root := hranoprovod.NewTreeNode("test", 10.0)
+	root.Add(hranoprovod.NewTreeNode("child1", 10.0))
+	child2 := root.Add(hranoprovod.NewTreeNode("child2", 10.0))
+	child2.Add(hranoprovod.NewTreeNode("child2.1", 10.0)).Add(hranoprovod.NewTreeNode("child2.1.1", 10.0))
 	return root
 }
 
@@ -26,10 +26,10 @@ func Test_balanceReporter_printNode(t *testing.T) {
 		config Config
 		db     hranoprovod.DBNodeMap
 		output io.Writer
-		root   *accumulator.TreeNode
+		root   *hranoprovod.TreeNode
 	}
 	type args struct {
-		node  *accumulator.TreeNode
+		node  *hranoprovod.TreeNode
 		level int
 	}
 	tests := []struct {

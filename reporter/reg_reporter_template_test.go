@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2"
 	"github.com/stretchr/testify/assert"
 )
 

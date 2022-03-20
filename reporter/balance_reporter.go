@@ -6,14 +6,13 @@ import (
 	"strings"
 
 	"github.com/aquilax/hranoprovod-cli/v2"
-	"github.com/aquilax/hranoprovod-cli/v2/accumulator"
 )
 
 type balanceReporter struct {
 	config Config
 	db     hranoprovod.DBNodeMap
 	output *bufio.Writer
-	root   *accumulator.TreeNode
+	root   *hranoprovod.TreeNode
 }
 
 func newBalanceReporter(config Config, db hranoprovod.DBNodeMap) *balanceReporter {
@@ -21,7 +20,7 @@ func newBalanceReporter(config Config, db hranoprovod.DBNodeMap) *balanceReporte
 		config,
 		db,
 		bufio.NewWriter(config.Output),
-		accumulator.NewTreeNode("", 0),
+		hranoprovod.NewTreeNode("", 0),
 	}
 }
 
@@ -32,12 +31,12 @@ func (r *balanceReporter) Process(ln *hranoprovod.LogNode) error {
 			if found {
 				for _, repl := range repl.Elements {
 					if repl.Name == r.config.SingleElement {
-						r.root.AddDeep(hranoprovod.NewElement(el.Name, repl.Value*el.Value), accumulator.DefaultCategorySeparator)
+						r.root.AddDeep(hranoprovod.NewElement(el.Name, repl.Value*el.Value), hranoprovod.DefaultCategorySeparator)
 					}
 				}
 			} else {
 				if el.Name == r.config.SingleElement {
-					r.root.AddDeep(hranoprovod.NewElement(el.Name, 0), accumulator.DefaultCategorySeparator)
+					r.root.AddDeep(hranoprovod.NewElement(el.Name, 0), hranoprovod.DefaultCategorySeparator)
 				}
 			}
 		}
@@ -46,7 +45,7 @@ func (r *balanceReporter) Process(ln *hranoprovod.LogNode) error {
 
 	for _, el := range ln.Elements {
 		el := el
-		r.root.AddDeep(el, accumulator.DefaultCategorySeparator)
+		r.root.AddDeep(el, hranoprovod.DefaultCategorySeparator)
 	}
 	return nil
 }
@@ -60,7 +59,7 @@ func (r *balanceReporter) Flush() error {
 	return r.output.Flush()
 }
 
-func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
+func (r *balanceReporter) printNode(node *hranoprovod.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 		if len(child.Children) == 0 {
@@ -76,7 +75,7 @@ func (r *balanceReporter) printNode(node *accumulator.TreeNode, level int) {
 	}
 }
 
-func getJump(node *accumulator.TreeNode) []string {
+func getJump(node *hranoprovod.TreeNode) []string {
 	if len(node.Children) > 1 {
 		return []string{}
 	}
@@ -86,7 +85,7 @@ func getJump(node *accumulator.TreeNode) []string {
 	return append([]string{node.Name}, getJump(node.Children[node.Keys()[0]])...)
 }
 
-func (r *balanceReporter) printNodeCollapsed(node *accumulator.TreeNode, level int) {
+func (r *balanceReporter) printNodeCollapsed(node *hranoprovod.TreeNode, level int) {
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 

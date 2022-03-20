@@ -1,4 +1,4 @@
-package accumulator
+package hranoprovod
 
 const (
 	// Negative register
