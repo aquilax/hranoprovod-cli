@@ -106,6 +106,16 @@ func Test_E2E(t *testing.T) {
 			nil,
 			`testAssets/print-log.yaml`,
 		},
+		{
+			"summary works as expected",
+			[]string{"summary", "2021/01/24"},
+			func(w io.Writer) cli.App {
+				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+				return getMockApp(newSummaryCommand(mockCu, app.Summary))
+			},
+			nil,
+			`testAssets/summary.txt`,
+		},
 	}
 
 	updateSnapshots := os.Getenv("UPDATE_SNAPSHOTS") == "1"

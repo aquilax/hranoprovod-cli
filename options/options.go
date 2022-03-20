@@ -127,7 +127,7 @@ func (o *Options) populateResolver(c *cli.Context) {
 	}
 }
 
-func getTimeFromString(now time.Time, format string, date string) (time.Time, error) {
+func GetTimeFromString(now time.Time, format string, date string) (time.Time, error) {
 	if date == "today" {
 		return now.Local(), nil
 	}
@@ -152,14 +152,14 @@ func getTimeFromString(now time.Time, format string, date string) (time.Time, er
 func (o *Options) populateFilter(c *cli.Context) error {
 	for i := len(c.Lineage()) - 1; i >= 0; i-- {
 		if c.Lineage()[i].IsSet("begin") {
-			time, err := getTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
+			time, err := GetTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("begin"))
 			if err != nil {
 				return err
 			}
 			o.FilterConfig.BeginningTime = &time
 		}
 		if c.Lineage()[i].IsSet("end") {
-			time, err := getTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
+			time, err := GetTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Lineage()[i].String("end"))
 			if err != nil {
 				return err
 			}

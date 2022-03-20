@@ -43,6 +43,7 @@ func getMockCmdUtilsRealOptions(contents []string, output io.Writer) cmdUtils {
 			if err := o.Load(c, false); err != nil {
 				return err
 			}
+			o.ReporterConfig.Color = false
 			o.ReporterConfig.Output = output
 			return cb(o)
 		},
