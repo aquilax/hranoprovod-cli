@@ -9,7 +9,7 @@ builds:
     - linux
   goarch:
     - amd64
-  main: ./hranoprovod/
+  dir: ./cmd/hranoprovod-cli
   binary: hranoprovod-cli
 
 archives:

@@ -1,18 +1,20 @@
-FROM golang:alpine AS builder
+FROM golang:alpine3.15 AS builder
 
 RUN apk update && apk add --no-cache git
 
-WORKDIR .
+RUN mkdir /build
+
+WORKDIR /build
 
 COPY . .
 
 ENV GOPATH /tmp
 
-RUN go get -d -v
+RUN cd cmd/hranoprovod-cli && go get -d -v
 
 ENV CGO_ENABLED 0
 
-RUN go build -o /go/bin/hranoprovod-cli
+RUN cd cmd/hranoprovod-cli && go build -o /go/bin/hranoprovod-cli
 
 
 FROM scratch

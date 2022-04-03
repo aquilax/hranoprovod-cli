@@ -1,0 +1,45 @@
+# daily nutrition budget
+day/nonworking:
+  calories: -1200
+  fat: -124
+  carbohydrate: -50
+  protein: -104
+
+bread/rye/100g:
+  # barcode: 0000000000000
+  calories: 259
+  fat: 3.3
+  carbohydrate: 48
+  protein: 9
+
+egg/boiled/100g:
+  # boiling time: 12 min
+  calories: 155
+  fat: 11
+  carbohydrate: 1.1
+  protein: 13
+
+vegetables/lettuce/romaine/100g:
+  calories: 15
+  fat: 0.5
+  carbohydrate: 1.7
+  protein: 0.9
+
+sauce/mayonnaise/100g:
+  calories: 680
+  fat: 7.5
+  carbohydrate: 0.6
+  protein: 1
+
+sandwich/egg/lettuce/100g:
+  bread/rye/100g: 0.40
+  egg/boiled/100g: 0.20
+  vegetables/lettuce/romaine/100g: 0.20
+  sauce/mayonnaise/100g: 0.20
+
+candy/snickers/bar:
+  calories: 280
+  fat: 13.6
+  carbohydrate: 35.1
+  protein: 4.29
+

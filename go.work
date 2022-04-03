@@ -1,0 +1,10 @@
+go 1.18
+
+use (
+	./cmd/hranoprovod-cli
+	./lib/filter
+	./lib/reporter
+	./lib/resolver
+	./lib/shared
+	./lib/parser
+)

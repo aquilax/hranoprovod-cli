@@ -22,7 +22,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
-hranoprovod-cli
+/hranoprovod-cli
 .vscode
 dist/
 snap-token.txt
