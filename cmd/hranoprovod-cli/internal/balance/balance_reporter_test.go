@@ -6,6 +6,7 @@ import (
 	"io"
 	"testing"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
@@ -19,11 +20,11 @@ func getSimpleTree() *shared.TreeNode {
 
 func Test_balanceReporter_printNode(t *testing.T) {
 	buffer := bytes.NewBufferString("")
-	config := NewDefaultConfig()
+	config := reporter.NewDefaultConfig()
 	config.CollapseLast = true
 
 	type fields struct {
-		config Config
+		config reporter.Config
 		db     shared.DBNodeMap
 		output io.Writer
 		root   *shared.TreeNode

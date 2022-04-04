@@ -5,11 +5,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_newBalanceCommand(t *testing.T) {
+func Test_NewBalanceCommand(t *testing.T) {
 	tests := []struct {
 		name          string
 		args          []string
@@ -31,14 +32,14 @@ func Test_newBalanceCommand(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockCu := utils.GetMockCmdUtils([]string{tt.dbContent, tt.logContent}, New())
+			mockCu := testutils.GetMockCmdUtils([]string{tt.dbContent, tt.logContent}, options.New())
 			callbackExecutedTimes := 0
 			mockBalance := func(logStream, dbStream io.Reader, bc BalanceConfig) error {
 				callbackExecutedTimes++
 				return nil
 			}
 
-			a := getMockApp(newBalanceCommand(mockCu, mockBalance))
+			a := testutils.GetMockApp(NewBalanceCommand(mockCu, mockBalance))
 
 			err := a.Run(append(os.Args[:1], tt.args...))
 			assert.Equal(t, tt.wantError, err)

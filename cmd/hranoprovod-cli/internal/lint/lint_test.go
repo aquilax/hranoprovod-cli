@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +49,7 @@ func Test_newLintCommand(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
-			mockCu := getMockCmdUtils([]string{tt.wantContent}, New())
+			mockCu := testutils.GetMockCmdUtils([]string{tt.wantContent}, options.New())
 			mockLint := func(stream io.Reader, lc LintConfig) error {
 				callbackExecuted++
 				content, _ := io.ReadAll(stream)
@@ -55,7 +57,7 @@ func Test_newLintCommand(t *testing.T) {
 				assert.Equal(t, lc.Silent, tt.wantSilent)
 				return tt.lintError
 			}
-			a := getMockApp(newLintCommand(mockCu, mockLint))
+			a := testutils.GetMockApp(newLintCommand(mockCu, mockLint))
 
 			err := a.Run(append(os.Args[:1], tt.args...))
 			assert.Equal(t, tt.wantError, err)

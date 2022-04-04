@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,7 +53,7 @@ func TestSummaryReporterTemplate_Process(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var b bytes.Buffer
 			w := bufio.NewWriter(&b)
-			c := NewDefaultConfig()
+			c := reporter.NewDefaultConfig()
 			c.Color = false
 			c.Output = w
 			r := NewSummaryReporterTemplate(c, tt.db)
