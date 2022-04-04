@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"io"
@@ -11,11 +11,11 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
-type resolvedCallback = func(nl shared.DBNodeMap) error
-type reporterCallback func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter
+type ResolvedCallback = func(nl shared.DBNodeMap) error
+type ReporterCallback func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter
 
-func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Config, cb resolvedCallback) error {
-	if nl, err := loadDatabaseFromStream(dbStream, pc); err == nil {
+func WithResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Config, cb ResolvedCallback) error {
+	if nl, err := LoadDatabaseFromStream(dbStream, pc); err == nil {
 		if nl, err = resolver.Resolve(rc, nl); err == nil {
 			return cb(nl)
 		} else {
@@ -26,16 +26,16 @@ func withResolvedDatabase(dbStream io.Reader, pc parser.Config, rc resolver.Conf
 	}
 }
 
-func walkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config, rpCb reporterCallback) error {
-	return withResolvedDatabase(dbStream, pc, rc,
+func WalkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parser.Config, rc resolver.Config, rpc reporter.Config, fc filter.Config, rpCb ReporterCallback) error {
+	return WithResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeMap) error {
 			r := rpCb(rpc, nl)
 			f := filter.GetIntervalNodeFilter(fc)
-			return walkNodesInStream(logStream, dateFormat, pc, f, r)
+			return WalkNodesInStream(logStream, dateFormat, pc, f, r)
 		})
 }
 
-func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNodeMap, error) {
+func LoadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNodeMap, error) {
 	nodeMap := shared.NewDBNodeMap()
 	return nodeMap, parser.ParseStreamCallback(dbStream, pc, func(node *shared.ParserNode, err error) (stop bool, cbError error) {
 		if err != nil {
@@ -47,7 +47,7 @@ func loadDatabaseFromStream(dbStream io.Reader, pc parser.Config) (shared.DBNode
 	})
 }
 
-func walkNodesInStream(logStream io.Reader, dateFormat string, pc parser.Config, filter *filter.LogNodeFilter, r reporter.Reporter) error {
+func WalkNodesInStream(logStream io.Reader, dateFormat string, pc parser.Config, filter *filter.LogNodeFilter, r reporter.Reporter) error {
 	var ln *shared.LogNode
 	var t time.Time
 	var ok bool

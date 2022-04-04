@@ -1,12 +1,18 @@
-package main
+package gen
 
 import (
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/urfave/cli/v2"
 )
 
-func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
+func Command() *cli.Command {
+	return newGenCommand(utils.NewCmdUtils())
+}
+
+func newGenCommand(cu utils.CmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "gen",
 		Usage: "Generate documentation",
@@ -15,8 +21,8 @@ func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
 				Name:  "man",
 				Usage: "Generate man page",
 				Action: func(c *cli.Context) error {
-					return cu.withOptions(c, func(o *Options) error {
-						man, err := a.ToMan()
+					return cu.WithOptions(c, func(o *options.Options) error {
+						man, err := c.App.ToMan()
 						if err != nil {
 							return err
 						}
@@ -29,8 +35,8 @@ func newGenCommand(cu cmdUtils, a *cli.App) *cli.Command {
 				Name:  "markdown",
 				Usage: "Generate markdown page",
 				Action: func(c *cli.Context) error {
-					return cu.withOptions(c, func(o *Options) error {
-						markdown, err := a.ToMarkdown()
+					return cu.WithOptions(c, func(o *options.Options) error {
+						markdown, err := c.App.ToMarkdown()
 						if err != nil {
 							return err
 						}

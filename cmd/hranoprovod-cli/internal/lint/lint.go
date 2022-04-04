@@ -1,9 +1,11 @@
-package main
+package lint
 
 import (
 	"fmt"
 	"io"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/urfave/cli/v2"
@@ -11,7 +13,11 @@ import (
 
 type lintCmd func(stream io.Reader, lc LintConfig) error
 
-func newLintCommand(cu cmdUtils, lint lintCmd) *cli.Command {
+func Command() *cli.Command {
+	return newLintCommand(utils.NewCmdUtils(), Lint)
+}
+
+func newLintCommand(cu utils.CmdUtils, lint lintCmd) *cli.Command {
 	return &cli.Command{
 		Name:      "lint",
 		Usage:     "Lints file for parsing errors",
@@ -30,8 +36,8 @@ func newLintCommand(cu cmdUtils, lint lintCmd) *cli.Command {
 			return nil
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{c.Args().First()}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{c.Args().First()}, func(streams []io.Reader) error {
 					streamToLint := streams[0]
 					return lint(streamToLint, LintConfig{
 						Silent:         c.IsSet("silent"),

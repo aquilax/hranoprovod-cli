@@ -1,4 +1,4 @@
-package main
+package lint
 
 import (
 	"errors"
@@ -9,27 +9,38 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_newPrintCommand(t *testing.T) {
+func Test_newLintCommand(t *testing.T) {
 	mockError := errors.New("Mock error")
 	tests := []struct {
 		name        string
 		args        []string
 		lintError   error
 		wantContent string
+		wantSilent  bool
 		wantError   error
 	}{
 		{
 			"runs as expected",
-			[]string{"print"},
+			[]string{"lint", "mock.yaml"},
 			nil,
 			"dummy",
+			false,
 			nil,
 		},
 		{
-			"returns an error if the print command returns an error",
-			[]string{"print"},
+			"runs silently",
+			[]string{"lint", "--silent", "mock.yaml"},
+			nil,
+			"dummy",
+			true,
+			nil,
+		},
+		{
+			"returns an error if the linter returns an error",
+			[]string{"lint", "mock.yaml"},
 			mockError,
 			"dummy",
+			false,
 			mockError,
 		},
 	}
@@ -37,13 +48,14 @@ func Test_newPrintCommand(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
 			mockCu := getMockCmdUtils([]string{tt.wantContent}, New())
-			mockPrint := func(logStream io.Reader, pc PrintConfig) error {
+			mockLint := func(stream io.Reader, lc LintConfig) error {
 				callbackExecuted++
-				content, _ := io.ReadAll(logStream)
+				content, _ := io.ReadAll(stream)
 				assert.Equal(t, string(content), tt.wantContent)
+				assert.Equal(t, lc.Silent, tt.wantSilent)
 				return tt.lintError
 			}
-			a := getMockApp(newPrintCommand(mockCu, mockPrint))
+			a := getMockApp(newLintCommand(mockCu, mockLint))
 
 			err := a.Run(append(os.Args[:1], tt.args...))
 			assert.Equal(t, tt.wantError, err)

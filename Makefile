@@ -45,9 +45,6 @@ documentation/usage.cast: $(TARGET) scripts/usage.sh
 
 cast: $(TARGET) documentation/usage.cast
 
-snapshots:
-	UPDATE_SNAPSHOTS=1 $(GO) test $(MODULES)
-
 coverage:
 	$(GO) test -race -coverprofile=coverage.out -covermode=atomic $(MODULES)
 	$(GO) tool cover -func=coverage.out

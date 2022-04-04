@@ -1,9 +1,11 @@
-package main
+package csv
 
 import (
 	"io"
 	"sort"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
@@ -13,24 +15,28 @@ import (
 )
 
 type (
-	csvLogCmd              func(logStream io.Reader, c CSVLogConfig) error
-	csvDatabaseCmd         func(dbStream io.Reader, cdc CSVDatabaseConfig) error
-	csvDatabaseResolvedCmd func(dbStream io.Reader, cdrc CSVDatabaseResolvedConfig) error
+	CSVLogCmd              func(logStream io.Reader, c CSVLogConfig) error
+	CSVDatabaseCmd         func(dbStream io.Reader, cdc CSVDatabaseConfig) error
+	CSVDatabaseResolvedCmd func(dbStream io.Reader, cdrc CSVDatabaseResolvedConfig) error
 )
 
-func newCSVCommand(cu cmdUtils) *cli.Command {
+func Command() *cli.Command {
+	return NewCSVCommand(utils.NewCmdUtils())
+}
+
+func NewCSVCommand(cu utils.CmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "csv",
 		Usage: "Generates csv exports",
 		Subcommands: []*cli.Command{
-			newCSVLogCommand(cu, CSVLog),
-			newCSVDatabaseCommand(cu, CSVDatabase),
-			newCSVDatabaseResolvedCommand(cu, CSVDatabaseResolved),
+			NewCSVLogCommand(cu, CSVLog),
+			NewCSVDatabaseCommand(cu, CSVDatabase),
+			NewCSVDatabaseResolvedCommand(cu, CSVDatabaseResolved),
 		},
 	}
 }
 
-func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
+func NewCSVLogCommand(cu utils.CmdUtils, csvLog CSVLogCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "log",
 		Usage: "Exports the log file as CSV",
@@ -47,14 +53,14 @@ func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
 				cfg := CSVLogConfig{
 					DateFormat:     o.GlobalConfig.DateFormat,
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
 					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Output, o.ReporterConfig.Color)),
 				}
-				return cu.withFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					logStream := streams[0]
 					return csvLog(logStream, cfg)
 				})
@@ -63,13 +69,13 @@ func newCSVLogCommand(cu cmdUtils, csvLog csvLogCmd) *cli.Command {
 	}
 }
 
-func newCSVDatabaseCommand(cu cmdUtils, csvDatabase csvDatabaseCmd) *cli.Command {
+func NewCSVDatabaseCommand(cu utils.CmdUtils, csvDatabase CSVDatabaseCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database",
 		Usage: "Exports the database file as CSV",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
 					dbStream := streams[0]
 					return csvDatabase(dbStream, CSVDatabaseConfig{
 						ParserConfig:   o.ParserConfig,
@@ -80,13 +86,13 @@ func newCSVDatabaseCommand(cu cmdUtils, csvDatabase csvDatabaseCmd) *cli.Command
 		},
 	}
 }
-func newCSVDatabaseResolvedCommand(cu cmdUtils, csvDatabaseResolved csvDatabaseResolvedCmd) *cli.Command {
+func NewCSVDatabaseResolvedCommand(cu utils.CmdUtils, csvDatabaseResolved CSVDatabaseResolvedCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "database-resolved",
 		Usage: "Exports the resolved database as CSV",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
 					dbStream := streams[0]
 					return CSVDatabaseResolved(dbStream, CSVDatabaseResolvedConfig{
 						ParserConfig:   o.ParserConfig,
@@ -110,7 +116,7 @@ type CSVLogConfig struct {
 func CSVLog(logStream io.Reader, c CSVLogConfig) error {
 	r := reporter.NewCSVReporter(c.ReporterConfig)
 	f := filter.GetIntervalNodeFilter(c.FilterConfig)
-	return walkNodesInStream(logStream, c.DateFormat, c.ParserConfig, f, r)
+	return utils.WalkNodesInStream(logStream, c.DateFormat, c.ParserConfig, f, r)
 }
 
 type CSVDatabaseConfig struct {
@@ -145,7 +151,7 @@ type CSVDatabaseResolvedConfig struct {
 
 // CSVDatabaseResolved generates CSV export of the resolved database
 func CSVDatabaseResolved(dbStream io.Reader, cdc CSVDatabaseResolvedConfig) error {
-	nl, err := loadDatabaseFromStream(dbStream, cdc.ParserConfig)
+	nl, err := utils.LoadDatabaseFromStream(dbStream, cdc.ParserConfig)
 	if err != nil {
 		return err
 	}

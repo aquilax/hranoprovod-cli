@@ -1,4 +1,4 @@
-package main
+package print
 
 import (
 	"errors"
@@ -6,56 +6,46 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_newLintCommand(t *testing.T) {
+func Test_newPrintCommand(t *testing.T) {
 	mockError := errors.New("Mock error")
 	tests := []struct {
 		name        string
 		args        []string
 		lintError   error
 		wantContent string
-		wantSilent  bool
 		wantError   error
 	}{
 		{
 			"runs as expected",
-			[]string{"lint", "mock.yaml"},
+			[]string{"print"},
 			nil,
 			"dummy",
-			false,
 			nil,
 		},
 		{
-			"runs silently",
-			[]string{"lint", "--silent", "mock.yaml"},
-			nil,
-			"dummy",
-			true,
-			nil,
-		},
-		{
-			"returns an error if the linter returns an error",
-			[]string{"lint", "mock.yaml"},
+			"returns an error if the print command returns an error",
+			[]string{"print"},
 			mockError,
 			"dummy",
-			false,
 			mockError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			callbackExecuted := 0
-			mockCu := getMockCmdUtils([]string{tt.wantContent}, New())
-			mockLint := func(stream io.Reader, lc LintConfig) error {
+			mockCu := testutils.GetMockCmdUtils([]string{tt.wantContent}, options.New())
+			mockPrint := func(logStream io.Reader, pc PrintConfig) error {
 				callbackExecuted++
-				content, _ := io.ReadAll(stream)
+				content, _ := io.ReadAll(logStream)
 				assert.Equal(t, string(content), tt.wantContent)
-				assert.Equal(t, lc.Silent, tt.wantSilent)
 				return tt.lintError
 			}
-			a := getMockApp(newLintCommand(mockCu, mockLint))
+			a := testutils.GetMockApp(NewPrintCommand(mockCu, mockPrint))
 
 			err := a.Run(append(os.Args[:1], tt.args...))
 			assert.Equal(t, tt.wantError, err)

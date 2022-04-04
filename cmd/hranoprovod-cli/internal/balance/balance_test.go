@@ -1,10 +1,11 @@
-package main
+package balance
 
 import (
 	"io"
 	"os"
 	"testing"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +31,7 @@ func Test_newBalanceCommand(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockCu := getMockCmdUtils([]string{tt.dbContent, tt.logContent}, New())
+			mockCu := utils.GetMockCmdUtils([]string{tt.dbContent, tt.logContent}, New())
 			callbackExecutedTimes := 0
 			mockBalance := func(logStream, dbStream io.Reader, bc BalanceConfig) error {
 				callbackExecutedTimes++

@@ -5,6 +5,16 @@ import (
 	"os/user"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/balance"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/csv"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/gen"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/lint"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/print"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/register"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/report"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/stats"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/summary"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/urfave/cli/v2"
@@ -18,8 +28,6 @@ var (
 
 // GetApp returns a cli app
 func GetApp() *cli.App {
-	u := newCmdUtils()
-
 	a := &cli.App{
 		Name:        "hranoprovod-cli",
 		Usage:       "Diet tracker for the command line",
@@ -47,21 +55,21 @@ func GetApp() *cli.App {
 		&cli.StringFlag{
 			Name:    "database",
 			Aliases: []string{"d"},
-			Value:   DefaultDbFilename,
+			Value:   options.DefaultDbFilename,
 			Usage:   "optional database file name `FILE`",
 			EnvVars: []string{"HR_DATABASE"},
 		},
 		&cli.StringFlag{
 			Name:    "logfile",
 			Aliases: []string{"l"},
-			Value:   DefaultLogFilename,
+			Value:   options.DefaultLogFilename,
 			Usage:   "log file name `FILE`",
 			EnvVars: []string{"HR_LOGFILE"},
 		},
 		&cli.StringFlag{
 			Name:    "config",
 			Aliases: []string{"c"},
-			Value:   getDefaultFileName(ConfigFileName),
+			Value:   getDefaultFileName(options.ConfigFileName),
 			Usage:   "Configuration file `FILE`",
 			EnvVars: []string{"HR_CONFIG"},
 		},
@@ -88,15 +96,15 @@ func GetApp() *cli.App {
 		},
 	}
 	a.Commands = []*cli.Command{
-		newRegisterCommand(u, Register),
-		newBalanceCommand(u, Balance),
-		newLintCommand(u, Lint),
-		newReportCommand(u),
-		newCSVCommand(u),
-		newStatsCommand(u, Stats),
-		newSummaryCommand(u, Summary),
-		newGenCommand(u, a),
-		newPrintCommand(u, Print),
+		register.Command(),
+		balance.Command(),
+		lint.Command(),
+		report.Command(),
+		csv.Command(),
+		stats.Command(),
+		summary.Command(),
+		gen.Command(),
+		print.Command(),
 	}
 	return a
 }

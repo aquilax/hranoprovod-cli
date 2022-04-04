@@ -1,17 +1,25 @@
-package main
+package balance
 
 import (
 	"io"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
+	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
 )
 
 type balanceCmd func(logStream, dbStream io.Reader, bc BalanceConfig) error
 
-func newBalanceCommand(cu cmdUtils, balance balanceCmd) *cli.Command {
+func Command() *cli.Command {
+	return NewBalanceCommand(utils.NewCmdUtils(), Balance)
+}
+
+func NewBalanceCommand(cu utils.CmdUtils, balance balanceCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "balance",
 		Aliases: []string{"bal"},
@@ -43,8 +51,8 @@ func newBalanceCommand(cu cmdUtils, balance balanceCmd) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
 					return balance(logStream, dbStream, BalanceConfig{
 						DateFormat:     o.GlobalConfig.DateFormat,
@@ -59,14 +67,20 @@ func newBalanceCommand(cu cmdUtils, balance balanceCmd) *cli.Command {
 	}
 }
 
-type BalanceConfig = RegisterConfig
+type BalanceConfig struct {
+	DateFormat     string
+	ParserConfig   parser.Config
+	ResolverConfig resolver.Config
+	ReporterConfig reporter.Config
+	FilterConfig   filter.Config
+}
 
 // Balance generates balance report
 func Balance(logStream, dbStream io.Reader, bc BalanceConfig) error {
-	return withResolvedDatabase(dbStream, bc.ParserConfig, bc.ResolverConfig,
+	return utils.WithResolvedDatabase(dbStream, bc.ParserConfig, bc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := reporter.NewBalanceReporter(bc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(bc.FilterConfig)
-			return walkNodesInStream(logStream, bc.DateFormat, bc.ParserConfig, f, r)
+			return utils.WalkNodesInStream(logStream, bc.DateFormat, bc.ParserConfig, f, r)
 		})
 }

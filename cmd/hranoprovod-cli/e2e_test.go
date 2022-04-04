@@ -3,28 +3,29 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"embed"
 	"io"
-	"io/ioutil"
 	"os"
 	"testing"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/balance"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/csv"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/print"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/register"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/summary"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
 
-//go:embed testAssets/*
-var content embed.FS
-
 func Test_E2E(t *testing.T) {
-	dbContent, err := content.ReadFile("testAssets/food.yaml")
+	dbContent, err := testutils.ReadAsset("testAssets/food.yaml")
 	assert.Equal(t, nil, err)
-	logContent, err := content.ReadFile("testAssets/log.yaml")
+	logContent, err := testutils.ReadAsset("testAssets/log.yaml")
 	assert.Equal(t, nil, err)
 
 	balanceApp := func(w io.Writer) cli.App {
-		mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
-		return getMockApp(newBalanceCommand(mockCu, Balance))
+		mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+		return testutils.GetMockApp(balance.NewBalanceCommand(mockCu, balance.Balance))
 	}
 
 	tests := []struct {
@@ -73,8 +74,8 @@ func Test_E2E(t *testing.T) {
 			"csv log works as expected",
 			[]string{"log"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(logContent)}, w)
-				return getMockApp(newCSVLogCommand(mockCu, CSVLog))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(logContent)}, w)
+				return testutils.GetMockApp(csv.NewCSVLogCommand(mockCu, csv.CSVLog))
 			},
 			nil,
 			`testAssets/csv-log.csv`,
@@ -83,8 +84,8 @@ func Test_E2E(t *testing.T) {
 			"csv database works as expected",
 			[]string{"database"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent)}, w)
-				return getMockApp(newCSVDatabaseCommand(mockCu, CSVDatabase))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent)}, w)
+				return testutils.GetMockApp(csv.NewCSVDatabaseCommand(mockCu, csv.CSVDatabase))
 			},
 			nil,
 			`testAssets/csv-database.csv`,
@@ -93,8 +94,8 @@ func Test_E2E(t *testing.T) {
 			"csv database-resolved works as expected",
 			[]string{"database-resolved"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent)}, w)
-				return getMockApp(newCSVDatabaseResolvedCommand(mockCu, CSVDatabaseResolved))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent)}, w)
+				return testutils.GetMockApp(csv.NewCSVDatabaseResolvedCommand(mockCu, csv.CSVDatabaseResolved))
 			},
 			nil,
 			`testAssets/csv-database-resolved.csv`,
@@ -103,8 +104,8 @@ func Test_E2E(t *testing.T) {
 			"print works as expected with log file",
 			[]string{"print"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(logContent)}, w)
-				return getMockApp(newPrintCommand(mockCu, Print))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(logContent)}, w)
+				return testutils.GetMockApp(print.NewPrintCommand(mockCu, print.Print))
 			},
 			nil,
 			`testAssets/print-log.yaml`,
@@ -113,8 +114,8 @@ func Test_E2E(t *testing.T) {
 			"summary works as expected",
 			[]string{"summary", "2021/01/24"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
-				return getMockApp(newSummaryCommand(mockCu, Summary))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+				return testutils.GetMockApp(summary.NewSummaryCommand(mockCu, summary.Summary))
 			},
 			nil,
 			`testAssets/summary.txt`,
@@ -123,15 +124,13 @@ func Test_E2E(t *testing.T) {
 			"register works as expected",
 			[]string{"register"},
 			func(w io.Writer) cli.App {
-				mockCu := getMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
-				return getMockApp(newRegisterCommand(mockCu, Register))
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+				return testutils.GetMockApp(register.NewRegisterCommand(mockCu, register.Register))
 			},
 			nil,
 			`testAssets/register.txt`,
 		},
 	}
-
-	updateSnapshots := os.Getenv("UPDATE_SNAPSHOTS") == "1"
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -142,11 +141,7 @@ func Test_E2E(t *testing.T) {
 			assert.Equal(t, tt.wantError, err)
 			w.Flush()
 			gotContent := buf.String()
-			if updateSnapshots {
-				err := ioutil.WriteFile(tt.wantContentFileName, buf.Bytes(), 0644)
-				assert.Equal(t, nil, err)
-			}
-			wantContent, err := content.ReadFile(tt.wantContentFileName)
+			wantContent, err := testutils.ReadAsset(tt.wantContentFileName)
 			assert.Equal(t, nil, err)
 			assert.Equal(t, string(wantContent), gotContent)
 		})

@@ -1,28 +1,36 @@
-package main
+package summary
 
 import (
 	"io"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
+	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
 )
 
 type summaryCmd func(logStream, dbStream io.Reader, sc SummaryConfig) error
 
-func newSummaryCommand(cu cmdUtils, summary summaryCmd) *cli.Command {
+func Command() *cli.Command {
+	return NewSummaryCommand(utils.NewCmdUtils(), Summary)
+}
+
+func NewSummaryCommand(cu utils.CmdUtils, summary summaryCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "summary",
 		Usage: "Show summary for date",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				t, err := GetTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Args().First())
+			return cu.WithOptions(c, func(o *options.Options) error {
+				t, err := options.GetTimeFromString(o.GlobalConfig.Now, o.GlobalConfig.DateFormat, c.Args().First())
 				if err != nil {
 					return err
 				}
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
 					bTime := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 					o.FilterConfig.BeginningTime = &bTime
@@ -41,14 +49,20 @@ func newSummaryCommand(cu cmdUtils, summary summaryCmd) *cli.Command {
 	}
 }
 
-type SummaryConfig = RegisterConfig
+type SummaryConfig struct {
+	DateFormat     string
+	ParserConfig   parser.Config
+	ResolverConfig resolver.Config
+	ReporterConfig reporter.Config
+	FilterConfig   filter.Config
+}
 
 // Summary generates summary
 func Summary(logStream, dbStream io.Reader, sc SummaryConfig) error {
-	return withResolvedDatabase(dbStream, sc.ParserConfig, sc.ResolverConfig,
+	return utils.WithResolvedDatabase(dbStream, sc.ParserConfig, sc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := reporter.NewSummaryReporterTemplate(sc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(sc.FilterConfig)
-			return walkNodesInStream(logStream, sc.DateFormat, sc.ParserConfig, f, r)
+			return utils.WalkNodesInStream(logStream, sc.DateFormat, sc.ParserConfig, f, r)
 		})
 }

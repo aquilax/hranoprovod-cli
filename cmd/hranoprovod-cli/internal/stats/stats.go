@@ -1,8 +1,10 @@
-package main
+package stats
 
 import (
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
@@ -11,12 +13,16 @@ import (
 
 type statsCmd func(logFileName, dbFileName string, sc StatsConfig) error
 
-func newStatsCommand(cu cmdUtils, stats statsCmd) *cli.Command {
+func Command() *cli.Command {
+	return NewStatsCommand(utils.NewCmdUtils(), Stats)
+}
+
+func NewStatsCommand(cu utils.CmdUtils, stats statsCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "stats",
 		Usage: "Provide stats information",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
 				return stats(o.GlobalConfig.LogFileName, o.GlobalConfig.LogFileName, StatsConfig{
 					Now:            o.GlobalConfig.Now,
 					ParserConfig:   o.ParserConfig,

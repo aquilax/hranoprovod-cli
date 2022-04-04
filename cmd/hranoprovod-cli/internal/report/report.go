@@ -1,10 +1,12 @@
-package main
+package report
 
 import (
 	"fmt"
 	"io"
 	"sort"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
@@ -19,7 +21,11 @@ type (
 	reportQuantityCmd   func(logStream io.Reader, rqc ReportQuantityConfig) error
 )
 
-func newReportCommand(cu cmdUtils) *cli.Command {
+func Command() *cli.Command {
+	return NewReportCommand(utils.NewCmdUtils())
+}
+
+func NewReportCommand(cu utils.CmdUtils) *cli.Command {
 	return &cli.Command{
 		Name:  "report",
 		Usage: "Generates various reports",
@@ -31,7 +37,7 @@ func newReportCommand(cu cmdUtils) *cli.Command {
 	}
 }
 
-func newReportElementTotalCommand(cu cmdUtils, reportElement reportElementCmd) *cli.Command {
+func newReportElementTotalCommand(cu utils.CmdUtils, reportElement reportElementCmd) *cli.Command {
 	return &cli.Command{
 		Name:      "element-total",
 		Usage:     "Generates total sum for element grouped by food",
@@ -49,8 +55,8 @@ func newReportElementTotalCommand(cu cmdUtils, reportElement reportElementCmd) *
 			return nil
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName}, func(streams []io.Reader) error {
 					dbStream := streams[0]
 					return reportElement(dbStream, ReportElementConfig{
 						ElementName:    c.Args().First(),
@@ -65,13 +71,13 @@ func newReportElementTotalCommand(cu cmdUtils, reportElement reportElementCmd) *
 	}
 }
 
-func newReportUnresolvedCommand(cu cmdUtils, reportUnresolved reportUnresolvedCmd) *cli.Command {
+func newReportUnresolvedCommand(cu utils.CmdUtils, reportUnresolved reportUnresolvedCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "unresolved",
 		Usage: "Print list of unresolved elements",
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
 					return reportUnresolved(logStream, dbStream, ReportUnresolvedConfig{
 						DateFormat:     o.GlobalConfig.DateFormat,
@@ -86,7 +92,7 @@ func newReportUnresolvedCommand(cu cmdUtils, reportUnresolved reportUnresolvedCm
 	}
 }
 
-func newReportQuantityCommand(cu cmdUtils, reportQuantity reportQuantityCmd) *cli.Command {
+func newReportQuantityCommand(cu utils.CmdUtils, reportQuantity reportQuantityCmd) *cli.Command {
 	return &cli.Command{
 		Name:  "quantity",
 		Usage: "Total quantities per food",
@@ -97,8 +103,8 @@ func newReportQuantityCommand(cu cmdUtils, reportQuantity reportQuantityCmd) *cl
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					logStream := streams[0]
 					return reportQuantity(logStream, ReportQuantityConfig{
 						DateFormat:     o.GlobalConfig.DateFormat,
@@ -123,7 +129,7 @@ type ReportElementConfig struct {
 
 // ReportElement generates report for single element
 func ReportElement(dbStream io.Reader, rec ReportElementConfig) error {
-	nl, err := loadDatabaseFromStream(dbStream, rec.ParserConfig)
+	nl, err := utils.LoadDatabaseFromStream(dbStream, rec.ParserConfig)
 	if err != nil {
 		return err
 	}
@@ -151,15 +157,21 @@ func ReportElement(dbStream io.Reader, rec ReportElementConfig) error {
 	return reporter.NewElementReporter(rec.ReporterConfig, list).Flush()
 }
 
-type ReportUnresolvedConfig = RegisterConfig
+type ReportUnresolvedConfig struct {
+	DateFormat     string
+	ParserConfig   parser.Config
+	ResolverConfig resolver.Config
+	ReporterConfig reporter.Config
+	FilterConfig   filter.Config
+}
 
 // ReportUnresolved generates report for unresolved elements
 func ReportUnresolved(logStream, dbStream io.Reader, ruc ReportUnresolvedConfig) error {
-	return withResolvedDatabase(dbStream, ruc.ParserConfig, ruc.ResolverConfig,
+	return utils.WithResolvedDatabase(dbStream, ruc.ParserConfig, ruc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := reporter.NewUnsolvedReporter(ruc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(ruc.FilterConfig)
-			return walkNodesInStream(logStream, ruc.DateFormat, ruc.ParserConfig, f, r)
+			return utils.WalkNodesInStream(logStream, ruc.DateFormat, ruc.ParserConfig, f, r)
 		})
 }
 
@@ -175,5 +187,5 @@ type ReportQuantityConfig struct {
 func ReportQuantity(logStream io.Reader, rqc ReportQuantityConfig) error {
 	r := reporter.NewQuantityReporter(rqc.ReporterConfig, rqc.Descending)
 	f := filter.GetIntervalNodeFilter(rqc.FilterConfig)
-	return walkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
+	return utils.WalkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
 }

@@ -1,8 +1,10 @@
-package main
+package register
 
 import (
 	"io"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
@@ -13,7 +15,11 @@ import (
 
 type registerCmd func(logStream, dbStream io.Reader, rc RegisterConfig) error
 
-func newRegisterCommand(cu cmdUtils, register registerCmd) *cli.Command {
+func Command() *cli.Command {
+	return NewRegisterCommand(utils.NewCmdUtils(), Register)
+}
+
+func NewRegisterCommand(cu utils.CmdUtils, register registerCmd) *cli.Command {
 	return &cli.Command{
 		Name:    "register",
 		Aliases: []string{"reg"},
@@ -79,8 +85,8 @@ func newRegisterCommand(cu cmdUtils, register registerCmd) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			return cu.withOptions(c, func(o *Options) error {
-				return cu.withFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					dbStream, logStream := streams[0], streams[1]
 					return register(logStream, dbStream, RegisterConfig{
 						DateFormat:     o.GlobalConfig.DateFormat,
@@ -108,5 +114,5 @@ func Register(logStream, dbStream io.Reader, rc RegisterConfig) error {
 	rpCb := func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter {
 		return reporter.NewRegReporter(rpc, nl)
 	}
-	return walkWithReporter(logStream, dbStream, rc.DateFormat, rc.ParserConfig, rc.ResolverConfig, rc.ReporterConfig, rc.FilterConfig, rpCb)
+	return utils.WalkWithReporter(logStream, dbStream, rc.DateFormat, rc.ParserConfig, rc.ResolverConfig, rc.ReporterConfig, rc.FilterConfig, rpCb)
 }
