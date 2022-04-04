@@ -8,6 +8,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
+	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
 )
 
@@ -58,19 +59,12 @@ type LintConfig struct {
 
 // Lint lints file
 func Lint(stream io.Reader, lc LintConfig) error {
-	parser := parser.NewParser(lc.ParserConfig)
-	go parser.ParseStream(stream)
-	err := func() error {
-		for {
-			select {
-			case <-parser.Nodes:
-			case err := <-parser.Errors:
-				fmt.Fprintln(lc.ReporterConfig.Output, err)
-			case <-parser.Done:
-				return nil
-			}
+	err := parser.ParseStreamCallback(stream, lc.ParserConfig, func(node *shared.ParserNode, err error) (stop bool, cbError error) {
+		if err != nil {
+			fmt.Fprintln(lc.ReporterConfig.Output, err)
 		}
-	}()
+		return false, nil
+	})
 	if err != nil {
 		return err
 	}
