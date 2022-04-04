@@ -1,20 +1,21 @@
-package reporter
+package register
 
 import (
 	"bufio"
 	"fmt"
 	"regexp"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 type singleFoodReporter struct {
-	config Config
+	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 }
 
-func newSingleFoodReporter(config Config, db shared.DBNodeMap) *singleFoodReporter {
+func newSingleFoodReporter(config reporter.Config, db shared.DBNodeMap) *singleFoodReporter {
 	return &singleFoodReporter{
 		config,
 		db,

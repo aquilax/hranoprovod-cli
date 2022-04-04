@@ -11,7 +11,7 @@ import (
 const negativeFormat = red + "%10.2f" + reset
 const positiveFormat = green + "%10.2f" + reset
 
-func getTemplateFunctions(config Config) template.FuncMap {
+func GetTemplateFunctions(config Config) template.FuncMap {
 	return template.FuncMap{
 		"formatDate": func(ts time.Time) string {
 			return ts.Format(config.DateFormat)

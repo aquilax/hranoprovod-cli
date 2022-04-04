@@ -6,10 +6,10 @@ import (
 	"sort"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
@@ -154,7 +154,7 @@ func ReportElement(dbStream io.Reader, rec ReportElementConfig) error {
 			return list[i].Value < list[j].Value
 		})
 	}
-	return reporter.NewElementReporter(rec.ReporterConfig, list).Flush()
+	return NewElementReporter(rec.ReporterConfig, list).Flush()
 }
 
 type ReportUnresolvedConfig struct {
@@ -169,7 +169,7 @@ type ReportUnresolvedConfig struct {
 func ReportUnresolved(logStream, dbStream io.Reader, ruc ReportUnresolvedConfig) error {
 	return utils.WithResolvedDatabase(dbStream, ruc.ParserConfig, ruc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
-			r := reporter.NewUnsolvedReporter(ruc.ReporterConfig, nl)
+			r := NewUnsolvedReporter(ruc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(ruc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, ruc.DateFormat, ruc.ParserConfig, f, r)
 		})
@@ -185,7 +185,7 @@ type ReportQuantityConfig struct {
 
 // ReportQuantity Generates a quantity report
 func ReportQuantity(logStream io.Reader, rqc ReportQuantityConfig) error {
-	r := reporter.NewQuantityReporter(rqc.ReporterConfig, rqc.Descending)
+	r := NewQuantityReporter(rqc.ReporterConfig, rqc.Descending)
 	f := filter.GetIntervalNodeFilter(rqc.FilterConfig)
 	return utils.WalkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
 }

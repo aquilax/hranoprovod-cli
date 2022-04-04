@@ -1,19 +1,20 @@
-package reporter
+package print
 
 import (
 	"bufio"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 // PrintReporter outputs log report
 type PrintReporter struct {
-	config Config
+	config reporter.Config
 	output *bufio.Writer
 }
 
-func NewPrintReporter(config Config) *PrintReporter {
+func NewPrintReporter(config reporter.Config) *PrintReporter {
 	return &PrintReporter{
 		config,
 		bufio.NewWriter(config.Output),

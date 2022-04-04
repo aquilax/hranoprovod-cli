@@ -1,10 +1,11 @@
-package reporter
+package report
 
 import (
 	"bufio"
 	"fmt"
 	"sort"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
@@ -14,7 +15,7 @@ type QuantityReporter struct {
 	output      *bufio.Writer
 }
 
-func NewQuantityReporter(config Config, descending bool) QuantityReporter {
+func NewQuantityReporter(config reporter.Config, descending bool) QuantityReporter {
 	return QuantityReporter{
 		descending,
 		make(map[string]float64),

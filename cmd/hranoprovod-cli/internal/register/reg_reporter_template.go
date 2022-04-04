@@ -1,10 +1,10 @@
-package reporter
+package register
 
 import (
 	"bufio"
-	"sort"
 	"text/template"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
@@ -42,7 +42,7 @@ const leftAlignedTemplate = `{{formatDate .Time}}
 `
 
 type regReporterTemplate struct {
-	config   Config
+	config   reporter.Config
 	db       shared.DBNodeMap
 	output   *bufio.Writer
 	template *template.Template
@@ -55,34 +55,19 @@ func getInternalTemplate(internalTemplateName string) string {
 	return defaultTemplate
 }
 
-func newRegReporterTemplate(config Config, db shared.DBNodeMap) *regReporterTemplate {
+func newRegReporterTemplate(config reporter.Config, db shared.DBNodeMap) *regReporterTemplate {
 	return &regReporterTemplate{
 		config,
 		db,
 		bufio.NewWriter(config.Output),
-		template.Must(template.New("template").Funcs(getTemplateFunctions(config)).Parse(getInternalTemplate(config.InternalTemplateName))),
+		template.Must(template.New("template").Funcs(reporter.GetTemplateFunctions(config)).Parse(getInternalTemplate(config.InternalTemplateName))),
 	}
 }
 
 func (r *regReporterTemplate) Process(ln *shared.LogNode) error {
-	return r.template.Execute(r.output, getReportItem(ln, r.db, r.config))
+	return r.template.Execute(r.output, reporter.GetReportItem(ln, r.db, r.config))
 }
 
 func (r *regReporterTemplate) Flush() error {
 	return r.output.Flush()
-}
-
-func newTotalFromAccumulator(acc shared.Accumulator) *[]total {
-	var result = make([]total, len(acc))
-	var ss = make(sort.StringSlice, len(acc))
-	i := 0
-	for name := range acc {
-		ss[i] = name
-		i++
-	}
-	sort.Sort(ss)
-	for i, name := range ss {
-		result[i] = total{name, acc[name][shared.Positive], acc[name][shared.Negative], acc[name][shared.Positive] + acc[name][shared.Negative]}
-	}
-	return &result
 }

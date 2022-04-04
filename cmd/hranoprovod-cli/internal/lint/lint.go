@@ -5,9 +5,9 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
 )

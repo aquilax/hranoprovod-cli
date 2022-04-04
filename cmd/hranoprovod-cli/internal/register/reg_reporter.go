@@ -1,4 +1,4 @@
-package reporter
+package register
 
 import (
 	"bufio"
@@ -7,16 +7,40 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
+const (
+	reset = "\x1B[0m"
+	red   = "\x1B[31m"
+	green = "\x1B[32m"
+)
+
 type regReporter struct {
-	config Config
+	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 }
 
-func newRegReporter(config Config, db shared.DBNodeMap) *regReporter {
+// NewRegReporter creates new response handler
+func NewRegReporter(c reporter.Config, db shared.DBNodeMap) reporter.Reporter {
+	if len(c.SingleElement) > 0 {
+		if c.ElementGroupByFood {
+			return newElementByFoodReporter(c, db)
+		}
+		return newSingleReporter(c, db)
+	}
+	if len(c.SingleFood) > 0 {
+		return newSingleFoodReporter(c, db)
+	}
+	if c.UseOldRegReporter {
+		return newRegReporter(c, db)
+	}
+	return newRegReporterTemplate(c, db)
+}
+
+func newRegReporter(config reporter.Config, db shared.DBNodeMap) *regReporter {
 	return &regReporter{
 		config,
 		db,

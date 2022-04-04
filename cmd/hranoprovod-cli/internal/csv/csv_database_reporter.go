@@ -1,9 +1,10 @@
-package reporter
+package csv
 
 import (
 	"encoding/csv"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
@@ -13,7 +14,7 @@ type CSVDatabaseReporter struct {
 }
 
 // NewCSVReporter creates new CSV reporter
-func NewCSVDatabaseReporter(config Config) CSVDatabaseReporter {
+func NewCSVDatabaseReporter(config reporter.Config) CSVDatabaseReporter {
 	w := csv.NewWriter(config.Output)
 	w.Comma = config.CSVSeparator
 	return CSVDatabaseReporter{w}

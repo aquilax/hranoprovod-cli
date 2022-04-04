@@ -1,6 +1,7 @@
 package reporter
 
 import (
+	"sort"
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
@@ -24,7 +25,22 @@ type reportItem struct {
 	Totals   *[]total
 }
 
-func getReportItem(ln *shared.LogNode, db shared.DBNodeMap, config Config) reportItem {
+func newTotalFromAccumulator(acc shared.Accumulator) *[]total {
+	var result = make([]total, len(acc))
+	var ss = make(sort.StringSlice, len(acc))
+	i := 0
+	for name := range acc {
+		ss[i] = name
+		i++
+	}
+	sort.Sort(ss)
+	for i, name := range ss {
+		result[i] = total{name, acc[name][shared.Positive], acc[name][shared.Negative], acc[name][shared.Positive] + acc[name][shared.Negative]}
+	}
+	return &result
+}
+
+func GetReportItem(ln *shared.LogNode, db shared.DBNodeMap, config Config) reportItem {
 	var acc shared.Accumulator
 	if config.Totals {
 		acc = shared.NewAccumulator()

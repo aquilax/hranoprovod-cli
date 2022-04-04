@@ -1,22 +1,23 @@
-package reporter
+package report
 
 import (
 	"bufio"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 // UnsolvedReporter is unresolved reporter
 type UnsolvedReporter struct {
-	config Config
+	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 	list   map[string]bool
 }
 
 // NewUnsolvedReporter returns reporter for unresolved elements
-func NewUnsolvedReporter(config Config, db shared.DBNodeMap) *UnsolvedReporter {
+func NewUnsolvedReporter(config reporter.Config, db shared.DBNodeMap) *UnsolvedReporter {
 	return &UnsolvedReporter{
 		config,
 		db,

@@ -1,14 +1,15 @@
-package reporter
+package stats
 
 import (
 	"bufio"
 	"fmt"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
-type Stats struct {
+type StatsData struct {
 	DbFileName      string
 	LogFileName     string
 	DbRecordsCount  int
@@ -19,11 +20,11 @@ type Stats struct {
 }
 
 type StatsReporter struct {
-	config Config
-	stats  *Stats
+	config reporter.Config
+	stats  *StatsData
 }
 
-func NewStatsReporter(c Config, stats *Stats) *StatsReporter {
+func NewStatsReporter(c reporter.Config, stats *StatsData) *StatsReporter {
 	return &StatsReporter{c, stats}
 }
 

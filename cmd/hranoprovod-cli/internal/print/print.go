@@ -4,10 +4,10 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/urfave/cli/v2"
 )
 
@@ -58,7 +58,7 @@ type PrintConfig struct {
 
 // Print reads and prints back out the log file
 func Print(logStream io.Reader, pc PrintConfig) error {
-	r := reporter.NewPrintReporter(pc.ReporterConfig)
+	r := NewPrintReporter(pc.ReporterConfig)
 	f := filter.GetIntervalNodeFilter(pc.FilterConfig)
 	return utils.WalkNodesInStream(logStream, pc.DateFormat, pc.ParserConfig, f, r)
 }

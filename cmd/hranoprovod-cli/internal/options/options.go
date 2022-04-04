@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
@@ -206,7 +206,6 @@ func (o *Options) populateReporter(c *cli.Context) {
 			o.ReporterConfig.InternalTemplateName = c.Lineage()[i].String("internal-template-name")
 		}
 	}
-	o.ReporterConfig.Unresolved = c.Bool("unresolved")
 	o.ReporterConfig.SingleFood = c.String("single-food")
 	o.ReporterConfig.ElementGroupByFood = c.Bool("group-food")
 	o.ReporterConfig.SingleElement = c.String("single-element")

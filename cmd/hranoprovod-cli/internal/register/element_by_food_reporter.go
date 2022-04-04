@@ -1,22 +1,23 @@
-package reporter
+package register
 
 import (
 	"bufio"
 	"fmt"
 	"sort"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 // elementByFoodReporter outputs report for single element groupped by food
 type elementByFoodReporter struct {
-	config Config
+	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 	acc    shared.Accumulator
 }
 
-func newElementByFoodReporter(config Config, db shared.DBNodeMap) *elementByFoodReporter {
+func newElementByFoodReporter(config reporter.Config, db shared.DBNodeMap) *elementByFoodReporter {
 	return &elementByFoodReporter{
 		config,
 		db,

@@ -1,22 +1,23 @@
-package reporter
+package balance
 
 import (
 	"bufio"
 	"fmt"
 	"strings"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 type balanceSingleReporter struct {
-	config Config
+	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 	root   *shared.TreeNode
 	total  float64
 }
 
-func newBalanceSingleReporter(config Config, db shared.DBNodeMap) *balanceSingleReporter {
+func newBalanceSingleReporter(config reporter.Config, db shared.DBNodeMap) *balanceSingleReporter {
 	return &balanceSingleReporter{
 		config,
 		db,

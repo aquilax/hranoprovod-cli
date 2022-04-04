@@ -1,9 +1,10 @@
-package reporter
+package csv
 
 import (
 	"encoding/csv"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
@@ -11,12 +12,12 @@ const DefaultOutputTimeFormat = "2006-01-02"
 const DefaultCSVSeparator = ','
 
 type CSVConfig struct {
-	CommonConfig
+	reporter.CommonConfig
 	CSVSeparator     rune
 	OutputTimeFormat string
 }
 
-func NewCSVConfig(c CommonConfig) CSVConfig {
+func NewCSVConfig(c reporter.CommonConfig) CSVConfig {
 	return CSVConfig{
 		CommonConfig:     c,
 		CSVSeparator:     DefaultCSVSeparator,

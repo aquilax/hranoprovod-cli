@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
@@ -61,7 +61,7 @@ type SummaryConfig struct {
 func Summary(logStream, dbStream io.Reader, sc SummaryConfig) error {
 	return utils.WithResolvedDatabase(dbStream, sc.ParserConfig, sc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
-			r := reporter.NewSummaryReporterTemplate(sc.ReporterConfig, nl)
+			r := NewSummaryReporterTemplate(sc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(sc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, sc.DateFormat, sc.ParserConfig, f, r)
 		})

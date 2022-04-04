@@ -4,9 +4,9 @@ import (
 	"io"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )

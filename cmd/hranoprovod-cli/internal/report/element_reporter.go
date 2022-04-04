@@ -1,19 +1,20 @@
-package reporter
+package report
 
 import (
 	"bufio"
 	"fmt"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 )
 
 type ElementReporter struct {
-	config Config
+	config reporter.Config
 	list   []shared.Element
 	output *bufio.Writer
 }
 
-func NewElementReporter(c Config, list []shared.Element) *ElementReporter {
+func NewElementReporter(c reporter.Config, list []shared.Element) *ElementReporter {
 	return &ElementReporter{c, list, bufio.NewWriter(c.Output)}
 }
 

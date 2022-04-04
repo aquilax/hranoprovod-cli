@@ -62,31 +62,3 @@ type Reporter interface {
 	Process(ln *shared.LogNode) error
 	Flush() error
 }
-
-// NewRegReporter creates new response handler
-func NewRegReporter(c Config, db shared.DBNodeMap) Reporter {
-	if c.Unresolved {
-		return NewUnsolvedReporter(c, db)
-	}
-	if len(c.SingleElement) > 0 {
-		if c.ElementGroupByFood {
-			return newElementByFoodReporter(c, db)
-		}
-		return newSingleReporter(c, db)
-	}
-	if len(c.SingleFood) > 0 {
-		return newSingleFoodReporter(c, db)
-	}
-	if c.UseOldRegReporter {
-		return newRegReporter(c, db)
-	}
-	return newRegReporterTemplate(c, db)
-}
-
-// NewBalanceReporter returns balance reporter
-func NewBalanceReporter(options Config, db shared.DBNodeMap) Reporter {
-	if len(options.SingleElement) > 0 {
-		return newBalanceSingleReporter(options, db)
-	}
-	return newBalanceReporter(options, db)
-}

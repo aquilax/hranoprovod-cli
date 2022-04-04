@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/aquilax/hranoprovod-cli/v2/lib/filter v0.0.0
 	github.com/aquilax/hranoprovod-cli/v2/lib/parser v0.0.0
-	github.com/aquilax/hranoprovod-cli/v2/lib/reporter v0.0.0
 	github.com/aquilax/hranoprovod-cli/v2/lib/resolver v0.0.0
 	github.com/aquilax/hranoprovod-cli/v2/lib/shared v0.0.0
 	github.com/stretchr/testify v1.7.1
@@ -29,7 +28,5 @@ replace github.com/aquilax/hranoprovod-cli/v2/lib/shared => ../../lib/shared
 replace github.com/aquilax/hranoprovod-cli/v2/lib/parser => ../../lib/parser
 
 replace github.com/aquilax/hranoprovod-cli/v2/lib/filter => ../../lib/filter
-
-replace github.com/aquilax/hranoprovod-cli/v2/lib/reporter => ../../lib/reporter
 
 replace github.com/aquilax/hranoprovod-cli/v2/lib/resolver => ../../lib/resolver

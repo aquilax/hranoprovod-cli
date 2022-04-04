@@ -8,11 +8,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func Command() *cli.Command {
-	return newGenCommand(utils.NewCmdUtils())
+func Command(a *cli.App) *cli.Command {
+	return newGenCommand(utils.NewCmdUtils(), a)
 }
 
-func newGenCommand(cu utils.CmdUtils) *cli.Command {
+func newGenCommand(cu utils.CmdUtils, a *cli.App) *cli.Command {
 	return &cli.Command{
 		Name:  "gen",
 		Usage: "Generate documentation",
@@ -22,7 +22,7 @@ func newGenCommand(cu utils.CmdUtils) *cli.Command {
 				Usage: "Generate man page",
 				Action: func(c *cli.Context) error {
 					return cu.WithOptions(c, func(o *options.Options) error {
-						man, err := c.App.ToMan()
+						man, err := a.ToMan()
 						if err != nil {
 							return err
 						}
@@ -36,7 +36,7 @@ func newGenCommand(cu utils.CmdUtils) *cli.Command {
 				Usage: "Generate markdown page",
 				Action: func(c *cli.Context) error {
 					return cu.WithOptions(c, func(o *options.Options) error {
-						markdown, err := c.App.ToMarkdown()
+						markdown, err := a.ToMarkdown()
 						if err != nil {
 							return err
 						}

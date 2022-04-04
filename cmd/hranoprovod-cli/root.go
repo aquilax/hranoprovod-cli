@@ -103,8 +103,8 @@ func GetApp() *cli.App {
 		csv.Command(),
 		stats.Command(),
 		summary.Command(),
-		gen.Command(),
 		print.Command(),
+		gen.Command(a),
 	}
 	return a
 }

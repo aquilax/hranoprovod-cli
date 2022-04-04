@@ -78,8 +78,8 @@ COMMANDS:
    csv            Generates csv exports
    stats          Provide stats information
    summary        Show summary for date
-   gen            Generate documentation
    print          Print log
+   gen            Generate documentation
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:

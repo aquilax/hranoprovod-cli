@@ -4,10 +4,10 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
@@ -79,10 +79,6 @@ func NewRegisterCommand(cu utils.CmdUtils, register registerCmd) *cli.Command {
 				Usage: "Name of the internal demplate to use: [default, left-aligned]",
 				Value: "default",
 			},
-			&cli.BoolFlag{
-				Name:  "unresolved",
-				Usage: "Deprecated: Show unresolved elements only (moved to 'report unresolved')",
-			},
 		},
 		Action: func(c *cli.Context) error {
 			return cu.WithOptions(c, func(o *options.Options) error {
@@ -112,7 +108,7 @@ type RegisterConfig struct {
 // Register generates report
 func Register(logStream, dbStream io.Reader, rc RegisterConfig) error {
 	rpCb := func(rpc reporter.Config, nl shared.DBNodeMap) reporter.Reporter {
-		return reporter.NewRegReporter(rpc, nl)
+		return NewRegReporter(rpc, nl)
 	}
 	return utils.WalkWithReporter(logStream, dbStream, rc.DateFormat, rc.ParserConfig, rc.ResolverConfig, rc.ReporterConfig, rc.FilterConfig, rpCb)
 }

@@ -4,10 +4,10 @@ import (
 	"io"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
@@ -79,7 +79,7 @@ type BalanceConfig struct {
 func Balance(logStream, dbStream io.Reader, bc BalanceConfig) error {
 	return utils.WithResolvedDatabase(dbStream, bc.ParserConfig, bc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
-			r := reporter.NewBalanceReporter(bc.ReporterConfig, nl)
+			r := NewBalanceReporter(bc.ReporterConfig, nl)
 			f := filter.GetIntervalNodeFilter(bc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, bc.DateFormat, bc.ParserConfig, f, r)
 		})

@@ -5,10 +5,10 @@ import (
 	"sort"
 
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/resolver"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/urfave/cli/v2"
@@ -58,7 +58,7 @@ func NewCSVLogCommand(cu utils.CmdUtils, csvLog CSVLogCmd) *cli.Command {
 					DateFormat:     o.GlobalConfig.DateFormat,
 					ParserConfig:   o.ParserConfig,
 					FilterConfig:   o.FilterConfig,
-					ReporterConfig: reporter.NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Output, o.ReporterConfig.Color)),
+					ReporterConfig: NewCSVConfig(reporter.NewCommonConfig(o.ReporterConfig.Output, o.ReporterConfig.Color)),
 				}
 				return cu.WithFileReaders([]string{o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
 					logStream := streams[0]
@@ -109,12 +109,12 @@ type CSVLogConfig struct {
 	DateFormat     string
 	ParserConfig   parser.Config
 	FilterConfig   filter.Config
-	ReporterConfig reporter.CSVConfig
+	ReporterConfig CSVConfig
 }
 
 // CSVLog generates CSV export of the log
 func CSVLog(logStream io.Reader, c CSVLogConfig) error {
-	r := reporter.NewCSVReporter(c.ReporterConfig)
+	r := NewCSVReporter(c.ReporterConfig)
 	f := filter.GetIntervalNodeFilter(c.FilterConfig)
 	return utils.WalkNodesInStream(logStream, c.DateFormat, c.ParserConfig, f, r)
 }
@@ -127,7 +127,7 @@ type CSVDatabaseConfig struct {
 // CSVDatabase generates CSV export of the database
 func CSVDatabase(dbStream io.Reader, cdc CSVDatabaseConfig) error {
 	p := parser.NewParser(cdc.ParserConfig)
-	r := reporter.NewCSVDatabaseReporter(cdc.ReporterConfig)
+	r := NewCSVDatabaseReporter(cdc.ReporterConfig)
 	go p.ParseStream(dbStream)
 	return func() error {
 		for {
@@ -166,7 +166,7 @@ func CSVDatabaseResolved(dbStream io.Reader, cdc CSVDatabaseResolvedConfig) erro
 		i++
 	}
 	sort.Strings(keys)
-	r := reporter.NewCSVDatabaseReporter(cdc.ReporterConfig)
+	r := NewCSVDatabaseReporter(cdc.ReporterConfig)
 	for _, key := range keys {
 		if err = r.Process(nl[key]); err != nil {
 			return err

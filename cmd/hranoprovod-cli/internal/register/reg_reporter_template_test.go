@@ -1,10 +1,11 @@
-package reporter
+package register
 
 import (
 	"bytes"
 	"testing"
 	"time"
 
+	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
 	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
 	"github.com/stretchr/testify/assert"
 )
@@ -40,7 +41,7 @@ func TestRegReporterTemplate(t *testing.T) {
 		db.Push(&dbNode)
 
 		t.Run("Prints list of unresolved items", func(t *testing.T) {
-			c := NewDefaultConfig()
+			c := reporter.NewDefaultConfig()
 			c.ShortenStrings = true
 			c.Color = false
 			c.Output = &b
