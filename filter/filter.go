@@ -1,3 +1,4 @@
+// Package filter provides functions for filtering log nodes
 package filter
 
 import (

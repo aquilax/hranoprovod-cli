@@ -1,3 +1,4 @@
+// Package resolver resolves a food database
 package resolver
 
 import (
