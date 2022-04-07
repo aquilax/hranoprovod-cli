@@ -11,7 +11,7 @@ TARGET=hranoprovod-cli
 MDEXEC=mdexec
 SRC=$(shell find . -type f -name '*.go' -not -path "./vendor/*")
 DOC_TARGETS=${TARGET} docs/command-line.md docs/usage.md README.md docs/usage.cast
-MODULES=$(shell ${GO} list -m)
+MODULES=$(shell ${GO} list -m -f '{{.String}}/...')
 
 .DEFAULT_GOAL: $(TARGET)
 
