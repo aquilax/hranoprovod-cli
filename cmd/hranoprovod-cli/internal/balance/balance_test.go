@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/options"
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/testutils"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/options"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/testutils"
 	"github.com/stretchr/testify/assert"
 )
 

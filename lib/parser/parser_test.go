@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 	"github.com/stretchr/testify/assert"
 )
 

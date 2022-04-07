@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/options"
 	"github.com/urfave/cli/v2"
 )
 

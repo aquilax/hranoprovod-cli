@@ -1,9 +1,9 @@
-module github.com/aquilax/hranoprovod-cli/v3/lib/parser
+module github.com/aquilax/hranoprovod-cli/lib/parser/v3
 
 go 1.17
 
 require (
-	github.com/aquilax/hranoprovod-cli/v3/lib/shared v0.0.0
+	github.com/aquilax/hranoprovod-cli/v3 v3.0.0
 	github.com/stretchr/testify v1.7.1
 )
 
@@ -13,4 +13,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
 
-replace github.com/aquilax/hranoprovod-cli/v3/lib/shared => ../shared
+replace github.com/aquilax/hranoprovod-cli/v3 => ../../

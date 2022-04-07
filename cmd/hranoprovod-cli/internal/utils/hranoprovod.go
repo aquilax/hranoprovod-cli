@@ -4,11 +4,11 @@ import (
 	"io"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/filter"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/parser"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/resolver"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/reporter"
+	"github.com/aquilax/hranoprovod-cli/lib/filter/v3"
+	"github.com/aquilax/hranoprovod-cli/lib/parser/v3"
+	"github.com/aquilax/hranoprovod-cli/lib/resolver/v3"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 type ResolvedCallback = func(nl shared.DBNodeMap) error
