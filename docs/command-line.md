@@ -1,5 +1,3 @@
-% hranoprovod-cli 8
-
 # NAME
 
 hranoprovod-cli - Diet tracker for the command line
@@ -22,6 +20,10 @@ hranoprovod-cli
 [--today]=[value]
 [--version|-v]
 ```
+
+# DESCRIPTION
+
+A command line tool to keep log of diet and exercise in text files
 
 **Usage**:
 
