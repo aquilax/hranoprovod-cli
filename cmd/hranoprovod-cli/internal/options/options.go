@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/lib/filter/v3"
-	"github.com/aquilax/hranoprovod-cli/lib/parser/v3"
-	"github.com/aquilax/hranoprovod-cli/lib/resolver/v3"
+	"github.com/aquilax/hranoprovod-cli/v3/filter"
+	"github.com/aquilax/hranoprovod-cli/v3/parser"
+	"github.com/aquilax/hranoprovod-cli/v3/resolver"
 	"github.com/tj/go-naturaldate"
 	"github.com/urfave/cli/v2"
 	gcfg "gopkg.in/gcfg.v1"

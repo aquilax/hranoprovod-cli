@@ -3,9 +3,6 @@ module github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3
 go 1.17
 
 require (
-	github.com/aquilax/hranoprovod-cli/lib/filter/v3 v3.0.0
-	github.com/aquilax/hranoprovod-cli/lib/parser/v3 v3.0.0
-	github.com/aquilax/hranoprovod-cli/lib/resolver/v3 v3.0.0
 	github.com/aquilax/hranoprovod-cli/v3 v3.0.0
 	github.com/stretchr/testify v1.7.1
 	github.com/tj/go-naturaldate v1.3.0
@@ -24,6 +21,3 @@ require (
 )
 
 replace github.com/aquilax/hranoprovod-cli/v3 => ../../
-replace github.com/aquilax/hranoprovod-cli/lib/parser/v3 => ../../lib/parser
-replace github.com/aquilax/hranoprovod-cli/lib/filter/v3 => ../../lib/filter
-replace github.com/aquilax/hranoprovod-cli/lib/resolver/v3 => ../../lib/resolver

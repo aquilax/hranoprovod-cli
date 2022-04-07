@@ -3,7 +3,4 @@ go 1.17
 use (
 	./
 	./cmd/hranoprovod-cli
-	./lib/filter
-	./lib/resolver
-	./lib/parser
 )

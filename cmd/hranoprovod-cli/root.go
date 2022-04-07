@@ -15,8 +15,8 @@ import (
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/report"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/stats"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/summary"
-	"github.com/aquilax/hranoprovod-cli/lib/parser/v3"
-	"github.com/aquilax/hranoprovod-cli/lib/resolver/v3"
+	"github.com/aquilax/hranoprovod-cli/v3/parser"
+	"github.com/aquilax/hranoprovod-cli/v3/resolver"
 	"github.com/urfave/cli/v2"
 )
 
