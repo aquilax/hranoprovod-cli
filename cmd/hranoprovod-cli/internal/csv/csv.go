@@ -126,21 +126,15 @@ type CSVDatabaseConfig struct {
 
 // CSVDatabase generates CSV export of the database
 func CSVDatabase(dbStream io.Reader, cdc CSVDatabaseConfig) error {
-	p := parser.NewParser(cdc.ParserConfig)
 	r := NewCSVDatabaseReporter(cdc.ReporterConfig)
-	go p.ParseStream(dbStream)
-	return func() error {
-		for {
-			select {
-			case node := <-p.Nodes:
-				r.Process(shared.NewDBNodeFromNode(node))
-			case error := <-p.Errors:
-				return error
-			case <-p.Done:
-				return r.Flush()
-			}
+	defer r.Flush()
+
+	return parser.ParseStreamCallback(dbStream, cdc.ParserConfig, func(n *shared.ParserNode, err error) (stop bool, cbError error) {
+		if err := r.Process(shared.NewDBNodeFromNode(n)); err != nil {
+			return true, err
 		}
-	}()
+		return false, nil
+	})
 }
 
 type CSVDatabaseResolvedConfig struct {

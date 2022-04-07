@@ -54,7 +54,9 @@ func (r Resolver) resolveNode(name string, level int) error {
 	nel := shared.NewElements()
 
 	for _, e := range node.Elements {
-		r.resolveNode(e.Name, level+1)
+		if err := r.resolveNode(e.Name, level+1); err != nil {
+			return err
+		}
 		foundNode, exists := r.db[e.Name]
 		if exists {
 			nel.SumMerge(foundNode.Elements, e.Value)
@@ -82,7 +84,9 @@ func resolveNode(maxDepth int, db shared.DBNodeMap, name string, level int) erro
 	nel := shared.NewElements()
 
 	for _, e := range node.Elements {
-		resolveNode(maxDepth, db, e.Name, level+1)
+		if err := resolveNode(maxDepth, db, e.Name, level+1); err != nil {
+			return err
+		}
 		if foundNode, exists := db[e.Name]; exists {
 			nel.SumMerge(foundNode.Elements, e.Value)
 		} else {

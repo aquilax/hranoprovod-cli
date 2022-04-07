@@ -47,7 +47,7 @@ func TestResolver(t *testing.T) {
 		nl := getTestnodeMap()
 		resolver := NewResolver(nl, Config{10})
 		t.Run("Resolve resolves the database", func(t *testing.T) {
-			resolver.Resolve()
+			assert.Nil(t, resolver.Resolve())
 			t.Run("Elements are resolved", func(t *testing.T) {
 				n1 := nl["node1"]
 				assert.Equal(t, "element1", n1.Elements[0].Name)
@@ -88,15 +88,23 @@ func TestResolver_Resolve(t *testing.T) {
 
 func BenchmarkResolve(b *testing.B) {
 	nl := getSizeNnodeMap(100)
+	var err error
 	for n := 0; n < b.N; n++ {
-		Resolve(Config{10}, nl)
+		_, err = Resolve(Config{10}, nl)
+	}
+	if err != nil {
+		b.Fatal(err)
 	}
 }
 
 func BenchmarkResolverResolve(b *testing.B) {
 	nl := getSizeNnodeMap(100)
 	resolver := NewResolver(nl, Config{10})
+	var err error
 	for n := 0; n < b.N; n++ {
-		resolver.Resolve()
+		err = resolver.Resolve()
+	}
+	if err != nil {
+		b.Fatal(err)
 	}
 }
