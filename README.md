@@ -21,17 +21,14 @@ hranoprovod can be installed using a plugin as follows:
 
 First make sure you have go (golang) installed.
 
-    http://golang.org/
+    https://go.dev/
 
 Clone the repository and build/install the tool:
 
     git clone https://github.com/aquilax/hranoprovod-cli.git
-    cd hranoprovod-cli
+    cd hranoprovod-cli/cmd/hranoprovod-cli/
     go install
 
-### snap
-
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/hranoprovod-cli)
 
 ## Docker
 
@@ -78,8 +75,8 @@ COMMANDS:
    csv            Generates csv exports
    stats          Provide stats information
    summary        Show summary for date
-   gen            Generate documentation
    print          Print log
+   gen            Generate documentation
    help, h        Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:

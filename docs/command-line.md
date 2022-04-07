@@ -1,3 +1,5 @@
+% hranoprovod-cli 8
+
 # NAME
 
 hranoprovod-cli - Diet tracker for the command line
@@ -20,10 +22,6 @@ hranoprovod-cli
 [--today]=[value]
 [--version|-v]
 ```
-
-# DESCRIPTION
-
-A command line tool to keep log of diet and exercise in text files
 
 **Usage**:
 
@@ -85,8 +83,6 @@ Shows the log register report
 **--single-food, -f**="": Show only single food
 
 **--totals-only**: Show only totals
-
-**--unresolved**: Deprecated: Show unresolved elements only (moved to 'report unresolved')
 
 **--use-old-reg-reporter**: Use the old reg reporter
 
@@ -158,6 +154,14 @@ Provide stats information
 
 Show summary for date
 
+## print
+
+Print log
+
+**--begin, -b**="": Beginning of period `DATE`
+
+**--end, -e**="": End of period `DATE`
+
 ## gen
 
 Generate documentation
@@ -171,14 +175,6 @@ Generate man page
 Generate markdown page
 
 **--help, -h**: show help
-
-## print
-
-Print log
-
-**--begin, -b**="": Beginning of period `DATE`
-
-**--end, -e**="": End of period `DATE`
 
 ## help, h
 
