@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/reporter"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 // elementByFoodReporter outputs report for single element groupped by food

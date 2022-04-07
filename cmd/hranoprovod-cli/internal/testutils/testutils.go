@@ -7,8 +7,8 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/options"
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/utils"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/options"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/utils"
 )
 
 //go:embed testAssets/*

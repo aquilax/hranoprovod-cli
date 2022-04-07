@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/reporter"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 // singleReporter outputs report for single food

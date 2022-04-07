@@ -3,7 +3,7 @@ package resolver
 import (
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 const DefaultMaxDepth = 10

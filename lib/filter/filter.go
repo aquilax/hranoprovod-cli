@@ -3,7 +3,7 @@ package filter
 import (
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 // Config contains node filtering configuration

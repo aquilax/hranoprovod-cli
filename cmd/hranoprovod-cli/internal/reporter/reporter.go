@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
+	shared "github.com/aquilax/hranoprovod-cli/v3"
 )
 
 type CommonConfig struct {
