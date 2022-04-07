@@ -3,8 +3,8 @@ package gen
 import (
 	"fmt"
 
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/utils"
 	"github.com/urfave/cli/v2"
 )
 

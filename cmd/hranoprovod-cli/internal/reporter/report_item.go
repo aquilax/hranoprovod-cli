@@ -4,7 +4,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
+	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
 )
 
 type reportElement struct {

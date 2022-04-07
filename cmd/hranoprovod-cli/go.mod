@@ -1,12 +1,12 @@
-module github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli
+module github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli
 
 go 1.17
 
 require (
-	github.com/aquilax/hranoprovod-cli/v2/lib/filter v0.0.0
-	github.com/aquilax/hranoprovod-cli/v2/lib/parser v0.0.0
-	github.com/aquilax/hranoprovod-cli/v2/lib/resolver v0.0.0
-	github.com/aquilax/hranoprovod-cli/v2/lib/shared v0.0.0
+	github.com/aquilax/hranoprovod-cli/v3/lib/filter v0.0.0
+	github.com/aquilax/hranoprovod-cli/v3/lib/parser v0.0.0
+	github.com/aquilax/hranoprovod-cli/v3/lib/resolver v0.0.0
+	github.com/aquilax/hranoprovod-cli/v3/lib/shared v0.0.0
 	github.com/stretchr/testify v1.7.1
 	github.com/tj/go-naturaldate v1.3.0
 	github.com/urfave/cli/v2 v2.3.0
@@ -23,10 +23,10 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
 )
 
-replace github.com/aquilax/hranoprovod-cli/v2/lib/shared => ../../lib/shared
+replace github.com/aquilax/hranoprovod-cli/v3/lib/shared => ../../lib/shared
 
-replace github.com/aquilax/hranoprovod-cli/v2/lib/parser => ../../lib/parser
+replace github.com/aquilax/hranoprovod-cli/v3/lib/parser => ../../lib/parser
 
-replace github.com/aquilax/hranoprovod-cli/v2/lib/filter => ../../lib/filter
+replace github.com/aquilax/hranoprovod-cli/v3/lib/filter => ../../lib/filter
 
-replace github.com/aquilax/hranoprovod-cli/v2/lib/resolver => ../../lib/resolver
+replace github.com/aquilax/hranoprovod-cli/v3/lib/resolver => ../../lib/resolver

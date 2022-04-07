@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
+	"github.com/aquilax/hranoprovod-cli/v3/lib/parser"
 )
 
 func ExampleParser_ParseStream() {

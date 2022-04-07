@@ -7,12 +7,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/balance"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/csv"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/print"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/register"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/summary"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/testutils"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/balance"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/csv"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/print"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/register"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/summary"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )

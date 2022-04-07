@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/shared"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/reporter"
+	"github.com/aquilax/hranoprovod-cli/v3/lib/shared"
 )
 
 const (

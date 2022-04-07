@@ -1,4 +1,4 @@
-module github.com/aquilax/hranoprovod-cli/v2/lib/shared
+module github.com/aquilax/hranoprovod-cli/v3/lib/shared
 
 go 1.17
 

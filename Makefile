@@ -18,7 +18,7 @@ MODULES=$(shell ${GO} list -m)
 all: $(TARGET) docs
 
 $(TARGET): $(SRC)
-	$(GO) build -o $(TARGET) github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli
+	$(GO) build -o $(TARGET) github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli
 
 docs: $(TARGET) docs/command-line.md docs/usage.md README.md
 

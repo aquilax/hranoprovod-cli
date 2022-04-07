@@ -3,11 +3,11 @@ package print
 import (
 	"io"
 
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/options"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/reporter"
-	"github.com/aquilax/hranoprovod-cli/v2/cmd/hranoprovod-cli/internal/utils"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/filter"
-	"github.com/aquilax/hranoprovod-cli/v2/lib/parser"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/options"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/reporter"
+	"github.com/aquilax/hranoprovod-cli/v3/cmd/hranoprovod-cli/internal/utils"
+	"github.com/aquilax/hranoprovod-cli/v3/lib/filter"
+	"github.com/aquilax/hranoprovod-cli/v3/lib/parser"
 	"github.com/urfave/cli/v2"
 )
 
