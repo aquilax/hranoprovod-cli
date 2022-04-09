@@ -80,6 +80,7 @@ func Balance(logStream, dbStream io.Reader, bc BalanceConfig) error {
 	return utils.WithResolvedDatabase(dbStream, bc.ParserConfig, bc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := NewBalanceReporter(bc.ReporterConfig, nl)
+			defer r.Flush()
 			f := filter.GetIntervalNodeFilter(bc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, bc.DateFormat, bc.ParserConfig, f, r)
 		})

@@ -5,3 +5,10 @@
            | sandwich
            |   egg
       2.70 |     lettuce/100g
+           | candy
+      1.00 |   snickers/bar
+      3.00 | coffee/cup
+      2.00 | day/nonworking
+           | sandwich
+           |   egg
+      2.70 |     lettuce/100g

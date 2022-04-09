@@ -62,7 +62,7 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 func (r *balanceReporter) Flush() error {
 	if r.config.Collapse {
 		r.printNodeCollapsed(r.root, 0)
-		return nil
+		return r.output.Flush()
 	}
 	r.printNode(r.root, 0)
 	return r.output.Flush()

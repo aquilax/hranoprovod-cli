@@ -170,6 +170,7 @@ func ReportUnresolved(logStream, dbStream io.Reader, ruc ReportUnresolvedConfig)
 	return utils.WithResolvedDatabase(dbStream, ruc.ParserConfig, ruc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := NewUnsolvedReporter(ruc.ReporterConfig, nl)
+			defer r.Flush()
 			f := filter.GetIntervalNodeFilter(ruc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, ruc.DateFormat, ruc.ParserConfig, f, r)
 		})
@@ -186,6 +187,7 @@ type ReportQuantityConfig struct {
 // ReportQuantity Generates a quantity report
 func ReportQuantity(logStream io.Reader, rqc ReportQuantityConfig) error {
 	r := NewQuantityReporter(rqc.ReporterConfig, rqc.Descending)
+	defer r.Flush()
 	f := filter.GetIntervalNodeFilter(rqc.FilterConfig)
 	return utils.WalkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
 }

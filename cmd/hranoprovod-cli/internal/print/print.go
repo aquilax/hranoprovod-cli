@@ -59,6 +59,7 @@ type PrintConfig struct {
 // Print reads and prints back out the log file
 func Print(logStream io.Reader, pc PrintConfig) error {
 	r := NewPrintReporter(pc.ReporterConfig)
+	defer r.Flush()
 	f := filter.GetIntervalNodeFilter(pc.FilterConfig)
 	return utils.WalkNodesInStream(logStream, pc.DateFormat, pc.ParserConfig, f, r)
 }

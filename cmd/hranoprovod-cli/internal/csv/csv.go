@@ -115,6 +115,7 @@ type CSVLogConfig struct {
 // CSVLog generates CSV export of the log
 func CSVLog(logStream io.Reader, c CSVLogConfig) error {
 	r := NewCSVReporter(c.ReporterConfig)
+	defer r.Flush()
 	f := filter.GetIntervalNodeFilter(c.FilterConfig)
 	return utils.WalkNodesInStream(logStream, c.DateFormat, c.ParserConfig, f, r)
 }
@@ -161,6 +162,7 @@ func CSVDatabaseResolved(dbStream io.Reader, cdc CSVDatabaseResolvedConfig) erro
 	}
 	sort.Strings(keys)
 	r := NewCSVDatabaseReporter(cdc.ReporterConfig)
+
 	for _, key := range keys {
 		if err = r.Process(nl[key]); err != nil {
 			return err

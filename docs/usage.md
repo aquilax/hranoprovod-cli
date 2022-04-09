@@ -208,6 +208,17 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
            |   egg
            |     lettuce
       2.70 |       100g
+           | candy
+           |   snickers
+      1.00 |     bar
+           | coffee
+      3.00 |   cup
+           | day
+      2.00 |   nonworking
+           | sandwich
+           |   egg
+           |     lettuce
+      2.70 |       100g
 
 ```
 
@@ -215,6 +226,14 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c
+      1.00 | candy/snickers/bar
+      3.00 | coffee/cup
+      2.00 | day/nonworking
+      2.70 | sandwich/egg/lettuce/100g
+      1.00 | candy/snickers/bar
+      3.00 | coffee/cup
+      2.00 | day/nonworking
+      2.70 | sandwich/egg/lettuce/100g
 
 ```
 
@@ -229,6 +248,13 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --
            | sandwich
            |   egg
       2.70 |     lettuce/100g
+           | candy
+      1.00 |   snickers/bar
+      3.00 | coffee/cup
+      2.00 | day/nonworking
+           | sandwich
+           |   egg
+      2.70 |     lettuce/100g
 
 ```
 
@@ -236,6 +262,17 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s fat
+     13.60 | candy
+     13.60 |   snickers
+     13.60 |     bar
+   -248.00 | day
+   -248.00 |   nonworking
+     13.82 | sandwich
+     13.82 |   egg
+     13.82 |     lettuce
+     13.82 |       100g
+-----------|
+   -220.58 | fat
      13.60 | candy
      13.60 |   snickers
      13.60 |     bar
@@ -274,6 +311,7 @@ Prints list of records which were not found in the recipe book
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color report unresolved
+coffee/cup
 coffee/cup
 
 ```
@@ -381,6 +419,10 @@ $ ./hranoprovod-cli --today 2022/01/01 -d examples/food.yaml -l examples/log.yam
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color report quantity --desc
+3.00	coffee/cup
+2.70	sandwich/egg/lettuce/100g
+2.00	day/nonworking
+1.00	candy/snickers/bar
 3.00	coffee/cup
 2.70	sandwich/egg/lettuce/100g
 2.00	day/nonworking

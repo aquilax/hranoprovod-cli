@@ -62,6 +62,7 @@ func Summary(logStream, dbStream io.Reader, sc SummaryConfig) error {
 	return utils.WithResolvedDatabase(dbStream, sc.ParserConfig, sc.ResolverConfig,
 		func(nl shared.DBNodeMap) error {
 			r := NewSummaryReporterTemplate(sc.ReporterConfig, nl)
+			defer r.Flush()
 			f := filter.GetIntervalNodeFilter(sc.FilterConfig)
 			return utils.WalkNodesInStream(logStream, sc.DateFormat, sc.ParserConfig, f, r)
 		})

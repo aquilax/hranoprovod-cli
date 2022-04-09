@@ -6,3 +6,11 @@
            |   egg
            |     lettuce
       1.50 |       100g
+           | coffee
+      2.00 |   cup
+           | day
+      1.00 |   nonworking
+           | sandwich
+           |   egg
+           |     lettuce
+      1.50 |       100g
