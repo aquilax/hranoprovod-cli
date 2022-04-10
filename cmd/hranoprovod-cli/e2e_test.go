@@ -143,6 +143,10 @@ func Test_E2E(t *testing.T) {
 			gotContent := buf.String()
 			wantContent, err := testutils.ReadAsset(tt.wantContentFileName)
 			assert.Equal(t, nil, err)
+			if string(wantContent) != gotContent {
+				println(tt.wantContentFileName)
+				println(gotContent)
+			}
 			assert.Equal(t, string(wantContent), gotContent)
 		})
 	}

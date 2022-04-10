@@ -197,27 +197,27 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml -b 2021/01/24 -e 
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal
-           | candy
-           |   snickers
+      1.00 | candy
+      1.00 |   snickers
       1.00 |     bar
-           | coffee
+      3.00 | coffee
       3.00 |   cup
-           | day
+      2.00 | day
       2.00 |   nonworking
-           | sandwich
-           |   egg
-           |     lettuce
+      2.70 | sandwich
+      2.70 |   egg
+      2.70 |     lettuce
       2.70 |       100g
-           | candy
-           |   snickers
+      1.00 | candy
+      1.00 |   snickers
       1.00 |     bar
-           | coffee
+      3.00 | coffee
       3.00 |   cup
-           | day
+      2.00 | day
       2.00 |   nonworking
-           | sandwich
-           |   egg
-           |     lettuce
+      2.70 | sandwich
+      2.70 |   egg
+      2.70 |     lettuce
       2.70 |       100g
 
 ```
@@ -241,19 +241,19 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -c
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal --collapse-last
-           | candy
+      1.00 | candy
       1.00 |   snickers/bar
       3.00 | coffee/cup
       2.00 | day/nonworking
-           | sandwich
-           |   egg
+      2.70 | sandwich
+      2.70 |   egg
       2.70 |     lettuce/100g
-           | candy
+      1.00 | candy
       1.00 |   snickers/bar
       3.00 | coffee/cup
       2.00 | day/nonworking
-           | sandwich
-           |   egg
+      2.70 | sandwich
+      2.70 |   egg
       2.70 |     lettuce/100g
 
 ```

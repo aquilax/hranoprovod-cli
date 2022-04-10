@@ -58,14 +58,13 @@ func Test_balanceReporter_printNode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			r := &balanceReporter{
-				config: tt.fields.config,
-				db:     tt.fields.db,
-				output: bufio.NewWriter(tt.fields.output),
-				root:   tt.fields.root,
+			r := balanceReporter{
+				db:           tt.fields.db,
+				output:       bufio.NewWriter(tt.fields.output),
+				root:         tt.fields.root,
+				collapseLast: tt.fields.config.CollapseLast,
 			}
-			print(tt.args.node.Name)
-			r.printNodeCollapsed(tt.args.node, tt.args.level)
+			printNodeCollapsed(tt.args.node, tt.args.level, r.output)
 			r.output.Flush()
 			got := buffer.String()
 			if got != tt.want {
