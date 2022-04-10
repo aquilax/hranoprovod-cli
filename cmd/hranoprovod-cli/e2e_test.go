@@ -11,6 +11,7 @@ import (
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/csv"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/print"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/register"
+	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/report"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/summary"
 	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/testutils"
 	"github.com/stretchr/testify/assert"
@@ -40,35 +41,35 @@ func Test_E2E(t *testing.T) {
 			[]string{"bal"},
 			balanceApp,
 			nil,
-			`testAssets/balance-no-extra-options.txt`,
+			"testAssets/balance-no-extra-options.txt",
 		},
 		{
 			"balance works collapse-last",
 			[]string{"bal", "--collapse-last"},
 			balanceApp,
 			nil,
-			`testAssets/balance-collapse-last.txt`,
+			"testAssets/balance-collapse-last.txt",
 		},
 		{
 			"balance works with collapse",
 			[]string{"bal", "--collapse"},
 			balanceApp,
 			nil,
-			`testAssets/balance-collapse.txt`,
+			"testAssets/balance-collapse.txt",
 		},
 		{
 			"balance works with single-element",
 			[]string{"bal", "--single-element", "protein"},
 			balanceApp,
 			nil,
-			`testAssets/balance-single-element.txt`,
+			"testAssets/balance-single-element.txt",
 		},
 		{
 			"balance works with begin date",
 			[]string{"bal", "-b", "2021/01/25"},
 			balanceApp,
 			nil,
-			`testAssets/balance-begin-date.txt`,
+			"testAssets/balance-begin-date.txt",
 		},
 		{
 			"csv log works as expected",
@@ -78,7 +79,7 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(csv.NewCSVLogCommand(mockCu, csv.CSVLog))
 			},
 			nil,
-			`testAssets/csv-log.csv`,
+			"testAssets/csv-log.csv",
 		},
 		{
 			"csv database works as expected",
@@ -88,7 +89,7 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(csv.NewCSVDatabaseCommand(mockCu, csv.CSVDatabase))
 			},
 			nil,
-			`testAssets/csv-database.csv`,
+			"testAssets/csv-database.csv",
 		},
 		{
 			"csv database-resolved works as expected",
@@ -98,7 +99,7 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(csv.NewCSVDatabaseResolvedCommand(mockCu, csv.CSVDatabaseResolved))
 			},
 			nil,
-			`testAssets/csv-database-resolved.csv`,
+			"testAssets/csv-database-resolved.csv",
 		},
 		{
 			"print works as expected with log file",
@@ -108,7 +109,7 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(print.NewPrintCommand(mockCu, print.Print))
 			},
 			nil,
-			`testAssets/print-log.yaml`,
+			"testAssets/print-log.yaml",
 		},
 		{
 			"summary works as expected",
@@ -118,7 +119,7 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(summary.NewSummaryCommand(mockCu, summary.Summary))
 			},
 			nil,
-			`testAssets/summary.txt`,
+			"testAssets/summary.txt",
 		},
 		{
 			"register works as expected",
@@ -128,7 +129,17 @@ func Test_E2E(t *testing.T) {
 				return testutils.GetMockApp(register.NewRegisterCommand(mockCu, register.Register))
 			},
 			nil,
-			`testAssets/register.txt`,
+			"testAssets/register.txt",
+		},
+		{
+			"report totals works as expected",
+			[]string{"totals"},
+			func(w io.Writer) cli.App {
+				mockCu := testutils.GetMockCmdUtilsRealOptions([]string{string(dbContent), string(logContent)}, w)
+				return testutils.GetMockApp(report.NewReportTotalsCommand(mockCu, report.ReportTotals))
+			},
+			nil,
+			"testAssets/report-total.txt",
 		},
 	}
 

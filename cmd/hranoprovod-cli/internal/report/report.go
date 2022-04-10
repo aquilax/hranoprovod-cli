@@ -19,6 +19,7 @@ type (
 	reportElementCmd    func(dbStream io.Reader, rec ReportElementConfig) error
 	reportUnresolvedCmd func(logStream, dbStream io.Reader, ruc ReportUnresolvedConfig) error
 	reportQuantityCmd   func(logStream io.Reader, rqc ReportQuantityConfig) error
+	reportTotalsCmd     func(logStream, dbStream io.Reader, rqc ReportTotalsConfig) error
 )
 
 func Command() *cli.Command {
@@ -33,6 +34,7 @@ func NewReportCommand(cu utils.CmdUtils) *cli.Command {
 			newReportElementTotalCommand(cu, ReportElement),
 			newReportUnresolvedCommand(cu, ReportUnresolved),
 			newReportQuantityCommand(cu, ReportQuantity),
+			NewReportTotalsCommand(cu, ReportTotals),
 		},
 	}
 }
@@ -119,6 +121,27 @@ func newReportQuantityCommand(cu utils.CmdUtils, reportQuantity reportQuantityCm
 	}
 }
 
+func NewReportTotalsCommand(cu utils.CmdUtils, reportTotals reportTotalsCmd) *cli.Command {
+	return &cli.Command{
+		Name:  "totals",
+		Usage: "Generates totals by element report",
+		Action: func(c *cli.Context) error {
+			return cu.WithOptions(c, func(o *options.Options) error {
+				return cu.WithFileReaders([]string{o.GlobalConfig.DbFileName, o.GlobalConfig.LogFileName}, func(streams []io.Reader) error {
+					dbStream, logStream := streams[0], streams[1]
+					return reportTotals(logStream, dbStream, ReportTotalsConfig{
+						DateFormat:     o.GlobalConfig.DateFormat,
+						ParserConfig:   o.ParserConfig,
+						ResolverConfig: o.ResolverConfig,
+						ReporterConfig: o.ReporterConfig,
+						FilterConfig:   o.FilterConfig,
+					})
+				})
+			})
+		},
+	}
+}
+
 type ReportElementConfig struct {
 	ElementName    string
 	Descending     bool
@@ -190,4 +213,22 @@ func ReportQuantity(logStream io.Reader, rqc ReportQuantityConfig) error {
 	defer r.Flush()
 	f := filter.GetIntervalNodeFilter(rqc.FilterConfig)
 	return utils.WalkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
+}
+
+type ReportTotalsConfig struct {
+	DateFormat     string
+	ParserConfig   parser.Config
+	ResolverConfig resolver.Config
+	ReporterConfig reporter.Config
+	FilterConfig   filter.Config
+}
+
+func ReportTotals(logStream, dbStream io.Reader, rqc ReportTotalsConfig) error {
+	return utils.WithResolvedDatabase(dbStream, rqc.ParserConfig, rqc.ResolverConfig,
+		func(nl shared.DBNodeMap) error {
+			r := NewTotalReporter(rqc.ReporterConfig, nl)
+			defer r.Flush()
+			f := filter.GetIntervalNodeFilter(rqc.FilterConfig)
+			return utils.WalkNodesInStream(logStream, rqc.DateFormat, rqc.ParserConfig, f, r)
+		})
 }

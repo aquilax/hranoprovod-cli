@@ -128,6 +128,10 @@ Total quantities per food
 
 **--desc**: Descending order
 
+### totals
+
+Generates totals by element report
+
 ## csv
 
 Generates csv exports

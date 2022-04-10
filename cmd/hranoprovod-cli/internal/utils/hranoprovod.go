@@ -30,6 +30,7 @@ func WalkWithReporter(logStream, dbStream io.Reader, dateFormat string, pc parse
 	return WithResolvedDatabase(dbStream, pc, rc,
 		func(nl shared.DBNodeMap) error {
 			r := rpCb(rpc, nl)
+			r.Flush()
 			f := filter.GetIntervalNodeFilter(fc)
 			return WalkNodesInStream(logStream, dateFormat, pc, f, r)
 		})
@@ -75,9 +76,5 @@ func WalkNodesInStream(logStream io.Reader, dateFormat string, pc parser.Config,
 		}
 		return false, nil
 	}
-	err := parser.ParseStreamCallback(logStream, pc, cb)
-	if err != nil {
-		return err
-	}
-	return r.Flush()
+	return parser.ParseStreamCallback(logStream, pc, cb)
 }

@@ -9,14 +9,3 @@
       2.70 |   egg
       2.70 |     lettuce
       2.70 |       100g
-      1.00 | candy
-      1.00 |   snickers
-      1.00 |     bar
-      3.00 | coffee
-      3.00 |   cup
-      2.00 | day
-      2.00 |   nonworking
-      2.70 | sandwich
-      2.70 |   egg
-      2.70 |     lettuce
-      2.70 |       100g

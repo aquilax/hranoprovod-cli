@@ -38,13 +38,13 @@ func (r *balanceReporterCollapsed) Flush() error {
 }
 
 func getJump(node *shared.TreeNode) []string {
-	if len(node.Children) > 1 {
-		return []string{}
-	}
 	if len(node.Children) == 0 {
 		return []string{node.Name}
 	}
-	return append([]string{node.Name}, getJump(node.Children[node.Keys()[0]])...)
+	if len(node.Children) == 1 {
+		return append([]string{node.Name}, getJump(node.FirstChild())...)
+	}
+	return []string{}
 }
 
 func printNodeCollapsed(node *shared.TreeNode, level int, output io.Writer) error {

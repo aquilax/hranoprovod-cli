@@ -9,14 +9,3 @@
      17.77 |       100g
 -----------|
    -185.94 | protein
-      4.29 | candy
-      4.29 |   snickers
-      4.29 |     bar
-   -208.00 | day
-   -208.00 |   nonworking
-     17.77 | sandwich
-     17.77 |   egg
-     17.77 |     lettuce
-     17.77 |       100g
------------|
-   -185.94 | protein

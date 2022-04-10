@@ -183,49 +183,6 @@ Given this example, the result will look like:
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color reg
-2021/01/24
-	day/nonworking              :      1.00
-		            calories   -1200.00
-		        carbohydrate     -50.00
-		                 fat    -124.00
-		             protein    -104.00
-	coffee/cup                  :      1.00
-		          coffee/cup       1.00
-	sandwich/egg/lettuce/100g   :      1.20
-		            calories     328.32
-		        carbohydrate      23.86
-		                 fat       6.14
-		             protein       7.90
-	candy/snickers/bar          :      1.00
-		            calories     280.00
-		        carbohydrate      35.10
-		                 fat      13.60
-		             protein       4.29
-	-- TOTAL  ----------------------------------------------------
-		            calories     608.32   -1200.00 =   -591.68
-		        carbohydrate      58.96     -50.00 =      8.96
-		          coffee/cup       1.00       0.00 =      1.00
-		                 fat      19.74    -124.00 =   -104.26
-		             protein      12.19    -104.00 =    -91.81
-2021/01/25
-	day/nonworking              :      1.00
-		            calories   -1200.00
-		        carbohydrate     -50.00
-		                 fat    -124.00
-		             protein    -104.00
-	coffee/cup                  :      2.00
-		          coffee/cup       2.00
-	sandwich/egg/lettuce/100g   :      1.50
-		            calories     410.40
-		        carbohydrate      29.82
-		                 fat       7.68
-		             protein       9.87
-	-- TOTAL  ----------------------------------------------------
-		            calories     410.40   -1200.00 =   -789.60
-		        carbohydrate      29.82     -50.00 =    -20.18
-		          coffee/cup       2.00       0.00 =      2.00
-		                 fat       7.68    -124.00 =   -116.32
-		             protein       9.87    -104.00 =    -94.13
 
 ```
 
@@ -246,17 +203,6 @@ $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s
     738.72 |       100g
 -----------|
   -1381.28 | calories
-    280.00 | candy
-    280.00 |   snickers
-    280.00 |     bar
-  -2400.00 | day
-  -2400.00 |   nonworking
-    738.72 | sandwich
-    738.72 |   egg
-    738.72 |     lettuce
-    738.72 |       100g
------------|
-  -1381.28 | calories
 
 ```
 
@@ -264,11 +210,6 @@ Same result in slightly more compact format:
 
 ```sh
 $ ./hranoprovod-cli -d examples/food.yaml -l examples/log.yaml --no-color bal -s calories -c
-    280.00 | candy/snickers/bar
-  -2400.00 | day/nonworking
-    738.72 | sandwich/egg/lettuce/100g
------------|
-  -1381.28 | calories
     280.00 | candy/snickers/bar
   -2400.00 | day/nonworking
     738.72 | sandwich/egg/lettuce/100g

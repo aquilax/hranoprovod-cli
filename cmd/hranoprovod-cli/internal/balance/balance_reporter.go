@@ -44,9 +44,9 @@ func printNode(node *shared.TreeNode, level int, output io.Writer, collapseLast 
 		child := node.Children[key]
 		if len(child.Children) == 0 {
 			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
-		} else if collapseLast && len(child.Children) == 1 && len(child.Children[child.Keys()[0]].Children) == 0 {
+		} else if collapseLast && len(child.Children) == 1 && len(child.FirstChild().Children) == 0 {
 			// combine the last two levels
-			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name+"/"+child.Children[child.Keys()[0]].Name)
+			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name+"/"+child.FirstChild().Name)
 			continue
 		} else {
 			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)

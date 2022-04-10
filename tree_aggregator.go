@@ -56,3 +56,11 @@ func (tn *TreeNode) Keys() []string {
 	sort.StringSlice.Sort(keys)
 	return keys
 }
+
+// FirstChild returns the first child of a TreeNode
+func (tn *TreeNode) FirstChild() *TreeNode {
+	if len(tn.Children) == 0 {
+		return nil
+	}
+	return tn.Children[tn.Keys()[0]]
+}

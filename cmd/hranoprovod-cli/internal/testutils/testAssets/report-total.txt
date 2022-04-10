@@ -1,0 +1,6 @@
+    positive      negative           sum  element
+     1018.72      -2400.00      -1381.28  calories
+       88.78       -100.00        -11.22  carbohydrate
+        3.00          0.00          3.00  coffee/cup
+       27.42       -248.00       -220.58  fat
+       22.06       -208.00       -185.94  protein
