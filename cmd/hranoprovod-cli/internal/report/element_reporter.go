@@ -9,13 +9,12 @@ import (
 )
 
 type ElementReporter struct {
-	config reporter.Config
 	list   []shared.Element
 	output *bufio.Writer
 }
 
 func NewElementReporter(c reporter.Config, list []shared.Element) *ElementReporter {
-	return &ElementReporter{c, list, bufio.NewWriter(c.Output)}
+	return &ElementReporter{list, bufio.NewWriter(c.Output)}
 }
 
 func (er ElementReporter) Process(ln *shared.LogNode) error {
@@ -24,7 +23,7 @@ func (er ElementReporter) Process(ln *shared.LogNode) error {
 func (er ElementReporter) Flush() error {
 	var err error
 	for _, el := range er.list {
-		if _, err = fmt.Fprintf(er.config.Output, "%0.2f\t%s\n", el.Value, el.Name); err != nil {
+		if _, err = fmt.Fprintf(er.output, "%0.2f\t%s\n", el.Value, el.Name); err != nil {
 			return err
 		}
 	}

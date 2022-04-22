@@ -5,7 +5,7 @@ unexport HR_LOGFILE
 unexport HR_CONFIG
 unexport HR_DATE_FORMAT
 
-GO=go1.18
+GO=go1.18.1
 SHELL=/bin/bash
 TARGET=hranoprovod-cli
 MDEXEC=mdexec

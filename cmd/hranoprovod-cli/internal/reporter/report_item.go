@@ -45,8 +45,8 @@ func GetReportItem(ln *shared.LogNode, db shared.DBNodeMap, config Config) repor
 	if config.Totals {
 		acc = shared.NewAccumulator()
 	}
+
 	re := make([]reportElement, len(ln.Elements))
-	//sort.Sort(ln.Elements)
 	for i := range ln.Elements {
 		re[i].Name = ln.Elements[i].Name
 		re[i].Value = ln.Elements[i].Value

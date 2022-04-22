@@ -28,8 +28,8 @@ func NewCSVConfig(c reporter.CommonConfig) CSVConfig {
 
 // CSVReporter outputs report for single food
 type CSVReporter struct {
-	config CSVConfig
-	output *csv.Writer
+	output           *csv.Writer
+	outputTimeFormat string
 }
 
 // NewCSVReporter creates new CSV reporter
@@ -37,8 +37,8 @@ func NewCSVReporter(config CSVConfig) CSVReporter {
 	w := csv.NewWriter(config.Output)
 	w.Comma = config.CSVSeparator
 	return CSVReporter{
-		config,
 		w,
+		config.OutputTimeFormat,
 	}
 }
 
@@ -47,7 +47,7 @@ func (r CSVReporter) Process(ln *shared.LogNode) error {
 	var err error
 	for _, e := range ln.Elements {
 		if err = r.output.Write([]string{
-			ln.Time.Format(r.config.OutputTimeFormat),
+			ln.Time.Format(r.outputTimeFormat),
 			e.Name,
 			fmt.Sprintf("%0.3f", e.Value),
 		}); err != nil {

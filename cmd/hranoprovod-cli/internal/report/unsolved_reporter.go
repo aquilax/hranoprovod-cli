@@ -10,7 +10,6 @@ import (
 
 // UnsolvedReporter is unresolved reporter
 type UnsolvedReporter struct {
-	config reporter.Config
 	db     shared.DBNodeMap
 	output *bufio.Writer
 	list   map[string]bool
@@ -19,10 +18,9 @@ type UnsolvedReporter struct {
 // NewUnsolvedReporter returns reporter for unresolved elements
 func NewUnsolvedReporter(config reporter.Config, db shared.DBNodeMap) *UnsolvedReporter {
 	return &UnsolvedReporter{
-		config,
-		db,
-		bufio.NewWriter(config.Output),
-		make(map[string]bool),
+		db:     db,
+		output: bufio.NewWriter(config.Output),
+		list:   make(map[string]bool),
 	}
 }
 

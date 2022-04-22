@@ -11,7 +11,6 @@ import (
 )
 
 type TotalReporter struct {
-	config reporter.Config
 	output *bufio.Writer
 	db     shared.DBNodeMap
 	acc    shared.Accumulator
@@ -19,7 +18,6 @@ type TotalReporter struct {
 
 func NewTotalReporter(c reporter.Config, db shared.DBNodeMap) *TotalReporter {
 	return &TotalReporter{
-		config: c,
 		output: bufio.NewWriter(c.Output),
 		db:     db,
 		acc:    shared.NewAccumulator(),

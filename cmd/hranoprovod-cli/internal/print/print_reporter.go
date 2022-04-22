@@ -10,20 +10,20 @@ import (
 
 // PrintReporter outputs log report
 type PrintReporter struct {
-	config reporter.Config
-	output *bufio.Writer
+	output     *bufio.Writer
+	dateFormat string
 }
 
 func NewPrintReporter(config reporter.Config) *PrintReporter {
 	return &PrintReporter{
-		config,
 		bufio.NewWriter(config.Output),
+		config.DateFormat,
 	}
 }
 
 func (pr PrintReporter) Process(ln *shared.LogNode) error {
 	var err error
-	if _, err = fmt.Fprintf(pr.output, "%s:\n", ln.Time.Format(pr.config.DateFormat)); err != nil {
+	if _, err = fmt.Fprintf(pr.output, "%s:\n", ln.Time.Format(pr.dateFormat)); err != nil {
 		return err
 	}
 	if ln.Metadata != nil {
