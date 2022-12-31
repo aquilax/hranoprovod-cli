@@ -1,4 +1,6 @@
 github.com/BurntSushi/toml v1.1.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
+github.com/aquilax/hranoprovod-cli/v3 v3.0.0-alpha.4 h1:/4YvAnbnk13s9OVGCgMBnUzVNKW9IDOo/vKFK8T9zsE=
+github.com/aquilax/hranoprovod-cli/v3 v3.0.0-alpha.4/go.mod h1:1y8LjMCEa5qWbq6oZmRBhZ1UtLT+1WIV4fN+eXYIfWY=
 github.com/aquilax/truncate v1.0.0 h1:UgIGS8U/aZ4JyOJ2h3xcF5cSQ06+gGBnjxH2RUHJe0U=
 github.com/aquilax/truncate v1.0.0/go.mod h1:BeMESIDMlvlS3bmg4BVvBbbZUNwWtS8uzYPAKXwwhLw=
 github.com/cpuguy83/go-md2man/v2 v2.0.1/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
