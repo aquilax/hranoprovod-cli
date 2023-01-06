@@ -53,12 +53,20 @@ func (r *balanceSingleReporter) Process(ln *shared.LogNode) error {
 
 func (r *balanceSingleReporter) Flush() error {
 	if r.collapse {
-		printNodeCollapsed(r.root, 0, r.output)
+		if err := printNodeCollapsed(r.root, 0, r.output); err != nil {
+			return err
+		}
 	} else {
-		printNode(r.root, 0, r.output, r.collapseLast)
+		if err := printNode(r.root, 0, r.output, r.collapseLast); err != nil {
+			return err
+		}
 	}
 
-	fmt.Fprintf(r.output, "%s|\n", strings.Repeat("-", 11))
-	fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.singleElement)
+	if _, err := fmt.Fprintf(r.output, "%s|\n", strings.Repeat("-", 11)); err != nil {
+		return err
+	}
+	if _, err := fmt.Fprintf(r.output, "%10.2f | %s\n", r.total, r.singleElement); err != nil {
+		return err
+	}
 	return r.output.Flush()
 }

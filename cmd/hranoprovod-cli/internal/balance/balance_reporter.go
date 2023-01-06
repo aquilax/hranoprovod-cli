@@ -35,7 +35,9 @@ func (r *balanceReporter) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceReporter) Flush() error {
-	printNode(r.root, 0, r.output, r.collapseLast)
+	if err := printNode(r.root, 0, r.output, r.collapseLast); err != nil {
+		return err
+	}
 	return r.output.Flush()
 }
 
@@ -51,7 +53,9 @@ func printNode(node *shared.TreeNode, level int, output io.Writer, collapseLast 
 		} else {
 			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
 		}
-		printNode(child, level+1, output, collapseLast)
+		if err := printNode(child, level+1, output, collapseLast); err != nil {
+			return err
+		}
 	}
 	return nil
 }

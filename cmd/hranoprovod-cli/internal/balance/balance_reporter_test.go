@@ -64,7 +64,9 @@ func Test_balanceReporter_printNode(t *testing.T) {
 				root:         tt.fields.root,
 				collapseLast: tt.fields.config.CollapseLast,
 			}
-			printNodeCollapsed(tt.args.node, tt.args.level, r.output)
+			if err := printNodeCollapsed(tt.args.node, tt.args.level, r.output); err != nil {
+				t.Error(err)
+			}
 			r.output.Flush()
 			got := buffer.String()
 			if got != tt.want {

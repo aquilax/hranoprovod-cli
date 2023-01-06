@@ -50,7 +50,9 @@ func (tr TotalReporter) Flush() error {
 		fmt.Fprintf(tr.output, "%12s  %12s  %12s  %s\n", "positive", "negative", "sum", "element")
 		for _, name := range ss {
 			arr := tr.acc[name]
-			printTotalRow(name, arr[shared.Positive], arr[shared.Negative], tr.output)
+			if err := printTotalRow(name, arr[shared.Positive], arr[shared.Negative], tr.output); err != nil {
+				return err
+			}
 		}
 	}
 	return tr.output.Flush()

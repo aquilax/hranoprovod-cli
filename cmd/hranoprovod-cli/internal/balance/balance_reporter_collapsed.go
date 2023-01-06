@@ -33,7 +33,9 @@ func (r *balanceReporterCollapsed) Process(ln *shared.LogNode) error {
 }
 
 func (r *balanceReporterCollapsed) Flush() error {
-	printNodeCollapsed(r.root, 0, r.output)
+	if err := printNodeCollapsed(r.root, 0, r.output); err != nil {
+		return err
+	}
 	return r.output.Flush()
 }
 
@@ -48,16 +50,23 @@ func getJump(node *shared.TreeNode) []string {
 }
 
 func printNodeCollapsed(node *shared.TreeNode, level int, output io.Writer) error {
+	var err error
 	for _, key := range node.Keys() {
 		child := node.Children[key]
 
 		jump := getJump(child)
 		if len(jump) > 0 {
-			fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), strings.Join(jump, "/"))
+			if _, err = fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), strings.Join(jump, "/")); err != nil {
+				return err
+			}
 			continue
 		}
-		fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name)
-		printNodeCollapsed(child, level+1, output)
+		if _, err = fmt.Fprintf(output, "%10.2f | %s%s\n", child.Total, strings.Repeat("  ", level), child.Name); err != nil {
+			return err
+		}
+		if err = printNodeCollapsed(child, level+1, output); err != nil {
+			return err
+		}
 	}
 	return nil
 }
