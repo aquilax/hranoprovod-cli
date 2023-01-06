@@ -1,7 +1,9 @@
 package options
 
 import (
+	"bufio"
 	"errors"
+	"io"
 	"os"
 	"time"
 
@@ -40,9 +42,9 @@ func NewDefaultGlobalConfig() GlobalConfig {
 type Options struct {
 	GlobalConfig   GlobalConfig    `gcfg:"Global"`
 	ResolverConfig resolver.Config `gcfg:"Resolver"`
-	ParserConfig   parser.Config   `gcfg:"Parser"`
-	ReporterConfig reporter.Config `gcfg:"Reporter"`
-	FilterConfig   filter.Config   `gcfg:"Filter"`
+	ParserConfig   parser.Config
+	ReporterConfig reporter.Config
+	FilterConfig   filter.Config
 }
 
 // New returns new options structure.
@@ -70,8 +72,13 @@ func (o *Options) Load(c *cli.Context, useConfigFile bool) error {
 			return errors.New("File " + fileName + "not found")
 		}
 		if exists {
-			if err := gcfg.ReadFileInto(o, fileName); err != nil {
+			if f, err := os.Open(fileName); err != nil {
 				return err
+			} else {
+				r := bufio.NewReader(f)
+				if err := loadFromConfigFile(o, r); err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -84,6 +91,10 @@ func (o *Options) Load(c *cli.Context, useConfigFile bool) error {
 		return err
 	}
 	return validateOptions(c, o)
+}
+
+func loadFromConfigFile(o *Options, r io.Reader) error {
+	return gcfg.ReadInto(o, r)
 }
 
 func validateOptions(c *cli.Context, o *Options) error {
