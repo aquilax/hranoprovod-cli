@@ -1,7 +1,9 @@
 package options
 
 import (
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -22,5 +24,28 @@ func TestOptions(t *testing.T) {
 			assert.False(t, ex)
 			assert.Nil(t, err)
 		})
+	})
+
+	t.Run("loadFromConfigFile", func(t *testing.T) {
+		o := New()
+		r := strings.NewReader(`
+[Global]
+Now=2020-01-01T01:00:00Z
+DbFileName=/tmp/db.yaml
+LogFileName=/tmp/log.yaml
+DateFormat=2006-01-02
+[Resolver]
+MaxDepth=10
+`)
+		err := loadFromConfigFile(o, r)
+		assert.Nil(t, err)
+		expectedNow, _ := time.Parse(time.RFC3339, "2020-01-01T01:00:00Z")
+		assert.Equal(t, o.GlobalConfig.Now, expectedNow)
+		assert.Equal(t, o.GlobalConfig.DbFileName, "/tmp/db.yaml")
+		assert.Equal(t, o.GlobalConfig.LogFileName, "/tmp/log.yaml")
+		assert.Equal(t, o.GlobalConfig.DateFormat, "2006-01-02")
+
+		assert.Equal(t, o.ResolverConfig.MaxDepth, 10)
+
 	})
 }
