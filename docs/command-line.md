@@ -172,6 +172,8 @@ Print log
 
 Generate documentation
 
+**--help, -h**: show help
+
 ### man
 
 Generate man page
@@ -181,6 +183,14 @@ Generate man page
 Generate markdown page
 
 **--help, -h**: show help
+
+#### help, h
+
+Shows a list of commands or help for one command
+
+### help, h
+
+Shows a list of commands or help for one command
 
 ## help, h
 
