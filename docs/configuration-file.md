@@ -6,7 +6,7 @@ explicitly add them each time.
 ## Default configuration file
 
 The default configuration file is loaded from $HOME/.hranoprovod/config but
-any valid configuration file can ba passed as a parameter using the `-c` or
+any valid configuration file can be passed as a parameter using the `-c` or
 `--config` command line options.
 
 ## Configuration file format
@@ -14,7 +14,7 @@ any valid configuration file can ba passed as a parameter using the `-c` or
 The configuration file is following the INI file structure with the following
 main sections (all of them are optional):
 
-* `Global` - general configuration configuration
+* `Global` - general configuration
 * `Resolver` - resolver specific configuration
 
 Details for each section follow:

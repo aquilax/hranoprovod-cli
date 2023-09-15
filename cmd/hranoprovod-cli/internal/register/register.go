@@ -76,7 +76,7 @@ func NewRegisterCommand(cu utils.CmdUtils, register registerCmd) *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:  "internal-template-name",
-				Usage: "Name of the internal demplate to use: [default, left-aligned]",
+				Usage: "Name of the internal template to use: [default, left-aligned]",
 				Value: "default",
 			},
 		},

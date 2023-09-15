@@ -231,3 +231,13 @@ func BenchmarkParse(b *testing.B) {
 	}
 	wg.Wait()
 }
+
+func FuzzParseStreamCallback(f *testing.F) {
+	f.Add("potato: 1")
+	f.Fuzz(func(t *testing.T, s string) {
+		r := strings.NewReader(s)
+		ParseStreamCallback(r, NewDefaultConfig(), func(n *shared.ParserNode, err error) (bool, error) {
+			return false, nil
+		})
+	})
+}
