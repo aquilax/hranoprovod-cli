@@ -23,7 +23,7 @@ func NewStatsCommand(cu utils.CmdUtils, stats statsCmd) *cli.Command {
 		Usage: "Provide stats information",
 		Action: func(c *cli.Context) error {
 			return cu.WithOptions(c, func(o *options.Options) error {
-				return stats(o.GlobalConfig.LogFileName, o.GlobalConfig.LogFileName, StatsConfig{
+				return stats(o.GlobalConfig.LogFileName, o.GlobalConfig.DbFileName, StatsConfig{
 					Now:            o.GlobalConfig.Now,
 					ParserConfig:   o.ParserConfig,
 					ReporterConfig: o.ReporterConfig,
