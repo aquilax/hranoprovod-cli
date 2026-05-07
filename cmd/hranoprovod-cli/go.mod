@@ -4,8 +4,8 @@ go 1.17
 
 require (
 	github.com/aquilax/hranoprovod-cli/v3 v3.0.0
-	github.com/aquilax/truncate v1.0.0
-	github.com/stretchr/testify v1.8.1
+	github.com/aquilax/truncate v1.0.1
+	github.com/stretchr/testify v1.10.0
 	github.com/tj/go-naturaldate v1.3.0
 	github.com/urfave/cli/v2 v2.23.7
 	gopkg.in/gcfg.v1 v1.2.3
