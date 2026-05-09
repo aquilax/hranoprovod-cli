@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/balance"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/csv"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/print"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/register"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/report"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/summary"
-	"github.com/aquilax/hranoprovod-cli/cmd/hranoprovod-cli/v3/internal/testutils"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/balance"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/csv"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/print"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/register"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/report"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/summary"
+	"github.com/aquilax/hranoprovod-cli/v3/internal/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/urfave/cli/v2"
 )
@@ -150,7 +150,7 @@ func Test_E2E(t *testing.T) {
 			a := tt.appGetter(w)
 			err := a.Run(append(os.Args[:1], tt.args...))
 			assert.Equal(t, tt.wantError, err)
-			w.Flush()
+			assert.NoError(t, w.Flush())
 			gotContent := buf.String()
 			wantContent, err := testutils.ReadAsset(tt.wantContentFileName)
 			assert.Equal(t, nil, err)
