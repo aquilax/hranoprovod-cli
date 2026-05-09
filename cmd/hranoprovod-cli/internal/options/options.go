@@ -69,7 +69,7 @@ func (o *Options) Load(c *cli.Context, useConfigFile bool) error {
 		}
 		// Non existing file passed
 		if !exists && c.IsSet("config") {
-			return errors.New("File " + fileName + "not found")
+			return errors.New("File " + fileName + " not found")
 		}
 		if exists {
 			if f, err := os.Open(fileName); err != nil {
@@ -104,6 +104,9 @@ func validateOptions(c *cli.Context, o *Options) error {
 
 func fileExists(name string) (bool, error) {
 	_, err := os.Stat(name)
+	if err == nil {
+		return true, nil
+	}
 	if os.IsNotExist(err) {
 		return false, nil
 	}
