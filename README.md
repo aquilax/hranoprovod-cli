@@ -56,7 +56,7 @@ NAME:
    hranoprovod-cli - Diet tracker for the command line
 
 USAGE:
-   hranoprovod-cli [global options] command [command options] [arguments...]
+   hranoprovod-cli [global options] command [command options]
 
 VERSION:
    dev, commit none, built at unknown
@@ -90,8 +90,8 @@ GLOBAL OPTIONS:
    --maxdepth DEPTH           Resolve depth DEPTH (default: 10) [$HR_MAXDEPTH]
    --no-color                 Disable color output (default: false)
    --no-database              Disables loading the database (even if database filename is set) (default: false)
-   --help, -h                 show help (default: false)
-   --version, -v              print the version (default: false)
+   --help, -h                 show help
+   --version, -v              print the version
 
 ```
 

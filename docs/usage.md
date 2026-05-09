@@ -370,8 +370,8 @@ vegetables/lettuce/romaine/100g,protein,0.90
 
 ```sh
 $ ./hranoprovod-cli --today 2022/01/01 -d examples/food.yaml -l examples/log.yaml --no-color stats
-  Database file:      examples/log.yaml
-  Database records:   2
+  Database file:      examples/food.yaml
+  Database records:   7
 
   Log file:           examples/log.yaml
   Log records:        2
