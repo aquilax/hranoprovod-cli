@@ -35,17 +35,17 @@ hranoprovod-cli [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]
 
 **--begin, -b**="": Beginning of period `DATE`
 
-**--config, -c**="": Configuration file `FILE` (default: /home/aquilax/.hranoprovod/config)
+**--config, -c**="": Configuration file `FILE` (default: "/home/aquilax/.hranoprovod/config")
 
-**--database, -d**="": optional database file name `FILE` (default: food.yaml)
+**--database, -d**="": optional database file name `FILE` (default: "food.yaml")
 
-**--date-format**="": Date format for parsing and printing dates `DATE_FORMAT` (default: 2006/01/02)
+**--date-format**="": Date format for parsing and printing dates `DATE_FORMAT` (default: "2006/01/02")
 
 **--end, -e**="": End of period `DATE`
 
 **--help, -h**: show help
 
-**--logfile, -l**="": log file name `FILE` (default: log.yaml)
+**--logfile, -l**="": log file name `FILE` (default: "log.yaml")
 
 **--maxdepth**="": Resolve depth `DEPTH` (default: 10)
 
@@ -72,7 +72,7 @@ Shows the log register report
 
 **--group-food, -g**: Single element grouped by food
 
-**--internal-template-name**="": Name of the internal template to use: [default, left-aligned] (default: default)
+**--internal-template-name**="": Name of the internal template to use: [default, left-aligned] (default: "default")
 
 **--no-color**: Disable color output
 
