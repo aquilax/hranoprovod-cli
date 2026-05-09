@@ -19,7 +19,7 @@ jobs:
         go-version-file: 'go.mod'
 
     - name: Build
-      run: go build -v $(go list -m)
+      run: go build cmd/hranoprovod-cli/main.go
 
     - name: Test
-      run: go test -v $(go list -m -f '{{.String}}/...')
+      run: go test -v ./...
