@@ -1,4 +1,7 @@
-FROM golang:alpine3.15 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN apk update && apk add --no-cache git
 
@@ -8,11 +11,10 @@ WORKDIR /build
 
 COPY . .
 
-ENV GOPATH /tmp
-
-RUN cd cmd/hranoprovod-cli && go get -d -v
-
-ENV CGO_ENABLED 0
+ENV GOPATH=/tmp \
+	CGO_ENABLED=0 \
+	GOOS=$TARGETOS \
+	GOARCH=$TARGETARCH
 
 RUN cd cmd/hranoprovod-cli && go build -o /go/bin/hranoprovod-cli
 
