@@ -1,5 +1,5 @@
-# This is an example goreleaser.yaml file with some sane defaults.
-# Make sure to check the documentation at http://goreleaser.com
+version: 2
+
 before:
   hooks:
 builds:
@@ -9,15 +9,12 @@ builds:
     - linux
   goarch:
     - amd64
+    - arm64
   dir: ./cmd/hranoprovod-cli
   binary: hranoprovod-cli
 
 archives:
-- replacements:
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
+-
 checksum:
   name_template: 'checksums.txt'
 changelog:
@@ -33,9 +30,6 @@ nfpms:
   maintainer: "Evgeniy Vasilev <aquilax@gmail.com>"
   description: "Command line life tracking tool"
   license: "MIT"
-  replacements:
-    amd64: 64bit
-    386: 32bit
   formats:
     - deb
     - rpm
